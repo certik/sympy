@@ -1,0 +1,18 @@
+Language Overview
+=================
+
+At the core of Python+SymPy is a highly developed symbolic language, which
+unifies a broad range of programming paradigms, and uses its unique concept of
+symbolic programming to add a new level of flexibility to the very concept of
+programming.
+
+`Symbolic Expressions <expressions.txt>`_: instance of Basic is the underlying
+form of everything in SymPy
+`Lists & Expression Manipulation <list_manipulation.txt>`:
+  * [...] (List)
+  * .args (Part)
+  * Table
+  * Length
+  * Take
+  * Select
+  * ...

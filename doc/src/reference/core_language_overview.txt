@@ -1,0 +1,11 @@
+Core Language
+=============
+
+Python together with SymPy is a uniquely powerful symbolic language.
+
+.. toctree::
+   :maxdepth: 2
+
+   language_overview.txt
+   list_manipulation.txt
+   expressions.txt

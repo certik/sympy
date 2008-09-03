@@ -1,0 +1,20 @@
+List Manipulation
+=================
+
+Lists are central constructs in Python+SymPy, used to represent collections,
+arrays, sets and sequences of all kinds. Lists can have any structure and size,
+and can routinely involve even millions of elements. Well over a dozens
+built-in functions throughout SymPy and Python operate directly on lists, making
+lists a powerful vehicle for interoperability.
+
+`Constructing Lists <constructing_lists.html>`_
+    * [a, b, ...] (List) -- specify a list explicitly
+    * Table -- make a table of values of an expression
+    * Array -- make an array of any dimension from a function
+    * `range <range.html>`_
+    * SparseArray
+    * Tuples
+    * NestList
+    * Sow
+    * Reap
+    * ...

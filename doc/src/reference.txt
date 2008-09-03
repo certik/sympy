@@ -1,0 +1,12 @@
+.. _module-ref:
+
+SymPy Reference
+===============
+
+This guide is a translation of the excellent `Mathematica documentation
+center <http://reference.wolfram.com/>`_ to Python+SymPy.
+
+.. toctree::
+   :maxdepth: 2
+
+   reference/core_language_overview.txt

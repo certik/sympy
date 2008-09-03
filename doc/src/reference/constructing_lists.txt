@@ -1,0 +1,42 @@
+Constructing Lists
+==================
+
+http://reference.wolfram.com/mathematica/guide/ConstructingLists.html
+
+Python provides powerful functions for constructing lists of any size and
+structure.
+
+  * `range <range.html>`_ — form a list from a range of numbers or other objects {1, 2, 3, ...}
+  * Table — make a table of any dimension of values of an expression
+  * Array — make an array of any dimension by applying a function to successive indices
+  * ConstantArray — form of a constant array of any dimension
+  * SparseArray, Normal — create a list from a sparse array position→value specification
+
+  * Tuples — all possible n-tuples from a list
+  * Subsets
+  * Permutations
+  * Outer
+  * RandomInteger, RandomChoice, ... — make lists of random elements
+
+Lists from Iteration
+  * NestList — create a list by successively iterating a function
+  * FixedPointList
+  * NestWhileList
+  * Append
+  * AppendTo
+  * Sow, Reap — create lists of elements "sown" inside programs
+
+  * IntegerDigits, RealDigits — make lists from digits in numbers
+  * CoefficientList, CoefficientArrays — make lists from polynomials or equations
+
+  * Characters — make a list from the characters in a string
+  * CharacterRange — a list of a range of characters (e.g. "a" through "z")
+
+  * ReplaceList — make a list of possible pattern replacements
+
+Importing Data as Lists
+  * Import
+  * ReadList
+  * BinaryReadList
+  * FindList
+  * FileNames

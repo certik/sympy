@@ -19,6 +19,7 @@ Contents:
    install.txt
    tutorial.txt
    guide.txt
+   reference.txt
    modules.txt
    python-comparisons.txt
    wiki.txt

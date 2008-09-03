@@ -1,0 +1,32 @@
+Mathematics and Algorithms
+==========================
+
+http://reference.wolfram.com/mathematica/guide/MathematicsAndAlgorithmsOverview.html
+
+* `Mathematical Functions <mathematical_functions.html>`_
+
+* Numbers & Precision
+
+* Formula Manipulation
+
+* Equation Solving
+
+* Matrices & Linear Algebra
+
+* Optimization
+
+* Calculus
+
+* Statistics
+
+* Polynomial Algebra
+
+* Discrete Math
+
+* Number Theory
+
+* Logic
+
+* Computational Systems
+
+* Mathematical Data

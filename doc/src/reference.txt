@@ -10,3 +10,4 @@ center <http://reference.wolfram.com/>`_ to Python+SymPy.
    :maxdepth: 2
 
    reference/core_language_overview.txt
+   reference/mathematics_and_algorithms.txt

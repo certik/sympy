@@ -1,6 +1,8 @@
 Range
 =====
 
+http://reference.wolfram.com/mathematica/ref/Range.html
+
 range(max)
     generates the list (1, 2, ..., max-1)
 

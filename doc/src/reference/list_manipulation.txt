@@ -18,3 +18,18 @@ lists a powerful vehicle for interoperability.
     * Sow
     * Reap
     * ...
+`Elements of Lists <elements_of_lists.html>`_
+    * list[...] (Part) parts or sequences of parts (;;), resettable with =
+    * First
+    * Last
+    * Take
+    * Drop
+    * Extract
+    * `Append <append.html>`_
+    * ReplacePart
+    * Select -- select according to a function
+    * Cases -- give cases matching a pattern
+    * Length
+    * Position
+    * MemberQ
+    * ...

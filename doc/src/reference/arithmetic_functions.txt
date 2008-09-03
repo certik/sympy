@@ -1,0 +1,11 @@
+Arithmetic Functions
+====================
+
+SymPt immediately allows you to do arithmetic not only with individual
+numbers, but also with arbitrary lists or arrays-as well as symbolic and
+algebraic forms.
+
+See also
+--------
+
+ok

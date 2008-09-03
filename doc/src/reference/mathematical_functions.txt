@@ -1,0 +1,29 @@
+Mathematical Functions
+======================
+
+http://reference.wolfram.com/mathematica/guide/MathematicalFunctions.html
+
+SymPy has extensive collection of mathematical functions. Most of the functions
+supports a full range of symbolic operations, as well as efficient numerical
+evaluation to arbitrary precision, for all complex values of parameters.
+
+`Mathematical Constants <mathematical_constants.html>`_
+  * `Pi <pi.html>`_
+  * `E <E.html>`_
+  * `Degree <Degree.html>`_
+  * `EulerGamma <EulerGamma.html>`_
+
+`Complex Numbers <complex_numbers.html>`_
+  * `I <I.html>`_
+  * `Re <Re.html>`_
+  * `Im <Im.html>`_
+  * `Conjugate <Conjugate.html>`_
+  * `Abs <Abs.html>`_
+  * `Arg <Arg.html>`_
+
+`Arithmetic Functions <arithmetic_functions.txt>`_
+  * Plus
+  * Mul
+  * Pow
+  * sqrt
+  * Total

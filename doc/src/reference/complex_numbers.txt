@@ -1,0 +1,29 @@
+Complex Numbers
+===============
+
+SymPy has fundamental support for both explicit complex numbers and symbolic
+complex variables. All applicable mathematical functions support arbitrary
+precision evaluation for complex values of all parameters, and symbolic
+operations automatically treat complex variables with full generality.
+
+    * x+I*y -- the complex number x+I*y
+    * I -- the imaginary unit
+    * Complex -- convert a pair of reals to a complex number
+    * Re -- real part
+    * Im -- imaginary part
+    * Abs -- absolute value
+    * Arg -- argument (phase angle in radians)
+    * Sign -- normalized direction
+    * Conjugate -- complex conjugate
+    * ConjugateTranspose -- Hermitian conjugate of a matrix
+    * ComplexExpand -- expand symbolic expressions into real and imaginary parts
+    * PowerExpand -- expand symbolic expressions ignoring branch cuts
+    * ExpToTrig, TrigToExp -- convert between complex exponentials and trig functions
+    * GaussianIntegers -- option for polynomial and number theory functions
+    * Reduce -- reduce equations and inequalities over complex numbers
+    * RandomComplex -- random complex number
+
+See also
+--------
+
+ok

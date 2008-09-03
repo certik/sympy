@@ -1,0 +1,52 @@
+Append
+======
+
+http://reference.wolfram.com/mathematica/ref/Append.html
+
+expr + [elem]
+    gives expr with elem appended
+
+expr.append(elem)
+    appends elem to expr inplace
+
+Examples
+--------
+
+Basic Examples
+~~~~~~~~~~~~~~
+
+::
+    In [1]: var("a b c d")
+    Out[1]: (a, b, c, d)
+
+    In [2]: [a, b, c, d] + [x]
+    Out[2]: [a, b, c, d, x]
+
+
+See Also
+--------
+
+  * Prepend
+  * Insert
+  * AppendTo
+  * PadRight
+  * Sow
+  * Join
+
+Tutorials
+---------
+
+  * Adding, Removing and Modifying List Elements
+  * Manipulating Lists by Their Indices
+
+More About
+----------
+
+  * `Constructing Lists <constructing_lists.html>`_
+  * Elements of Lists
+  * Expressions
+  * Handling Arrays of Data
+  * `List Manipulation <list_manipulation.html>`_
+  * Parts of Expressions
+  * Rearranging & Restructuring Lists
+  * Structural Operations on Expressions

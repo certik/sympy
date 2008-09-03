@@ -1,0 +1,28 @@
+Mathematical Constants
+======================
+
+SymPy incorporates the latest algorithms for evaluating mathematical constants
+to any number of digits of precision. For basic constants like pi and e,
+millions of digits can routinely be computed in seconds.
+
+    * `pi <pi.html>`_
+    * `e <e.html>`_
+    * `degree <degree.html>`_
+    * `GoldenRatio <GoldenRatio.html>`_
+    * `EulerGamma <EulerGamma.html>`_
+    * `Catalan <Catalan.html>`_
+
+    * `I <I.html>`_
+    * `RootOf <RootOf.html>`_ -- general root of a polynomial
+    * `N <N.html>`_  -- evaluate to any precision
+
+Tutorials
+---------
+
+    * Mathematical Constants
+
+More about
+----------
+
+    * Complex Numbers
+    * Number Recognition

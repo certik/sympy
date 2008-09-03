@@ -22,7 +22,7 @@ Lists from Iteration
   * NestList — create a list by successively iterating a function
   * FixedPointList
   * NestWhileList
-  * Append
+  * `Append <append.html>`_
   * AppendTo
   * Sow, Reap — create lists of elements "sown" inside programs
 

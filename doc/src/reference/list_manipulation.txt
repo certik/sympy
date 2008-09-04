@@ -1,5 +1,5 @@
-List Manipulation
-=================
+List & Expression Manipulation
+==============================
 
 Lists are central constructs in Python+SymPy, used to represent collections,
 arrays, sets and sequences of all kinds. Lists can have any structure and size,

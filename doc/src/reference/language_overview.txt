@@ -1,23 +1,20 @@
 Language Overview
 =================
 
+http://reference.wolfram.com/mathematica/guide/LanguageOverview.html
+
 At the core of Python+SymPy is a highly developed symbolic language, which
 unifies a broad range of programming paradigms, and uses its unique concept of
 symbolic programming to add a new level of flexibility to the very concept of
 programming.
 
-`Symbolic Expressions <expressions.html>`_: instance of Basic is the underlying form of everything in SymPy
+.. toctree::
+   :maxdepth: 2
 
-`Lists & Expression Manipulation <list_manipulation.html>`_:
-  * [...] (List)
-  * .args (Part)
-  * Table
-  * Length
-  * Take
-  * Select
-  * ...
+   expressions.txt
+   list_manipulation.txt
 
-`Functional Operations <functional_operations.html>`_:
+Functional Operations:
   * ... & (Function)
   * /@ (Map)
   * Nest
@@ -26,10 +23,22 @@ programming.
   * Array
   * ...
 
-`Pattern Matching <pattern_matching>`_:
+Pattern Matching:
   * _
   * ..
   * /;
   * Cases
   * Position
   * ...
+
+Rules & Transformations
+
+Definitions & Assignments
+
+Logic & Tests
+
+Scoping & Modularity
+
+Procedural Programming
+
+String Manipulation

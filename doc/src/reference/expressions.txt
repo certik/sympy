@@ -1,2 +1,4 @@
 Expressions
 ===========
+
+An instance of Basic is the underlying form of everything in SymPy.

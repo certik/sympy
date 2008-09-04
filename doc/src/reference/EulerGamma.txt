@@ -1,2 +1,131 @@
 EulerGamma
 ==========
+
+http://reference.wolfram.com/mathematica/ref/EulerGamma.html
+
+EulerGamma is Euler's constant, with numerical value about 0.577216.
+
+Examples
+--------
+
+Evaluate to any precision::
+
+    In [1]: N(EulerGamma, 50)
+    Out[1]: 0.57721566490153286060651209008240243104215933593992
+
+Scope
+-----
+
+Do an exact numerical computation (wrong, `issue 1073 <http://code.google.com/p/sympy/issues/detail?id=1073>`_)::
+
+    In [1]: round(1/EulerGamma**100)
+    Out[1]: 7.34833795661e+23
+
+Find decimal digits 10000 through 10050::
+
+    In [1]: str(N(EulerGamma, 10**4+50))[10**4+1:10**4+51]
+    Out[1]: '55521590139256032061376427156280118971096114002391'
+
+Applications
+------------
+
+The first 20 digits of EulerGamma in base 10::
+
+    In [1]: str(N(EulerGamma, 30))[:23]
+    Out[1]: '0.577215664901532860606'
+
+ContinuedFraction (not implemented `mpmath issue 55
+<http://code.google.com/p/mpmath/issues/detail?id=55>`_).
+
+Plot scaled sums of divisors (not implemented `issue 1093
+<http://code.google.com/p/sympy/issues/detail?id=1093>`_).
+
+Compute the asymptotic upper bound::
+
+    In [2]: N(exp(EulerGamma))
+    Out[2]: 1.78107241799020
+
+Properties & Relations
+----------------------
+
+Various symbolic relations are automatically used::
+
+    In [1]: bool(1/2 < EulerGamma)
+    Out[1]: True
+
+    In [2]: bool(EulerGamma < 1)
+    Out[2]: True
+
+Mathematical functions and operations often give results involving gamma:
+
+Not implemented (`issue 1092
+<http://code.google.com/p/sympy/issues/detail?id=1092>`_)::
+
+    In [1]: limit(sum(1/k, (k, 1, n))-log(n), n, oo)
+    AttributeError: 'tuple' object has no attribute 'atoms'
+
+Wrong (`issue 1091 <http://code.google.com/p/sympy/issues/detail?id=1091>`_)::
+
+    In [2]: limit(x - gamma(1/x), x, oo)
+    Out[2]: ∞ - zoo
+
+Not implemented (`issue 1090 <http://code.google.com/p/sympy/issues/detail?id=1090>`_)::
+
+    In [3]: sum((-1)**k * log(k)/k, (k, 2, oo))
+    Out[3]: Sum((-1)**k*log(k)/k, (k, 2, oo))
+
+Not implemented (`issue 1089 <http://code.google.com/p/sympy/issues/detail?id=1089>`_)::
+
+    In [4]: sum((-1)**k * (zeta(k)-1)/(k*2**k), (k, 2, oo))
+    Out[4]: Sum(-(-1)**k*2**(-k)*(1 - zeta(k))/k, (k, 2, oo))
+
+Not implemented (`issue 1088 <http://code.google.com/p/sympy/issues/detail?id=1088>`_)::
+
+    In [5]: integrate(log(x)*exp(x), (x, 0, oo))
+    Out[5]:
+    ∞
+    ⌠
+    ⎮  x
+    ⎮ ℯ ⋅log(x) dx
+    ⌡
+    0
+
+StieltjesGamma is not implemented (`issue 1087
+<http://code.google.com/p/sympy/issues/detail?id=1087>`_).
+
+Possible Issues
+---------------
+
+It is currently not known if EulerGamma is an algebraic number:
+
+Algebraic is not implemented (`issue 1077
+<http://code.google.com/p/sympy/issues/detail?id=1077>`_).
+
+Neat Examples
+-------------
+
+Terms in the continued fraction:
+
+Not implemented (`issue 1085 <http://code.google.com/p/sympy/issues/detail?id=1085>`_).
+
+Weyl-type sum involving EulerGamma:
+
+Not implemented (`issue 1086 <http://code.google.com/p/sympy/issues/detail?id=1086>`_).
+
+See Also
+--------
+
+  * PolyGamma
+  * StieltjesGamma
+  * HarmonicNumber
+
+Tutorials
+---------
+
+  * Mathematical Constants
+
+More About
+----------
+
+  * `Mathematical Constants <mathematical_constants.html>`_
+  * `Mathematical Functions <mathematical_functions.html>`_

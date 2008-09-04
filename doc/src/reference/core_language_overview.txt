@@ -9,3 +9,12 @@ Python together with SymPy is a uniquely powerful symbolic language.
    language_overview.txt
    list_manipulation.txt
    expressions.txt
+   variables_and_functions.txt
+   rules_and_patterns.txt
+   functional_programming.txt
+   procedural_programming.txt
+   string_manipulation.txt
+   external_operations.txt
+   package_development.txt
+   tuning_and_debugging.txt
+   syntax.txt

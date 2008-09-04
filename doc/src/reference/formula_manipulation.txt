@@ -1,0 +1,10 @@
+Formula Manipulation
+====================
+
+SymPy handles formulas of all types, from polynomials to complex combinations
+of higher mathematical functions. It provides powerful general transformation
+and simplification functions that automatically call on thousands of rules and
+algorithms.
+
+Simplify -- simplify, perhaps with assumptions about variables
+FullSimplify -- apply full simplification procedures

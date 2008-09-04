@@ -7,29 +7,16 @@ http://reference.wolfram.com/mathematica/guide/MathematicsAndAlgorithmsOverview.
     :maxdepth: 1
 
     mathematical_functions.txt
-
-* Numbers & Precision
-
-* Formula Manipulation
-
-* Equation Solving
-
-* Matrices & Linear Algebra
-
-* Optimization
-
-* Calculus
-
-* Statistics
-
-* Polynomial Algebra
-
-* Discrete Math
-
-* Number Theory
-
-* Logic
-
-* Computational Systems
-
-* Mathematical Data
+    numerical_evaluation_and_precision.txt
+    formula_manipulation.txt
+    equation_solving.txt
+    matrices_and_linear_algebra.txt
+    optimization.txt
+    calculus.txt
+    statistics.txt
+    polynomial_algebra.txt
+    discrete_math.txt
+    number_theory.txt
+    logic.txt
+    computational_systems.txt
+    mathematical_data.txt

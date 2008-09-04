@@ -6,7 +6,13 @@ http://reference.wolfram.com/mathematica/guide/ConstructingLists.html
 Python provides powerful functions for constructing lists of any size and
 structure.
 
-  * `range <range.html>`_ — form a list from a range of numbers or other objects {1, 2, 3, ...}
+.. toctree::
+    :maxdepth: 1
+
+    range.txt
+
+Other:
+
   * Table — make a table of any dimension of values of an expression
   * Array — make an array of any dimension by applying a function to successive indices
   * ConstantArray — form of a constant array of any dimension

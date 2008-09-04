@@ -1,35 +1,16 @@
 List & Expression Manipulation
 ==============================
 
+http://reference.wolfram.com/mathematica/guide/ListManipulation.html
+
 Lists are central constructs in Python+SymPy, used to represent collections,
 arrays, sets and sequences of all kinds. Lists can have any structure and size,
 and can routinely involve even millions of elements. Well over a dozens
 built-in functions throughout SymPy and Python operate directly on lists, making
 lists a powerful vehicle for interoperability.
 
-`Constructing Lists <constructing_lists.html>`_
-    * [a, b, ...] (List) -- specify a list explicitly
-    * Table -- make a table of values of an expression
-    * Array -- make an array of any dimension from a function
-    * `range <range.html>`_
-    * SparseArray
-    * Tuples
-    * NestList
-    * Sow
-    * Reap
-    * ...
-`Elements of Lists <elements_of_lists.html>`_
-    * list[...] (Part) parts or sequences of parts (;;), resettable with =
-    * First
-    * Last
-    * Take
-    * Drop
-    * Extract
-    * `Append <append.html>`_
-    * ReplacePart
-    * Select -- select according to a function
-    * Cases -- give cases matching a pattern
-    * Length
-    * Position
-    * MemberQ
-    * ...
+.. toctree::
+    :maxdepth: 2
+
+    constructing_lists.txt
+    elements_of_lists.txt

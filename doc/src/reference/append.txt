@@ -14,8 +14,8 @@ Examples
 
 Basic Examples
 ~~~~~~~~~~~~~~
-
 ::
+
     In [1]: var("a b c d")
     Out[1]: (a, b, c, d)
 

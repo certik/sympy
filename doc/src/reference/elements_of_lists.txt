@@ -1,0 +1,26 @@
+Elements of Lists
+=================
+
+http://reference.wolfram.com/mathematica/guide/ElementsOfLists.html
+
+.. toctree::
+    :maxdepth: 1
+
+    append.txt
+
+Other:
+
+    * list[...] (Part) parts or sequences of parts (;;), resettable with =
+    * First
+    * Last
+    * Take
+    * Drop
+    * Extract
+    * `Append <append.html>`_
+    * ReplacePart
+    * Select -- select according to a function
+    * Cases -- give cases matching a pattern
+    * Length
+    * Position
+    * MemberQ
+    * ...

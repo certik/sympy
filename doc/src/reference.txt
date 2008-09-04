@@ -4,7 +4,11 @@ SymPy Reference
 ===============
 
 This guide is a translation of the excellent `Mathematica documentation
-center <http://reference.wolfram.com/>`_ to Python+SymPy.
+center <http://reference.wolfram.com/>`_ to Python+SymPy. This reference is
+meant as 1:1 translation, so if there is a missing feature in SymPy, there is
+always a link to the corresponding issue in our bugtracker. Correspondigly, if
+SymPy can do something that Mathematica cannot, it should be added to a special
+section, or in our other docs.
 
 All of the examples are executed directly in :ref:`isympy <isympy>` and you are
 encouraged to try them yourself.

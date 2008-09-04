@@ -6,6 +6,9 @@ SymPy Reference
 This guide is a translation of the excellent `Mathematica documentation
 center <http://reference.wolfram.com/>`_ to Python+SymPy.
 
+All of the examples are executed directly in :ref:`isympy <isympy>` and you are
+encouraged to try them yourself.
+
 .. toctree::
    :maxdepth: 2
 

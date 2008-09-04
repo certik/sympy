@@ -83,6 +83,8 @@ SymPy's webpage.
 .. _Downloads: http://code.google.com/p/sympy/wiki/DownloadInstallation?tm=2
 
 
+.. _isympy:
+
 isympy Console
 --------------
 

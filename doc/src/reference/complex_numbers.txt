@@ -25,5 +25,3 @@ operations automatically treat complex variables with full generality.
 
 See also
 --------
-
-ok

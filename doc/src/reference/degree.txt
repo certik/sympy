@@ -1,0 +1,5 @@
+Degree
+======
+
+Not implemented, `issue 1081
+<http://code.google.com/p/sympy/issues/detail?id=1081>`_.

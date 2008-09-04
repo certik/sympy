@@ -1,0 +1,5 @@
+ContinuedFraction
+==================
+
+Not implemented, see the `mpmath issue 55
+<http://code.google.com/p/mpmath/issues/detail?id=55>`_

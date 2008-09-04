@@ -1,0 +1,55 @@
+GoldenRatio
+===========
+
+http://reference.wolfram.com/mathematica/ref/GoldenRatio.html
+
+GoldenRatio is the golden ratio, with numerical value about 1.61803.
+
+Basic Examples
+--------------
+
+Numerical value::
+
+    In [1]: N(GoldenRatio)
+    Out[1]: 1.61803398874989
+
+Scope
+-----
+
+Evaluate to any precision::
+
+    In [1]: N(GoldenRatio, 50)
+    Out[1]: 1.6180339887498948482045868343656381177203091798058
+
+Do exact computations (not implemented, `issue 1084 <http://code.google.com/p/sympy/issues/detail?id=1084>`_).
+
+Simplify GoldenRation expressions (not implemented, `issue 1083 <http://code.google.com/p/sympy/issues/detail?id=1083>`_)::
+
+    In [1]: simplify(GoldenRatio**20 + 1/GoldenRatio**20)
+    Out[1]:
+                   40
+    1 + GoldenRatio
+    ─────────────────
+                 20
+      GoldenRatio
+
+    In [2]: simplify(GoldenRatio**4 - GoldenRatio)
+    Out[2]:
+                              4
+    -GoldenRatio + GoldenRatio
+
+Applications
+------------
+
+Not implemented (`issue 1082 <http://code.google.com/p/sympy/issues/detail?id=1082>`_).
+
+
+See Also
+--------
+
+Fibonnacci, ContinuedFraction, LucasL, AspectRatio
+
+Tutorials
+---------
+
+  * Mathematical Constants

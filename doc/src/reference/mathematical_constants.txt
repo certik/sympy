@@ -1,6 +1,8 @@
 Mathematical Constants
 ======================
 
+http://reference.wolfram.com/mathematica/guide/MathematicalConstants.html
+
 SymPy incorporates the latest algorithms for evaluating mathematical constants
 to any number of digits of precision. For basic constants like pi and e,
 millions of digits can routinely be computed in seconds.
@@ -14,7 +16,11 @@ millions of digits can routinely be computed in seconds.
 
     * `I <I.html>`_
     * `RootOf <RootOf.html>`_ -- general root of a polynomial
+
     * `N <N.html>`_  -- evaluate to any precision
+    * RealDigits
+    * ContinuedFraction
+    * FullSimplify
 
 Tutorials
 ---------

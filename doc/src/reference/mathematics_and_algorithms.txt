@@ -3,7 +3,10 @@ Mathematics and Algorithms
 
 http://reference.wolfram.com/mathematica/guide/MathematicsAndAlgorithmsOverview.html
 
-* `Mathematical Functions <mathematical_functions.html>`_
+.. toctree::
+    :maxdepth: 1
+
+    mathematical_functions.txt
 
 * Numbers & Precision
 

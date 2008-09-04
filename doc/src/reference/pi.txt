@@ -1,0 +1,121 @@
+Pi
+==
+
+http://reference.wolfram.com/mathematica/ref/Pi.html
+
+Pi is π, with numerical value about 3.14159
+
+
+Basic Examples
+--------------
+::
+
+    In [1]: pi
+    Out[1]: π
+
+Evaluate to any precision::
+
+    In [1]: N(pi, 50)
+    Out[1]: 3.1415926535897932384626433832795028841971693993751
+
+Do an exact numerical computation (wrong, `issue 1073
+<http://code.google.com/p/sympy/issues/detail?id=1073>`_)::
+
+    In [1]: round(pi**100)
+    Out[1]: 5.18784831432e+49
+
+Scope
+-----
+
+Find the milionth digit of π in base 10::
+
+    In [1]: str(pi.evalf(10**6))[10**6-1]
+    Out[1]: '1'
+
+Applications
+------------
+
+Find an area of a circle (not implemented, `issue 1075
+<http://code.google.com/p/sympy/issues/detail?id=1076>`_)::
+
+    In [1]: var("r")
+    Out[1]: r
+
+    In [2]: 2*integrate(sqrt(r**2-x**2), (x, -r, r))
+    Out[2]:
+      r
+      ⌠
+      ⎮     ⎽⎽⎽⎽⎽⎽⎽⎽⎽
+      ⎮    ╱  2    2
+    2⋅⎮  ╲╱  r  - x   dx
+      ⌡
+      -r
+
+
+    In [3]: 2*integrate(sqrt(1-x**2), (x, -1, 1))
+    Out[3]: π
+
+The first 20 digits of π in base 10::
+
+    In [1]: str(pi.evalf(21))[:21]
+    Out[1]: '3.1415926535897932384'
+
+Continued fraction (not implemented, `mpmath issue 55 <http://code.google.com/p/mpmath/issues/detail?id=55>`_).
+
+Trigonometric functions have arguments in radians::
+
+    In [1]: sin(pi/4)
+    Out[1]:
+      ⎽⎽⎽
+    ╲╱ 2
+    ─────
+      2
+
+Many mathematical functions and operations give results involving π::
+
+    In [1]: zeta(2)
+    Out[1]:
+     2
+    π
+    ──
+    6
+
+    In [2]: integrate(exp(-x**2), (x, -oo, oo))
+    Out[2]:
+      ⎽⎽⎽
+    ╲╱ π
+
+Properties & Relations
+----------------------
+
+Various symbolic relations are automatically used::
+
+    In [1]: bool(pi > 3)
+    Out[1]: True
+
+pi in Algebraics (not implemented, `issue 1077 <http://code.google.com/p/sympy/issues/detail?id=1077>`_).
+
+pi is treated as a constant in differentiation::
+
+    In [1]: diff(pi, x)
+    Out[1]: 0
+
+Neat Examples
+-------------
+
+Walk corresponding to the binary digits of pi (not implemented, `issue 1078 <http://code.google.com/p/sympy/issues/detail?id=1078>`_).
+
+Terms in the continued fraction (not implemented, `issue 1079 <http://code.google.com/p/sympy/issues/detail?id=1079>`_).
+
+See Also
+--------
+
+  * Degree
+  * `E <E.html>`_
+  * N
+
+Tutorials
+---------
+
+  * Some Mathematical Functions
+  * `Mathematical Constants <mathematical_constants.html>`_

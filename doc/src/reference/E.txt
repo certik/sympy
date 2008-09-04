@@ -1,0 +1,110 @@
+E
+=
+
+http://reference.wolfram.com/mathematica/ref/E.html
+
+E is the exponential constant e (base of natural logarithms), with numerical
+value about 2.71828.
+
+Basic Examples
+--------------
+::
+
+    In [1]: E
+    Out[1]: ℯ
+
+Evaluate to any precision::
+
+    In [2]: N(E, 50)
+    Out[2]: 2.7182818284590452353602874713526624977572470937000
+
+Do an exact numerical computation (wrong,
+`issue 1073 <http://code.google.com/p/sympy/issues/detail?id=1073>`_)::
+
+    In [3]: round(E**100)
+    Out[3]: 2.68811714182e+43
+
+Applications
+------------
+
+The first 20 digits of ℯ in base 10::
+
+    In [1]: str(N(E, 21))[:21]
+    Out[1]: '2.7182818284590452353'
+
+ℯ has a very regular continued fraction (not implemented, `mpmath
+issue 55 <http://code.google.com/p/mpmath/issues/detail?id=55>`_).
+
+Evaluate symbolic relations involving ℯ::
+
+    In [1]: bool(E**pi > pi**E)
+    Out[1]: True
+
+Mathematical functions and operations often give results involving ℯ::
+
+    In [1]: limit((1+z)**(1/z), z, 0)
+    Out[1]: ℯ
+
+Solve the Steiner problem (not implemented, `issue 1074 <http://code.google.com/p/sympy/issues/detail?id=1074>`_).
+
+Properties & Relations
+----------------------
+
+exp(z) is automatically converted to e**z::
+
+    In [1]: exp(z)
+    Out[1]:
+     z
+    ℯ
+
+Use TrigToExp to obtain E from hyperbolic and trigonometric functions (not
+implemented, `issue 1075 <http://code.google.com/p/sympy/issues/detail?id=1075>`_).
+
+Find twenty base-10 digits after the millionth one::
+
+    In [1]: str(N(E, 10**6+21))[10**6:10**6+21]
+    Out[1]: '888374711515623968271'
+
+ℯ arises in many limiting results:
+
+Wrong (`issue 1070 <http://code.google.com/p/sympy/issues/detail?id=1070>`_)::
+
+    In [1]: limit(z**z/(z-1)**(z-1) - (z-1)**(z-1)/(z-2)**(z-2), z, oo)
+    Out[1]: nan
+
+NotImplemented (`issue 1071 <http://code.google.com/p/sympy/issues/detail?id=1070>`_)::
+
+    In [2]: sum(1/factorial(k), (k, 0, oo))
+    Out[2]: Sum(1/k!, (k, 0, oo))
+
+NotImplemented (`issue 1072 <http://code.google.com/p/sympy/issues/detail?id=1070>`_)::
+
+    In [3]: sum(factorial(2*k+1)/factorial(2*k), (k, 0, oo))
+    Out[3]: Sum(1/(2*k)!*(1 + 2*k)!, (k, 0, oo))
+
+Neat Examples
+-------------
+
+Weyl-type sum involving E (not implemented, `issue 1080
+<http://code.google.com/p/sympy/issues/detail?id=1080>`_).
+
+See Also
+--------
+
+  * exp
+  * log
+  * `pi <pi.html>`_
+  * N
+  * limit
+
+Tutorials
+---------
+
+  * Some Mathematical Functions
+  * Mathematical Constants
+
+More About
+----------
+
+  * `Mathematical Constants <mathematical_constants.html>`_
+  * `Mathematical Functions <mathematical_functions.html>`_

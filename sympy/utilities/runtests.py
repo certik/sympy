@@ -145,6 +145,36 @@ def doctest(*paths, **kwargs):
             print "Failed %s, tested %s" % out
     return dtest
 
+def run_test_function(f):
+    """
+    f is a Python test function to be run
+    """
+    try:
+        f()
+    except:
+        e, val, tb = sys.exc_info()
+        if e is AssertionError:
+            result = "failed"
+        elif e.__name__ == "Skipped":
+            result = "skipped"
+        elif e.__name__ == "XFail":
+            result = "xfail"
+        elif e.__name__ == "XPass":
+            result = "xpass"
+        else:
+            result = "exception"
+        t = traceback.extract_tb(tb)
+        # remove the first item, as that is always runtests.py
+        t = t[1:]
+        t = traceback.format_list(t)
+        e = "".join(t)
+        t = traceback.format_exception_only(e, val)
+        e += "".join(t)
+
+        return result, e
+    else:
+        return "pass", None
+
 class SymPyTests(object):
 
     def __init__(self, reporter, kw="", post_mortem=False):
@@ -179,7 +209,14 @@ class SymPyTests(object):
                 break
         return self._reporter.finish()
 
-    def test_file(self, filename):
+    def collect_tests_in_file(self, filename):
+        """
+        Returns a list of executable test functions in a file.
+
+        It executes the test file and imports all test functions from there. It
+        then picks up real tests and also takes into account all custom things,
+        like "disabled" variable etc.
+        """
         name = "test%d" % self._count
         name = os.path.splitext(os.path.basename(filename))[0]
         self._count += 1
@@ -222,7 +259,10 @@ class SymPyTests(object):
                     i += 1
             # drop functions that are not selected with the keyword expression:
             funcs = [x for x in funcs if self.matches(x)]
+        return funcs
 
+    def test_file(self, filename):
+        funcs = self.collect_tests_in_file(filename)
         self._reporter.entering_filename(filename, len(funcs))
         for f in funcs:
             self._reporter.entering_test(f)

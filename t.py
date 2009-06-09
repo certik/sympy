@@ -1,4 +1,4 @@
-from sympy import var, pprint, Symbol, Add, integrate
+from sympy import var, pprint, Symbol, Add, integrate, solve
 
 var("x y")
 
@@ -108,3 +108,24 @@ integrals = [
     integrate_line(B_y, [0, -h_y/2], [h_x, -h_y/2]),
 ]
 pprint(integrals)
+
+print "let h_x=h_y=1"
+for i in range(len(integrals)):
+    integrals[i] = integrals[i].subs({h_x: 1, h_y: 1})
+
+pprint(integrals)
+
+print "form equations"
+eqns = []
+for constrain in constrains:
+    eqns.append(constrain)
+integral_unknowns = [Symbol("I%d" % i) for i in range(1, 15)]
+unknowns = [Symbol("a%d" % i) for i in range(10)]
+unknowns.extend([Symbol("b%d" % i) for i in range(10)])
+for integ, unknown in zip(integrals, integral_unknowns):
+    eqns.append(integ-unknown)
+pprint(eqns)
+print "number of equations:", len(eqns)
+print "unknowns:", unknowns
+print "solving"
+print solve(eqns, unknowns)

@@ -1,4 +1,5 @@
-from sympy import var, pprint, Symbol, Add, integrate, solve
+from sympy import var, pprint, Symbol, Add, integrate, solve, sympify, \
+        Equality, zeros
 
 var("x y")
 
@@ -62,6 +63,35 @@ def integrate_line(e, p1, p2):
         return integrate(e.subs(y, p1[1]), (x, p1[0], p2[0]))
     else:
         raise NotImplementedError()
+
+def get_matrix(eqns, unknowns):
+    polys = []
+
+    for g in eqns:
+        g = sympify(g)
+
+        if isinstance(g, Equality):
+            g = g.lhs - g.rhs
+
+        poly = g.as_poly(*unknowns)
+
+        if poly is not None:
+            polys.append(poly)
+        else:
+            raise NotImplementedError()
+
+    if all(p.is_linear for p in polys):
+        n, m = len(eqns), len(unknowns)
+        matrix = zeros((n, m + 1))
+
+        for i, poly in enumerate(polys):
+            for coeff, monom in poly.iter_terms():
+                try:
+                    j = list(monom).index(1)
+                    matrix[i, j] = coeff
+                except ValueError:
+                    matrix[i, m] = -coeff
+    return matrix[:, :m], matrix[:, m]
 
 B_x = get_poly([x, y], 3, "a")
 B_y = get_poly([x, y], 3, "b")
@@ -128,4 +158,8 @@ pprint(eqns)
 print "number of equations:", len(eqns)
 print "unknowns:", unknowns
 print "solving"
-print solve(eqns, unknowns)
+A, b = get_matrix(eqns, unknowns)
+pprint(A)
+pprint(b)
+print A.det()
+#print solve(eqns, unknowns)

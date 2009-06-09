@@ -73,24 +73,27 @@ print "divergence:"
 div = B_x.diff(x) + B_y.diff(y)
 pprint(div)
 print "we put it equal to zero, this yields the following 6 constrains:"
-pprint(div.subs({x: 0, y: 0}))
-pprint(div.coeff(x).subs({y:0}))
-pprint(div.coeff(y).subs({x:0}))
-pprint(div.coeff(x*y))
-pprint(div.coeff(x**2))
-pprint(div.coeff(y**2))
+constrains = [
+    div.subs({x: 0, y: 0}),
+    div.coeff(x).subs({y:0}),
+    div.coeff(y).subs({x:0}),
+    div.coeff(x*y),
+    div.coeff(x**2),
+    div.coeff(y**2)
+]
+pprint(constrains)
 
 print "integrals:"
 var("h_x h_y")
-print "vertical_left"
-pprint(integrate_line(B_x, [-h_x, 0], [-h_x, h_y]))
-pprint(integrate_line(B_x, [-h_x, -h_y], [-h_x, 0]))
+integrals = [
+    integrate_line(B_x, [-h_x, 0], [-h_x, h_y]),
+    integrate_line(B_x, [-h_x, -h_y], [-h_x, 0]),
 
-print "vertical middle"
-pprint(integrate_line(B_x, [0, -3*h_y/2], [0, -h_y/2]))
-pprint(integrate_line(B_x, [0, -h_y/2], [0, h_y/2]))
-pprint(integrate_line(B_x, [0, h_y/2], [0, 3*h_y/2]))
+    integrate_line(B_x, [0, -3*h_y/2], [0, -h_y/2]),
+    integrate_line(B_x, [0, -h_y/2], [0, h_y/2]),
+    integrate_line(B_x, [0, h_y/2], [0, 3*h_y/2]),
 
-print "vertical right"
-pprint(integrate_line(B_x, [h_x, 0], [h_x, h_y]))
-pprint(integrate_line(B_x, [h_x, -h_y], [h_x, 0]))
+    integrate_line(B_x, [h_x, 0], [h_x, h_y]),
+    integrate_line(B_x, [h_x, -h_y], [h_x, 0])
+]
+pprint(integrals[3])

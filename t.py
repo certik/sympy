@@ -96,8 +96,8 @@ def get_matrix(eqns, unknowns, return_Ab=True):
     else:
         return matrix
 
-B_x = get_poly([x, y], 3, "a")
-B_y = get_poly([x, y], 3, "b")
+B_x = get_poly([x, y], 2, "a")
+B_y = get_poly([x, y], 2, "b")
 print "Polynomials B_x and B_y:"
 pprint(B_x)
 pprint(B_y)
@@ -110,9 +110,6 @@ constrains = [
     div.subs({x: 0, y: 0}),
     div.coeff(x).subs({y:0}),
     div.coeff(y).subs({x:0}),
-    div.coeff(x*y),
-    div.coeff(x**2),
-    div.coeff(y**2)
 ]
 pprint(constrains)
 
@@ -122,9 +119,7 @@ integrals = [
     integrate_line(B_x, [-h_x/2, 0], [-h_x/2, h_y]),
     integrate_line(B_x, [-h_x/2, -h_y], [-h_x/2, 0]),
 
-    integrate_line(B_x, [0, -3*h_y/2], [0, -h_y/2]),
     integrate_line(B_x, [0, -h_y/2], [0, h_y/2]),
-    integrate_line(B_x, [0, h_y/2], [0, 3*h_y/2]),
 
     integrate_line(B_x, [h_x/2, 0], [h_x/2, h_y]),
     integrate_line(B_x, [h_x/2, -h_y], [h_x/2, 0]),
@@ -132,10 +127,6 @@ integrals = [
 
     integrate_line(B_y, [-h_x, h_y/2], [0, h_y/2]),
     integrate_line(B_y, [0, h_y/2], [h_x, h_y/2]),
-
-    integrate_line(B_y, [-3*h_x/2, 0], [-h_x/2, 0]),
-    integrate_line(B_y, [-h_x/2, 0], [h_x/2, 0]),
-    integrate_line(B_y, [h_x/2, 0], [3*h_x/2, 0]),
 
     integrate_line(B_y, [-h_x, -h_y/2], [0, -h_y/2]),
     integrate_line(B_y, [0, -h_y/2], [h_x, -h_y/2]),
@@ -153,8 +144,8 @@ eqns = []
 for constrain in constrains:
     eqns.append(constrain)
 integral_unknowns = [Symbol("I%d" % i) for i in range(1, 15)]
-unknowns = [Symbol("a%d" % i) for i in range(10)]
-unknowns.extend([Symbol("b%d" % i) for i in range(10)])
+unknowns = [Symbol("a%d" % i) for i in range(6)]
+unknowns.extend([Symbol("b%d" % i) for i in range(6)])
 for integ, unknown in zip(integrals, integral_unknowns):
     eqns.append(integ-unknown)
 pprint(eqns)

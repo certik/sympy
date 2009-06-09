@@ -86,14 +86,25 @@ pprint(constrains)
 print "integrals:"
 var("h_x h_y")
 integrals = [
-    integrate_line(B_x, [-h_x, 0], [-h_x, h_y]),
-    integrate_line(B_x, [-h_x, -h_y], [-h_x, 0]),
+    integrate_line(B_x, [-h_x/2, 0], [-h_x/2, h_y]),
+    integrate_line(B_x, [-h_x/2, -h_y], [-h_x/2, 0]),
 
     integrate_line(B_x, [0, -3*h_y/2], [0, -h_y/2]),
     integrate_line(B_x, [0, -h_y/2], [0, h_y/2]),
     integrate_line(B_x, [0, h_y/2], [0, 3*h_y/2]),
 
-    integrate_line(B_x, [h_x, 0], [h_x, h_y]),
-    integrate_line(B_x, [h_x, -h_y], [h_x, 0])
+    integrate_line(B_x, [h_x/2, 0], [h_x/2, h_y]),
+    integrate_line(B_x, [h_x/2, -h_y], [h_x/2, 0]),
+
+
+    integrate_line(B_y, [-h_x, h_y/2], [0, h_y/2]),
+    integrate_line(B_y, [0, h_y/2], [h_x, h_y/2]),
+
+    integrate_line(B_y, [-3*h_x/2, 0], [-h_x/2, 0]),
+    integrate_line(B_y, [-h_x/2, 0], [h_x/2, 0]),
+    integrate_line(B_y, [h_x/2, 0], [3*h_x/2, 0]),
+
+    integrate_line(B_y, [-h_x, -h_y/2], [0, -h_y/2]),
+    integrate_line(B_y, [0, -h_y/2], [h_x, -h_y/2]),
 ]
-pprint(integrals[3])
+pprint(integrals)

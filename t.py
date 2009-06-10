@@ -158,6 +158,8 @@ pprint(eqns)
 print "number of equations:", len(eqns)
 print "unknowns:", unknowns
 print "solving"
+#unknowns = [unknowns[i] for i in [0, 2, 5, 9, 10, 12, 13, 16]]
+#print unknowns
 A, b = get_matrix(eqns, unknowns)
 pprint(A)
 pprint(b)

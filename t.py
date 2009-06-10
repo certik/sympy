@@ -64,7 +64,7 @@ def integrate_line(e, p1, p2):
     else:
         raise NotImplementedError()
 
-def get_matrix(eqns, unknowns):
+def get_matrix(eqns, unknowns, return_Ab=True):
     polys = []
 
     for g in eqns:
@@ -91,7 +91,10 @@ def get_matrix(eqns, unknowns):
                     matrix[i, j] = coeff
                 except ValueError:
                     matrix[i, m] = -coeff
-    return matrix[:, :m], matrix[:, m]
+    if return_Ab:
+        return matrix[:, :m], matrix[:, m]
+    else:
+        return matrix
 
 B_x = get_poly([x, y], 3, "a")
 B_y = get_poly([x, y], 3, "b")
@@ -160,8 +163,8 @@ print "unknowns:", unknowns
 print "solving"
 #unknowns = [unknowns[i] for i in [0, 2, 5, 9, 10, 12, 13, 16]]
 #print unknowns
-A, b = get_matrix(eqns, unknowns)
+A = get_matrix(eqns, unknowns, False)
 pprint(A)
-pprint(b)
-print A.det()
+pprint(A.rref())
+#print A.det()
 #print solve(eqns, unknowns)

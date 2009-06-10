@@ -165,6 +165,8 @@ print "solving"
 #print unknowns
 A = get_matrix(eqns, unknowns, False)
 pprint(A)
-pprint(A.rref())
+A_rref, pivots = A.rref()
+pprint(A_rref)
+print pivots
 #print A.det()
 #print solve(eqns, unknowns)

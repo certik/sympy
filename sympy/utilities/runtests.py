@@ -18,6 +18,9 @@ import traceback
 import pdb
 from glob import glob
 from timeit import default_timer as clock
+import doctest as pdoctest # avoid clashing with our doctest() function
+
+SKIP = pdoctest.register_optionflag('SKIP') # for python2.4 compatility
 
 def isgeneratorfunction(object):
     """
@@ -34,6 +37,13 @@ def isgeneratorfunction(object):
         object.func_code.co_flags & CO_GENERATOR:
         return True
     return False
+
+def convert_to_native_paths(lst):
+    """
+    Converts a list of '/' separated paths into a list of
+    native (os.sep separated) paths.
+    """
+    return [os.path.join(*x.split("/")) for x in lst]
 
 def test(*paths, **kwargs):
     """
@@ -112,16 +122,37 @@ def doctest(*paths, **kwargs):
     dtest = t.test()
 
     # test documentation under doc/src/
-    import doctest
-    excluded = ['doc/src/modules/plotting.txt']
-    doc_files = glob('doc/src/*.txt') + glob('doc/src/modules/*.txt')
+    excluded = convert_to_native_paths(['doc/src/modules/plotting.txt'])
+    doc_globs = convert_to_native_paths(['doc/src/*.txt',
+            'doc/src/modules/*.txt'])
+    doc_files = sum([glob(x) for x in doc_globs], [])
     for ex in excluded:
         doc_files.remove(ex)
     for doc_file in doc_files:
+        runner = SymPyDocTestRunner(verbose=None, optionflags=0)
+        parser = pdoctest.DocTestParser()
+        text = open(doc_file).read()
+        test = parser.get_doctest(text, {}, doc_file, doc_file, 0)
+        runner.run(test)
         print "Testing ", doc_file
-        print "Failed %s, tested %s" % doctest.testfile(doc_file, module_relative=False)
+        print "Failed %s, tested %s" % (runner.failures, runner.tries)
     return dtest
 
+class SymPyDocTestRunner(pdoctest.DocTestRunner):
+
+    def run(self, test, compileflags=None, out=None, clear_globs=True):
+        """
+        Run the examples in `test`.  Write the outcome of each example
+        with one of the `DocTestRunner.report_*` methods, using the
+        writer function `out`.  `compileflags` is the set of compiler
+        flags that should be used to execute examples.  Return a tuple
+        `(f, t)`, where `t` is the number of examples tried, and `f`
+        is the number of examples that failed.  The examples are run
+        in the namespace `test.globs`.
+        """
+        if SKIP: return
+        return pdoctest.DocTestRunner.run(self, test, \
+                     compileflags, out, clear_globs)
 
 class SymPyTests(object):
 
@@ -284,7 +315,7 @@ class SymPyDocTests(object):
         self._reporter = reporter
         self._reporter.root_dir(self._root_dir)
         self._tests = []
-        self._blacklist = blacklist
+        self._blacklist = convert_to_native_paths(blacklist)
 
     def add_paths(self, paths):
         for path in paths:
@@ -325,7 +356,7 @@ class SymPyDocTests(object):
         from StringIO import StringIO
 
         rel_name = filename[len(self._root_dir)+1:]
-        module = rel_name.replace('/', '.')[:-3]
+        module = rel_name.replace(os.sep, '.')[:-3]
         setup_pprint()
         try:
             module = doctest._normalize_module(module)
@@ -497,6 +528,9 @@ class PyTestReporter(Reporter):
             # output is piped to less, e.g. "bin/test | less". In this case,
             # the terminal control sequences would be printed verbatim, so
             # don't use any colors.
+            color = ""
+        if sys.platform == "win32":
+            # Windows consoles don't support ANSI escape sequences
             color = ""
 
         if self._line_wrap:

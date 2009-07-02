@@ -7,6 +7,14 @@ at present this is mainly needed for facts.py , feel free however to improve
 this stuff for general purpose.
 """
 
+def cmp(a, b):
+    if a < b:
+        return -1
+    elif a > b:
+        return 1
+    else:
+        return 0
+
 def fuzzy_not(v):
     """'not' in fuzzy logic"""
     if v is None:

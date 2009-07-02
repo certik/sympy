@@ -37,7 +37,7 @@ from .libmpi import (
     mpi_mul, mpi_div, mpi_pow_int, mpi_pow
 )
 
-from string import strip
+#from string import strip
 from operator import gt, lt
 
 

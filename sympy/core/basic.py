@@ -2376,4 +2376,4 @@ from power import Pow
 from add import Add
 from relational import Inequality, StrictInequality
 from function import FunctionClass, Derivative
-from numbers import Rational
+from numbers import Rational, Integer

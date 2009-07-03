@@ -792,3 +792,5 @@ class Mul(AssocOp):
 #import operations as _
 #_.Mul       = Mul
 #del _
+from power import Pow
+from numbers import Real

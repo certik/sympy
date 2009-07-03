@@ -197,5 +197,5 @@ def _sympify(a):
 
 
 
-from numbers import Integer
-from basic import Basic
+from numbers import Integer, Real
+from basic import Basic, BasicType

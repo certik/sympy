@@ -481,3 +481,4 @@ class Add(AssocOp):
 #import operations as _
 #_.Add       = Add
 #del _
+from mul import Mul

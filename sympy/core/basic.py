@@ -2372,3 +2372,5 @@ from symbol import Wild
 from sympify import _sympify, sympify, SympifyError
 S.__call__ = sympify
 from mul import Mul
+from power import Pow
+from add import Add

@@ -36,11 +36,10 @@ from cache import cacheit
 from itertools import repeat
 from numbers import Rational, Integer
 from symbol import Symbol
-from add    import Add
 from multidimensional import vectorize
+from sympy.utilities.decorator import deprecated
 
 from sympy import mpmath
-from sympy.utilities.decorator import deprecated
 
 class PoleError(Exception):
     pass
@@ -1027,3 +1026,6 @@ def expand_complex(expr, deep=True):
 #import numbers as _
 #_.FunctionClass = FunctionClass
 #del _
+
+from sympify import sympify
+from add    import Add

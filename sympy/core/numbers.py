@@ -1617,3 +1617,4 @@ Basic.singleton['Catalan'] = Catalan
 from basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg
 from sympify import _sympify, SympifyError
 from function import FunctionClass
+from power import Pow

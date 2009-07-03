@@ -794,3 +794,4 @@ class Mul(AssocOp):
 #del _
 from power import Pow
 from numbers import Real
+from function import FunctionClass

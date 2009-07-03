@@ -199,4 +199,4 @@ def _sympify(a):
 
 
 from numbers import Integer, Real
-from basic import Basic, BasicType
+from basic import Basic, BasicType, S

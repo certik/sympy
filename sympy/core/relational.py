@@ -184,9 +184,9 @@ class Inequality(Relational):
 
 
 # /cyclic/
-import basic as _
-_.Equality      = Equality
-_.Unequality    = Unequality
-_.Inequality    = Inequality
-_.StrictInequality = StrictInequality
-del _
+#import basic as _
+#_.Equality      = Equality
+#_.Unequality    = Unequality
+#_.Inequality    = Inequality
+#_.StrictInequality = StrictInequality
+#del _

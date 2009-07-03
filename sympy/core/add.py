@@ -466,18 +466,18 @@ class Add(AssocOp):
 
 
 # /cyclic/
-import basic as _
-_.Add       = Add
-del _
+#import basic as _
+#_.Add       = Add
+#del _
 
-import mul as _
-_.Add       = Add
-del _
+#import mul as _
+#_.Add       = Add
+#del _
 
-import power as _
-_.Add       = Add
-del _
+#import power as _
+#_.Add       = Add
+#del _
 
-import operations as _
-_.Add       = Add
-del _
+#import operations as _
+#_.Add       = Add
+#del _

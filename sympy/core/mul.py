@@ -773,22 +773,22 @@ class Mul(AssocOp):
 
 
 # /cyclic/
-import basic as _
-_.Mul       = Mul
-del _
+#import basic as _
+#_.Mul       = Mul
+#del _
 
-import add as _
-_.Mul       = Mul
-del _
+#import add as _
+#_.Mul       = Mul
+#del _
 
-import power as _
-_.Mul       = Mul
-del _
+#import power as _
+#_.Mul       = Mul
+#del _
 
-import numbers as _
-_.Mul       = Mul
-del _
+#import numbers as _
+#_.Mul       = Mul
+#del _
 
-import operations as _
-_.Mul       = Mul
-del _
+#import operations as _
+#_.Mul       = Mul
+#del _

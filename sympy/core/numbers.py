@@ -1567,33 +1567,33 @@ class ImaginaryUnit(Atom):
         return sage.I
 
 # /cyclic/
-import basic as _
-_.Number    = Number
-_.Integer   = Integer
-_.Rational  = Rational
-_.Real      = Real
-del _
+#import basic as _
+#_.Number    = Number
+#_.Integer   = Integer
+#_.Rational  = Rational
+#_.Real      = Real
+#del _
 
-import add as _
-_.Number    = Number
-del _
+#import add as _
+#_.Number    = Number
+#del _
 
-import mul as _
-_.Number    = Number
-_.Integer   = Integer
-_.Real      = Real
-del _
+#import mul as _
+#_.Number    = Number
+#_.Integer   = Integer
+#_.Real      = Real
+#del _
 
-import power as _
-_.Number    = Number
-_.Rational  = Rational
-_.Integer   = Integer
-del _
+#import power as _
+#_.Number    = Number
+#_.Rational  = Rational
+#_.Integer   = Integer
+#del _
 
-import sympify as _
-_.Integer   = Integer
-_.Real      = Real
-del _
+#import sympify as _
+#_.Integer   = Integer
+#_.Real      = Real
+#del _
 
 # ----
 

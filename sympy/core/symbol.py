@@ -284,8 +284,8 @@ def var(*names, **kwargs):
         del frame
 
 # /cyclic/
-import basic as _
-_.Symbol    = Symbol
-_.Wild      = Wild
-_.Temporary = Temporary
-del _
+#import basic as _
+#_.Symbol    = Symbol
+#_.Wild      = Wild
+#_.Temporary = Temporary
+#del _

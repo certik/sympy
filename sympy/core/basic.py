@@ -2358,13 +2358,13 @@ class ClassesRegistry:
 C = ClassesRegistry()
 
 # XXX this is ugly, but needed for Memoizer('str', ...) to work
-import cache
-cache.C = C
-del cache
+#import cache
+#cache.C = C
+#del cache
 
 # /cyclic/
-import sympify as _
-_.Basic     = Basic
-_.BasicType = BasicType
-_.S         = S
-del _
+#import sympify as _
+#_.Basic     = Basic
+#_.BasicType = BasicType
+#_.S         = S
+#del _

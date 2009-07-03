@@ -29,7 +29,7 @@ Example:
     (x,)
 """
 
-from basic import Basic, Atom, S, C, sympify
+from basic import Basic, Atom, S, C
 from basic import BasicType, BasicMeta
 from operations import AssocOp
 from cache import cacheit

@@ -1,4 +1,4 @@
-from basic import Basic, S, sympify
+from basic import Basic, S
 from operations import AssocOp
 from cache import cacheit
 

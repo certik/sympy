@@ -1,5 +1,4 @@
 
-from basic import Basic, S, C
 from sympify import _sympify
 from cache import cacheit
 
@@ -764,3 +763,4 @@ class Pow(Basic):
 #_.Pow =     Pow
 #del _
 
+from basic import Basic, S, C

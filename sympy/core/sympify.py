@@ -295,3 +295,4 @@ def _sympifyit(arg, retval=None):
 
     return deco
 
+from numbers import Integer

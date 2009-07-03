@@ -1,5 +1,5 @@
 
-from basic import Basic, Atom, S, C, sympify
+from basic import Atom
 from cache import cacheit
 
 # from function import Function, WildFunction   /cyclic/
@@ -289,3 +289,5 @@ def var(*names, **kwargs):
 #_.Wild      = Wild
 #_.Temporary = Temporary
 #del _
+
+from basic import Basic, Atom, S, C, sympify

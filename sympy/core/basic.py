@@ -2,8 +2,8 @@
 
 import sympy.mpmath as mpmath
 
+from sympify import _sympifyit
 from assumptions import AssumeMeths, make__get_assumption
-from sympify import _sympify, _sympifyit, sympify, SympifyError
 from cache import cacheit, Memoizer, MemoizerArg
 
 # from numbers  import Number, Integer, Rational, Real /cyclic/
@@ -2368,3 +2368,6 @@ C = ClassesRegistry()
 #_.BasicType = BasicType
 #_.S         = S
 #del _
+
+from symbol import Wild
+from sympify import _sympify, _sympifyit, sympify, SympifyError

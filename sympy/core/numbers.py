@@ -6,7 +6,6 @@ import decimal
 
 rnd = mlib.round_nearest
 
-from basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg
 from sympify import _sympify, SympifyError, _sympifyit
 from power import integer_nthroot
 
@@ -1613,3 +1612,4 @@ Basic.singleton['GoldenRatio'] = GoldenRatio
 Basic.singleton['EulerGamma'] = EulerGamma
 Basic.singleton['Catalan'] = Catalan
 
+from basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg

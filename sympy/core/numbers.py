@@ -1,3 +1,6 @@
+from basic import Atom, SingletonMeta, S, Basic
+from decorators import _sympifyit
+from cache import Memoizer, MemoizerArg
 import sympy.mpmath as mpmath
 import sympy.mpmath.libmpf as mlib
 import sympy.mpmath.libmpc as mlibc
@@ -6,7 +9,6 @@ import decimal
 
 rnd = mlib.round_nearest
 
-from sympify import _sympify, SympifyError, _sympifyit
 from power import integer_nthroot
 
 # from mul import Mul   /cyclic/
@@ -1613,3 +1615,4 @@ Basic.singleton['EulerGamma'] = EulerGamma
 Basic.singleton['Catalan'] = Catalan
 
 from basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg
+from sympify import _sympify, SympifyError

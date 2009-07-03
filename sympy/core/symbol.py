@@ -290,4 +290,5 @@ def var(*names, **kwargs):
 #_.Temporary = Temporary
 #del _
 
-from basic import Basic, Atom, S, C, sympify
+from basic import Basic, Atom, S, C
+from sympify import sympify

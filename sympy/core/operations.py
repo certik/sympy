@@ -66,6 +66,7 @@ class AssocOp(Basic):
 
     @classmethod
     def identity(cls):
+        from mul import Mul
         if cls is Mul: return S.One
         if cls is Add: return S.Zero
         if cls is C.Composition:
@@ -148,3 +149,4 @@ class AssocOp(Basic):
         return r
 
     _eval_evalf = Basic._seq_eval_evalf
+

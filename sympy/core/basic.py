@@ -2,7 +2,7 @@
 
 import sympy.mpmath as mpmath
 
-from sympify import _sympifyit
+from decorators import _sympifyit
 from assumptions import AssumeMeths, make__get_assumption
 from cache import cacheit, Memoizer, MemoizerArg
 
@@ -2330,7 +2330,6 @@ class SingletonFactory:
 S = SingletonFactory()
 
 # S(...) = sympify(...)
-S.__call__ = sympify
 
 class ClassesRegistry:
     """Namespace for SymPy classes
@@ -2370,4 +2369,6 @@ C = ClassesRegistry()
 #del _
 
 from symbol import Wild
-from sympify import _sympify, _sympifyit, sympify, SympifyError
+from sympify import _sympify, sympify, SympifyError
+S.__call__ = sympify
+from mul import Mul

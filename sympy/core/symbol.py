@@ -292,3 +292,4 @@ def var(*names, **kwargs):
 
 from basic import Basic, Atom, S, C
 from sympify import sympify
+from function import Function

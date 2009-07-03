@@ -107,6 +107,7 @@ class AssocOp(Basic):
         # eliminate exact part from pattern: (2+a+w1+w2).matches(expr) -> (w1+w2).matches(expr-a-2)
         wild_part = []
         exact_part = []
+        from function import WildFunction
         for p in pattern.args:
             if p.atoms(Wild, WildFunction):
                 # not all Wild should stay Wilds, for example:
@@ -150,3 +151,4 @@ class AssocOp(Basic):
         return r
 
     _eval_evalf = Basic._seq_eval_evalf
+

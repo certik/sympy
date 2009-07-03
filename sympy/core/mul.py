@@ -795,3 +795,5 @@ class Mul(AssocOp):
 from power import Pow
 from numbers import Real
 from function import FunctionClass
+from sympify import sympify
+from add import Add

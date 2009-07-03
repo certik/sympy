@@ -2374,3 +2374,5 @@ S.__call__ = sympify
 from mul import Mul
 from power import Pow
 from add import Add
+from relational import Inequality, StrictInequality
+from function import FunctionClass, Derivative

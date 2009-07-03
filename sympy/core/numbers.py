@@ -9,7 +9,6 @@ import decimal
 
 rnd = mlib.round_nearest
 
-from power import integer_nthroot
 
 # from mul import Mul   /cyclic/
 # from power import Pow /cyclic/
@@ -1617,4 +1616,4 @@ Basic.singleton['Catalan'] = Catalan
 from basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg
 from sympify import _sympify, SympifyError
 from function import FunctionClass
-from power import Pow
+from power import Pow, integer_nthroot

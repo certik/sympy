@@ -765,3 +765,4 @@ class Pow(Basic):
 #del _
 
 from basic import Basic, S, C
+from add import Add

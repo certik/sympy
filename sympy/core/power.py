@@ -766,3 +766,4 @@ class Pow(Basic):
 
 from basic import Basic, S, C
 from add import Add
+from numbers import Integer

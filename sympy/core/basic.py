@@ -2368,7 +2368,7 @@ C = ClassesRegistry()
 #_.S         = S
 #del _
 
-from symbol import Wild
+from symbol import Wild, Symbol
 from sympify import _sympify, sympify, SympifyError
 S.__call__ = sympify
 from mul import Mul

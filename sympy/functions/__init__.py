@@ -6,9 +6,9 @@ Special - gamma, zeta,spherical harmonics...
 """
 from sympy.core.basic import Basic
 
-import combinatorial
-import elementary
-import special
+from . import combinatorial
+from . import elementary
+from . import special
 
 from special.polynomials import legendre, assoc_legendre, hermite, chebyshevt, chebyshevu, \
         chebyshevu_root, chebyshevt_root

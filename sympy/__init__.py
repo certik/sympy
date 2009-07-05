@@ -22,7 +22,7 @@ SYMPY_DEBUG = __sympy_debug()
 import symbol as stdlib_symbol
 from sympy.core import *
 
-from polys import *
+from .polys import *
 from series import *
 from functions import *
 from ntheory import *

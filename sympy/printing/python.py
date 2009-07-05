@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sympy
-from reprlib import ReprPrinter
+from .repr import ReprPrinter
 from .str import StrPrinter
 
 # A list of classes that should be printed using StrPrinter

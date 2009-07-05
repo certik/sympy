@@ -300,7 +300,7 @@ class Mul(AssocOp):
 
 
         # order commutative part canonically
-        c_part.sort(Basic.compare)
+        #c_part.sort(Basic.compare)
 
         # current code expects coeff to be always in slot-0
         if coeff is not S.One:

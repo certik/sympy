@@ -574,7 +574,7 @@ class PyTestReporter(Reporter):
         self.write_center("test process starts")
         executable = sys.executable
         v = sys.version_info
-        python_version = "%s.%s.%s-%s-%s" % v
+        python_version = "%s.%s.%s-%s-%s" % tuple(v)
         self.write("executable:   %s  (%s)\n\n" % (executable, python_version))
         self._t_start = clock()
 

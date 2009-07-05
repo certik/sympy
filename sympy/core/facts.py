@@ -721,7 +721,7 @@ class FactRules:
             print '\n --- ALPHA-CHAINS (I) ---'
 
             for a,b in impl_a.iteritems():
-                print '%s\t->  α(%2i):%s' % (a,len(b),b)
+                print '%s\t->  a(%2i):%s' % (a,len(b),b)
 
             print '   - - - - -   '
             print
@@ -730,7 +730,7 @@ class FactRules:
             print '\n --- ALPHA-CHAINS (II) ---'
 
             for a,(b,bb) in impl_ab.iteritems():
-                print '%s\t->  α(%2i):%s  β(%s)' % (a,len(b),b, ' '.join(str(x) for x in bb))
+                print '%s\t->  a(%2i):%s  b(%s)' % (a,len(b),b, ' '.join(str(x) for x in bb))
 
             print '   - - - - -   '
             print

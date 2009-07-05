@@ -14,7 +14,8 @@ def test_ode1():
     x1' =  x2
     x2' = -x1
     """
-    def derivs((x1, x2), t):
+    def derivs(xxx_todo_changeme, t):
+        (x1, x2) = xxx_todo_changeme
         return x2, -x1
 
     for solver in solvers:
@@ -36,7 +37,8 @@ def test_ode2():
     i.e. x = exp(x)
 
     """
-    def derivs((x), t):
+    def derivs(xxx_todo_changeme1, t):
+        (x) = xxx_todo_changeme1
         return x
 
     for solver in solvers:

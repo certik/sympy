@@ -80,7 +80,7 @@ __version__ = '$Id: __init__.py 1512 2007-12-11 06:46:10Z Alex.Holkner $'
 import ctypes
 import sys
 import time
-import StringIO
+import io
 
 from pyglet import event
 
@@ -499,7 +499,7 @@ class StaticSource(Source):
 
         # Naive implementation.  Driver-specific implementations may override
         # to load static audio data into device (or at least driver) memory. 
-        data = StringIO.StringIO()
+        data = io.StringIO()
         while True:
             audio_data = source._get_audio_data(buffer_size)
             if not audio_data:
@@ -520,7 +520,7 @@ class StaticMemorySource(StaticSource):
     def __init__(self, data, audio_format):
         '''Construct a memory source over the given data buffer.
         '''
-        self._file = StringIO.StringIO(data)
+        self._file = io.StringIO(data)
         self._max_offset = len(data)
         self.audio_format = audio_format
         self._duration = len(data) / float(audio_format.bytes_per_second)
@@ -774,7 +774,7 @@ class Player(event.EventDispatcher):
         else:
             self._last_system_time = time.time()
         
-    def next(self):
+    def __next__(self):
         '''Move immediately to the next queued source.
 
         There may be a gap in playback while the audio buffer is refilled.

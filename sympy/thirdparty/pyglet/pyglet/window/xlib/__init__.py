@@ -282,7 +282,7 @@ class XlibGLConfig10(XlibGLConfig):
         if not self._visual_info:
             raise gl.ContextException('No conforming visual exists')
 
-        for name, attr in self.attribute_ids.items():
+        for name, attr in list(self.attribute_ids.items()):
             value = c_int()
             result = glx.glXGetConfig(self._display,
                 self._visual_info, attr, byref(value))
@@ -332,7 +332,7 @@ class XlibGLConfig13(XlibGLConfig):
         self.screen = screen
         self._display = screen.display._display
         self._fbconfig = fbconfig
-        for name, attr in self.attribute_ids.items():
+        for name, attr in list(self.attribute_ids.items()):
             value = c_int()
             result = glx.glXGetFBConfigAttrib(
                 self._display, self._fbconfig, attr, byref(value))
@@ -918,7 +918,7 @@ class XlibWindow(BaseWindow):
         atom = xlib.XInternAtom(self._x_display, name, False)
         if not atom:
             raise XlibException('Undefined atom "%s"' % name)
-        assert type(value) in (str, unicode)
+        assert type(value) in (str, str)
         property = xlib.XTextProperty()
         if _have_utf8 and allow_utf8:
             buf = create_string_buffer(value.encode('utf8'))
@@ -1044,7 +1044,7 @@ class XlibWindow(BaseWindow):
         # pyglet.self.key keysymbols are identical to X11 keysymbols, no
         # need to map the keysymbol.
         symbol = xlib.XKeycodeToKeysym(self._x_display, event.xkey.keycode, 0)
-        if symbol not in key._key_names.keys():
+        if symbol not in list(key._key_names.keys()):
             symbol = key.user_key(event.xkey.keycode)
         return symbol
 

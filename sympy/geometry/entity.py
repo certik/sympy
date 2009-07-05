@@ -97,7 +97,7 @@ class GeometryEntity(tuple):
         if remove_duplicates:
             temp = set(ret)
             ind, n = 0, len(ret)
-            for counter in xrange(0, n):
+            for counter in range(0, n):
                 x = ret[ind]
                 if x in temp:
                     temp.remove(x)

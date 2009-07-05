@@ -6,8 +6,8 @@ from sympy.core.numbers import igcd
 from sympy.core.power import integer_nthroot
 import random
 import math
-from primetest import isprime
-from generate import sieve, prime, primerange
+from .primetest import isprime
+from .generate import sieve, prime, primerange
 
 small_trailing = [i and max(int(not i % 2**j) and j for j in range(1,8)) \
     for i in range(256)]
@@ -199,7 +199,7 @@ def _trial(factors, n, candidates=None, verbose=False, force_finalize=False):
         if m:
             found_something = True
             if verbose:
-                print "-- %i (multiplicity %i)" % (k, m)
+                print("-- %i (multiplicity %i)" % (k, m))
             n //= (k**m)
             factors[k] = m
             if n == 1:
@@ -213,7 +213,7 @@ def _check_termination(factors, n, verbose=False):
     the factorization and raises ``StopIteration``.
     """
     if verbose:
-        print "Checking if remaining factor terminates the factorization"
+        print("Checking if remaining factor terminates the factorization")
     n = int(n)
     if n == 1:
         raise StopIteration
@@ -221,13 +221,13 @@ def _check_termination(factors, n, verbose=False):
     if p:
         base, exp = p
         if verbose:
-            print "-- Remaining factor is a perfect power: %i ** %i" % (base, exp)
-        for b, e in factorint(base).iteritems():
+            print("-- Remaining factor is a perfect power: %i ** %i" % (base, exp))
+        for b, e in factorint(base).items():
             factors[b] = exp*e
         raise StopIteration
     if isprime(n):
         if verbose:
-            print "Remaining factor", n, "is prime"
+            print("Remaining factor", n, "is prime")
         factors[n] = 1
         raise StopIteration
 
@@ -336,7 +336,7 @@ def factorint(n, limit=None, use_trial=True, use_rho=True, use_pm1=True,
     found_trial_previous = True
 
     if verbose and n < 1e300:
-        print "Factoring", n
+        print("Factoring", n)
 
     while 1:
         try:
@@ -345,7 +345,7 @@ def factorint(n, limit=None, use_trial=True, use_rho=True, use_pm1=True,
             # Trial division
             if use_trial:
                 if verbose:
-                    print trial_msg % (low, high_)
+                    print(trial_msg % (low, high_))
                 ps = sieve.primerange(low, high_)
                 n, found_trial = _trial(factors, n, ps, verbose)
             else:
@@ -365,7 +365,7 @@ def factorint(n, limit=None, use_trial=True, use_rho=True, use_pm1=True,
                 if use_pm1 and not found_trial:
                     B = int(high_**0.7)
                     if verbose:
-                        print (pm1_msg % (high_, high_))
+                        print((pm1_msg % (high_, high_)))
                     ps = factorint(pollard_pm1(n, B=high_, seed=high_) or 1, \
                         limit=limit, verbose=verbose)
                     n, found_pm1 = _trial(factors, n, ps, verbose)
@@ -376,7 +376,7 @@ def factorint(n, limit=None, use_trial=True, use_rho=True, use_pm1=True,
                 if use_rho and not found_trial:
                     max_steps = int(high_**0.7)
                     if verbose:
-                        print (rho_msg % (1, max_steps, high_))
+                        print((rho_msg % (1, max_steps, high_)))
                     ps = factorint(pollard_rho(n, retries=1, max_steps=max_steps, \
                         seed=high_) or 1, limit=limit, verbose=verbose)
                     n, found_rho = _trial(factors, n, ps, verbose)
@@ -441,7 +441,7 @@ def divisors(n):
     if isprime(n):
         return [1, n]
     s = []
-    for i in xrange(1, n+1):
+    for i in range(1, n+1):
         if n % i == 0:
             s += [i]
     return s
@@ -460,6 +460,6 @@ def totient(n):
         raise ValueError("n must be a positive integer")
     factors = factorint(n)
     t = 1
-    for p, k in factors.iteritems():
+    for p, k in factors.items():
         t *= (p-1) * p**(k-1)
     return t

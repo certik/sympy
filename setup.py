@@ -36,8 +36,8 @@ import sympy
 
 # Make sure I have the right Python version.
 if sys.version_info[1] < 4:
-    print "Sympy requires Python 2.4 or newer. Python %d.%d detected" % \
-          sys.version_info[:2]
+    print("Sympy requires Python 2.4 or newer. Python %d.%d detected" % \
+          sys.version_info[:2])
     sys.exit(-1)
 
 # Check that this list is uptodate against the result of the command (you can
@@ -138,10 +138,10 @@ class test_sympy_core(Command):
         try:
             import py
         except ImportError:
-            print """In order to run the tests, you need codespeak's py.lib
+            print("""In order to run the tests, you need codespeak's py.lib
             web page: http://codespeak.net/py/dist/
             If you are on debian systems, the package is named python-codespeak-lib
-            """
+            """)
             sys.exit(-1)
         py.test.cmdline.main(args=["sympy/core/tests"])
 

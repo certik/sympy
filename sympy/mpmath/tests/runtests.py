@@ -108,19 +108,19 @@ def testit(importdir='', testdir=''):
         modules.sort()
         tstart = clock()
         for priority, name, module in modules:
-            print name
+            print(name)
             for f in sorted(module.__dict__.keys()):
                 if f.startswith('test_'):
                     if coverage and ('numpy' in f):
                         continue
-                    print "   ", f[5:].ljust(25),
+                    print("   ", f[5:].ljust(25), end=' ')
                     t1 = clock()
                     module.__dict__[f]()
                     t2 = clock()
-                    print "ok", "      ", ("%.7f" % (t2-t1)), "s"
+                    print("ok", "      ", ("%.7f" % (t2-t1)), "s")
         tend = clock()
-        print
-        print "finished tests in", ("%.2f" % (tend-tstart)), "seconds"
+        print()
+        print("finished tests in", ("%.2f" % (tend-tstart)), "seconds")
         # clean sys.path
         if importdir:
             sys.path.remove(importdir)

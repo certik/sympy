@@ -24,7 +24,7 @@ class Dij(Function):
 
     @classmethod
     def eval(cls, i, j=0):
-        i, j = map(sympify, (i, j))
+        i, j = list(map(sympify, (i, j)))
         if i == j:
             return S.One
         elif i.is_number and j.is_number:
@@ -43,7 +43,7 @@ class Eijk(Function):
 
     @classmethod
     def eval(cls, i, j, k):
-        i, j, k = map(sympify, (i, j, k))
+        i, j, k = list(map(sympify, (i, j, k)))
         if (i,j,k) in [(1,2,3), (2,3,1), (3,1,2)]:
             return S.One
         elif (i,j,k) in [(1,3,2), (3,2,1), (2,1,3)]:

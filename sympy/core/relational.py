@@ -1,8 +1,8 @@
 
-from basic import Basic, C
-from sympify import _sympify
+from .basic import Basic, C
+from .sympify import _sympify
 
-from numbers import Number
+from .numbers import Number
 
 def Rel(a, b, op):
     """
@@ -144,7 +144,7 @@ class Equality(Relational):
 
     __slots__ = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.lhs.compare(self.rhs)==0
 
 class Unequality(Relational):
@@ -153,7 +153,7 @@ class Unequality(Relational):
 
     __slots__ = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.lhs.compare(self.rhs)!=0
 
 class StrictInequality(Relational):
@@ -162,7 +162,7 @@ class StrictInequality(Relational):
 
     __slots__ = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         if self.lhs.is_comparable and self.rhs.is_comparable:
             if self.lhs.is_Number and self.rhs.is_Number:
                 return self.lhs < self.rhs
@@ -175,7 +175,7 @@ class Inequality(Relational):
 
     __slots__ = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         if self.lhs.is_comparable and self.rhs.is_comparable:
             if self.lhs.is_Number and self.rhs.is_Number:
                 return self.lhs <= self.rhs

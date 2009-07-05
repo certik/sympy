@@ -1,11 +1,11 @@
 
-from basic import Basic
-from sympify import _sympify
-from cache import cacheit
+from .basic import Basic
+from .sympify import _sympify
+from .cache import cacheit
 
 from sympy import mpmath
 
-from symbol import Symbol, Wild, Temporary
+from .symbol import Symbol, Wild, Temporary
 # from numbers import Number, Rational, Integer     /cyclic/
 # from add import Add   /cyclic/
 # from mul import Mul   /cyclic/
@@ -524,7 +524,7 @@ class Pow(Basic):
     def matches(pattern, expr, repl_dict={}, evaluate=False):
         if evaluate:
             pat = pattern
-            for old,new in repl_dict.items():
+            for old,new in list(repl_dict.items()):
                 pat = pat.subs(old, new)
             if pat!=pattern:
                 return pat.matches(expr, repl_dict)
@@ -726,10 +726,10 @@ class Pow(Basic):
                 except TypeError:
                     #well, the n is something more complicated (like 1+log(2))
                     n = int(n.evalf()) + 1
-                assert n>=0,`n`
+                assert n>=0,repr(n)
                 l = []
                 g = None
-                for i in xrange(n+2):
+                for i in range(n+2):
                     g = self.taylor_term(i, z, g)
                     g = g.nseries(x, x0, n)
                     l.append(g)
@@ -764,7 +764,7 @@ class Pow(Basic):
 #_.Pow =     Pow
 #del _
 
-from basic import Basic, S, C
-from add import Add
-from numbers import Integer
-from mul import Mul
+from .basic import Basic, S, C
+from .add import Add
+from .numbers import Integer
+from .mul import Mul

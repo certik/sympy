@@ -7,11 +7,11 @@ try:
         raise ImportError("ctypes is required for plotting.\n'easy_install ctypes' or visit http://sourceforge.net/projects/ctypes/")
 
     def Plot(*args, **kwargs):
-        import plot
+        from . import plot
         return plot.Plot(*args, **kwargs)
 
-except Exception, e:
+except Exception as e:
     def Plot(*args, **kwargs):
         raise e
 
-from textplot import textplot
+from .textplot import textplot

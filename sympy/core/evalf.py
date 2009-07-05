@@ -22,9 +22,9 @@ from sympy.mpmath.gammazeta import mpf_bernoulli
 
 import math
 
-from basic import Basic, C, S
-from function import Function
-from sympify import sympify
+from .basic import Basic, C, S
+from .function import Function
+from .sympify import sympify
 
 LG10 = math.log(10,2)
 
@@ -299,7 +299,7 @@ def evalf_add(v, prec, options):
             accuracy = complex_accuracy((re, im, re_accuracy, im_accuracy))
             if accuracy >= target_prec:
                 if options.get('verbose'):
-                    print "ADD: wanted", target_prec, "accurate bits, got", re_accuracy, im_accuracy
+                    print("ADD: wanted", target_prec, "accurate bits, got", re_accuracy, im_accuracy)
                 return re, im, re_accuracy, im_accuracy
             else:
                 diff = target_prec - accuracy
@@ -309,7 +309,7 @@ def evalf_add(v, prec, options):
                 prec = prec + max(10+2**i, diff)
                 options['maxprec'] = min(oldmaxprec, 2*prec)
                 if options.get('verbose'):
-                    print "ADD: restarting with prec", prec
+                    print("ADD: restarting with prec", prec)
             i += 1
     finally:
         options['maxprec'] = oldmaxprec
@@ -317,7 +317,11 @@ def evalf_add(v, prec, options):
 # Helper for complex multiplication
 # XXX: should be able to multiply directly, and use complex_accuracy
 # to obtain the final accuracy
-def cmul((a, aacc), (b, bacc), (c, cacc), (d, dacc), prec, target_prec):
+def cmul(xxx_todo_changeme, xxx_todo_changeme1, xxx_todo_changeme2, xxx_todo_changeme3, prec, target_prec):
+    (a, aacc) = xxx_todo_changeme
+    (b, bacc) = xxx_todo_changeme1
+    (c, cacc) = xxx_todo_changeme2
+    (d, dacc) = xxx_todo_changeme3
     A, Aacc = mpf_mul(a,c,prec), min(aacc, cacc)
     B, Bacc = mpf_mul(mpf_neg(b),d,prec), min(bacc, dacc)
     C, Cacc = mpf_mul(a,d,prec), min(aacc, dacc)
@@ -380,7 +384,7 @@ def evalf_mul(v, prec, options):
             re, im, re_acc, im_acc = cmul((re, re_acc), (im,im_acc),
                 (wre,wre_acc), (wim,wim_acc), prec, target_prec)
         if options.get('verbose'):
-            print "MUL: obtained accuracy", re_acc, im_acc, "expected", target_prec
+            print("MUL: obtained accuracy", re_acc, im_acc, "expected", target_prec)
         # multiply by i
         if direction & 1:
             return mpf_neg(im), re, re_acc, im_acc
@@ -544,8 +548,8 @@ def evalf_trig(v, prec, options):
         accuracy = (xprec - xsize) - gap
         if accuracy < prec:
             if options.get('verbose'):
-                print "SIN/COS", accuracy, "wanted", prec, "gap", gap
-                print to_str(y,10)
+                print("SIN/COS", accuracy, "wanted", prec, "gap", gap)
+                print(to_str(y,10))
             if xprec > options.get('maxprec', DEFAULT_MAXPREC):
                 return y, None, accuracy, None
             xprec += gap
@@ -958,10 +962,10 @@ def evalf(x, prec, options):
         except AttributeError:
             raise NotImplementedError
     if options.get("verbose"):
-        print "### input", x
-        print "### output", to_str(r[0] or fzero, 50)
+        print("### input", x)
+        print("### output", to_str(r[0] or fzero, 50))
         #print "### raw", r[0], r[2]
-        print
+        print()
     if options.get("chop"):
         r = chop_parts(r, prec)
     if options.get("strict"):

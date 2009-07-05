@@ -881,9 +881,9 @@ def test_subs():
     coeffs = [ Symbol('a' + str(i)) for i in [3,2,1,0] ]
     values = [ 4, 0, 0, 1 ]
 
-    f = Poly(zip(coeffs, [3,2,1,0]), x)
+    f = Poly(list(zip(coeffs, [3,2,1,0])), x)
 
-    assert f.subs(dict(zip(coeffs, values))) == Poly(4*x**3+1, x)
+    assert f.subs(dict(list(zip(coeffs, values)))) == Poly(4*x**3+1, x)
 
 def test_unify():
     p = Poly(x**2+x*y, x, y)
@@ -1182,8 +1182,8 @@ def test_roots2():
     a, b, c, d, x = symbols("a b c d x")
     f1 = x**2*c + (a/b) + x*c*d - a
     f2 = x**2*(a + b*(c-d)*a) + x*a*b*c/(b*d-d) + (a*d-c/d)
-    assert roots(f1, x).values() == [1, 1]
-    assert roots(f2, x).values() == [1, 1]
+    assert list(roots(f1, x).values()) == [1, 1]
+    assert list(roots(f2, x).values()) == [1, 1]
 
 def test_root_factors():
     assert poly_root_factors(1, x) == [Poly(1, x)]

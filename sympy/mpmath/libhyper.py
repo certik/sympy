@@ -8,11 +8,11 @@ cases are also provided.
 import operator
 import math
 
-from settings import (\
+from .settings import (\
     MP_ZERO, MP_ONE, round_fast, round_nearest
 )
 
-from libmpf import (\
+from .libmpf import (\
     ComplexResult,
     negative_rnd, bitcount, to_fixed, from_man_exp, to_int,
     fzero, fone, fnone, ftwo, finf, fninf, fnan,
@@ -22,12 +22,12 @@ from libmpf import (\
     sqrt_fixed, mpf_sqrt, mpf_rdiv_int
 )
 
-from libelefun import (\
+from .libelefun import (\
     mpf_pi, mpf_exp, mpf_log, pi_fixed, cos_sin, mpf_cos, mpf_sin,
     mpf_sqrt, agm_fixed,
 )
 
-from libmpc import (\
+from .libmpc import (\
     mpc_one, mpc_sub, mpc_mul_mpf, mpc_mul, mpc_neg, complex_int_pow,
     mpc_div, mpc_add_mpf, mpc_sub_mpf,
     mpc_log, mpc_add, mpc_pos, mpc_shift,
@@ -35,7 +35,8 @@ from libmpc import (\
     mpc_mpf_div, mpc_square,
 )
 
-from gammazeta import int_fac, mpf_euler
+from .gammazeta import int_fac, mpf_euler
+from functools import reduce
 
 #-----------------------------------------------------------------------#
 #                                                                       #
@@ -108,8 +109,8 @@ def hypsum_internal(ar, af, ac, br, bf, bc, xre, xim, prec, rnd):
     if have_float:
         len_af = len(af)
         len_bf = len(bf)
-        range_af = range(len_af)
-        range_bf = range(len_bf)
+        range_af = list(list(range(len_af)))
+        range_bf = list(list(range(len_bf)))
         for i in range_af: af[i] = to_fixed(af[i], wp)
         for i in range_bf: bf[i] = to_fixed(bf[i], wp)
         shift += len_af
@@ -118,8 +119,8 @@ def hypsum_internal(ar, af, ac, br, bf, bc, xre, xim, prec, rnd):
     if have_complex:
         len_ac = len(ac)
         len_bc = len(bc)
-        range_ac = range(len_ac)
-        range_bc = range(len_bc)
+        range_ac = list(list(range(len_ac)))
+        range_bc = list(list(range(len_bc)))
         for i in range_ac: ac[i] = [to_fixed(ac[i][0], wp), to_fixed(ac[i][1], wp)]
         for i in range_bc: bc[i] = [to_fixed(bc[i][0], wp), to_fixed(bc[i][1], wp)]
         shift += len_ac
@@ -212,7 +213,8 @@ def hypsum_internal(ar, af, ac, br, bf, bc, xre, xim, prec, rnd):
 #   about 2x faster at low precision                                        #
 #---------------------------------------------------------------------------#
 
-def mpf_hyp0f1_rat((bp, bq), x, prec, rnd):
+def mpf_hyp0f1_rat(xxx_todo_changeme, x, prec, rnd):
+    (bp, bq) = xxx_todo_changeme
     wp = prec + 25
     x = to_fixed(x, wp)
     s = p = MP_ONE << wp
@@ -227,7 +229,8 @@ def mpf_hyp0f1_rat((bp, bq), x, prec, rnd):
         bp += bq
     return from_man_exp(s, -wp, prec, rnd)
 
-def mpc_hyp0f1_rat((bp, bq), z, prec, rnd):
+def mpc_hyp0f1_rat(xxx_todo_changeme1, z, prec, rnd):
+    (bp, bq) = xxx_todo_changeme1
     wp = prec + 25
     zre, zim = z
     zre = to_fixed(zre, wp)
@@ -251,7 +254,9 @@ def mpc_hyp0f1_rat((bp, bq), z, prec, rnd):
     im = from_man_exp(sim, -wp, prec, rnd)
     return re, im
 
-def mpf_hyp1f1_rat((ap, aq), (bp, bq), x, prec, rnd):
+def mpf_hyp1f1_rat(xxx_todo_changeme2, xxx_todo_changeme3, x, prec, rnd):
+    (ap, aq) = xxx_todo_changeme2
+    (bp, bq) = xxx_todo_changeme3
     wp = prec + 25
     x = to_fixed(x, wp)
     s = p = MP_ONE << wp
@@ -266,7 +271,9 @@ def mpf_hyp1f1_rat((ap, aq), (bp, bq), x, prec, rnd):
         bp += bq
     return from_man_exp(s, -wp, prec, rnd)
 
-def mpc_hyp1f1_rat((ap, aq), (bp, bq), z, prec, rnd):
+def mpc_hyp1f1_rat(xxx_todo_changeme4, xxx_todo_changeme5, z, prec, rnd):
+    (ap, aq) = xxx_todo_changeme4
+    (bp, bq) = xxx_todo_changeme5
     wp = prec + 25
     zre, zim = z
     zre = to_fixed(zre, wp)
@@ -291,7 +298,10 @@ def mpc_hyp1f1_rat((ap, aq), (bp, bq), z, prec, rnd):
     im = from_man_exp(sim, -wp, prec, rnd)
     return re, im
 
-def mpf_hyp2f1_rat((ap, aq), (bp, bq), (cp, cq), x, prec, rnd):
+def mpf_hyp2f1_rat(xxx_todo_changeme6, xxx_todo_changeme7, xxx_todo_changeme8, x, prec, rnd):
+    (ap, aq) = xxx_todo_changeme6
+    (bp, bq) = xxx_todo_changeme7
+    (cp, cq) = xxx_todo_changeme8
     wp = prec + 25
     x = to_fixed(x, wp)
     s = p = MP_ONE << wp
@@ -307,7 +317,10 @@ def mpf_hyp2f1_rat((ap, aq), (bp, bq), (cp, cq), x, prec, rnd):
         cp += cq
     return from_man_exp(s, -wp, prec, rnd)
 
-def mpc_hyp2f1_rat((ap, aq), (bp, bq), (cp, cq), z, prec, rnd):
+def mpc_hyp2f1_rat(xxx_todo_changeme9, xxx_todo_changeme10, xxx_todo_changeme11, z, prec, rnd):
+    (ap, aq) = xxx_todo_changeme9
+    (bp, bq) = xxx_todo_changeme10
+    (cp, cq) = xxx_todo_changeme11
     wp = prec + 25
     zre, zim = z
     zre = to_fixed(zre, wp)

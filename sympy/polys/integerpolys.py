@@ -221,7 +221,7 @@ def zzX_zeros_of(f, k, d=0):
     if not k:
         return []
     else:
-        return [ zzX_zero(l) for i in xrange(k) ]
+        return [ zzX_zero(l) for i in range(k) ]
 
 def zzX_consts_of(f, c, k, d=0):
     """Returns a list of multivariate constants of f. """
@@ -233,7 +233,7 @@ def zzX_consts_of(f, c, k, d=0):
     if not k:
         return []
     else:
-        return [ zzX_const(l, c) for i in xrange(k) ]
+        return [ zzX_const(l, c) for i in range(k) ]
 
 def zzX_zero_p(f):
     """Returns True if f is zero in Z[X]. """
@@ -284,9 +284,9 @@ def zzx_from_dict(f):
     if not f:
         return []
 
-    n, h = max(f.iterkeys()), []
+    n, h = max(f.keys()), []
 
-    for k in xrange(n, -1, -1):
+    for k in range(n, -1, -1):
         h.append(INT_TYPE(int(f.get(k, 0))))
 
     return zzx_strip(h)
@@ -300,7 +300,7 @@ def zzX_from_dict(f, l):
 
     coeffs = {}
 
-    for monom, coeff in f.iteritems():
+    for monom, coeff in f.items():
         head, tail = monom[0], monom[1:]
 
         if len(tail) == 1:
@@ -311,9 +311,9 @@ def zzX_from_dict(f, l):
         else:
             coeffs[head] = { tail : INT_TYPE(int(coeff)) }
 
-    n, h = max(coeffs.iterkeys()), []
+    n, h = max(coeffs.keys()), []
 
-    for k in xrange(n, -1, -1):
+    for k in range(n, -1, -1):
         coeff = coeffs.get(k)
 
         if coeff is not None:
@@ -327,7 +327,7 @@ def zzx_to_dict(f):
     """Convert Z[x] polynomial to a dict. """
     n, result = zzx_degree(f), {}
 
-    for i in xrange(0, n+1):
+    for i in range(0, n+1):
         if f[n-i]:
             result[i] = f[n-i]
 
@@ -340,10 +340,10 @@ def zzX_to_dict(f):
 
     n, result = zzX_degree(f), {}
 
-    for i in xrange(0, n+1):
+    for i in range(0, n+1):
         h = zzX_to_dict(f[n-i])
 
-        for exp, coeff in h.iteritems():
+        for exp, coeff in h.items():
             if type(exp) is not tuple:
                 exp = (exp,)
 
@@ -353,14 +353,14 @@ def zzX_to_dict(f):
 
 def zzx_from_poly(f):
     """Convert Poly instance to a recursive dense polynomial in Z[x]. """
-    return zzx_from_dict(dict(zip([ m for (m,) in f.monoms ], f.coeffs)))
+    return zzx_from_dict(dict(list(zip([ m for (m,) in f.monoms ], f.coeffs))))
 
 def zzX_from_poly(f):
     """Convert Poly instance to a recursive dense polynomial in Z[X]. """
     if f.is_univariate:
         return zzx_from_poly(f)
     else:
-        return zzX_from_dict(dict(zip(f.monoms, f.coeffs)), len(f.symbols))
+        return zzX_from_dict(dict(list(zip(f.monoms, f.coeffs))), len(f.symbols))
 
 def zzx_to_poly(f, *symbols):
     """Convert recursive dense polynomial to a Poly in Z[x]. """
@@ -368,7 +368,7 @@ def zzx_to_poly(f, *symbols):
 
     terms = {}
 
-    for monom, coeff in zzx_to_dict(f).iteritems():
+    for monom, coeff in zzx_to_dict(f).items():
         terms[(monom,)] = Integer(int(coeff))
 
     return Poly(terms, *symbols)
@@ -379,7 +379,7 @@ def zzX_to_poly(f, *symbols):
 
     terms = {}
 
-    for monom, coeff in zzX_to_dict(f).iteritems():
+    for monom, coeff in zzX_to_dict(f).items():
         terms[monom] = Integer(int(coeff))
 
     return Poly(terms, *symbols)
@@ -397,7 +397,7 @@ def zzX_swap(f, i=1, j=2):
 
     F, H = zzX_to_dict(f), {}
 
-    for exp, coeff in F.iteritems():
+    for exp, coeff in F.items():
         H[exp[:i]    + (exp[j],) +
           exp[i+1:j] +
           (exp[i],)  + exp[j+1:]] = coeff
@@ -565,7 +565,7 @@ def zzX_compose_term(f, K):
         result, L = [g[0]], poly_level(g) - 1
 
         for coeff in g[1:]:
-            for i in xrange(1, K[l]):
+            for i in range(1, K[l]):
                 result.append(zzX_zero(L))
 
             result.append(coeff)
@@ -584,7 +584,7 @@ def zzx_reduce(f):
 
     g = INT_ZERO
 
-    for i in xrange(len(f)):
+    for i in range(len(f)):
         if not f[-i-1]:
             continue
 
@@ -613,12 +613,12 @@ def zzX_reduce(f):
 
         return g or 1
 
-    M = tuple(map(lambda *row: ilgcd(row), *F.keys()))
+    M = tuple(map(lambda *row: ilgcd(row), *list(F.keys())))
 
     if all([ b == 1 for b in M ]):
         return M, f
 
-    for m, coeff in F.iteritems():
+    for m, coeff in F.items():
         N = [ a // b for a, b in zip(m, M) ]
         H[tuple(N)] = coeff
 
@@ -634,7 +634,7 @@ def zzx_multi_reduce(*polys):
 
         g = INT_ZERO
 
-        for i in xrange(len(p)):
+        for i in range(len(p)):
             if not p[-i-1]:
                 continue
 
@@ -677,7 +677,7 @@ def zzX_multi_reduce(*polys):
         if zzX_zero_p(p):
             m = (0,)*l
         else:
-            m = map(lambda *row: ilgcd(row), *f.keys())
+            m = list(map(lambda *row: ilgcd(row), *list(f.keys())))
 
         F.append(f)
         M.append(m)
@@ -690,7 +690,7 @@ def zzX_multi_reduce(*polys):
     for f in F:
         h = {}
 
-        for m, coeff in f.iteritems():
+        for m, coeff in f.items():
             N = [ a // b for a, b in zip(m, M) ]
             h[tuple(N)] = coeff
 
@@ -821,10 +821,10 @@ def zzx_mul(f, g):
 
     h = []
 
-    for i in xrange(0, df+dg+1):
+    for i in range(0, df+dg+1):
         coeff = 0
 
-        for j in xrange(max(0, i-dg), min(df, i)+1):
+        for j in range(max(0, i-dg), min(df, i)+1):
             coeff += f[j]*g[i-j]
 
         h.append(coeff)
@@ -849,10 +849,10 @@ def zzX_mul(f, g):
 
     h, l = [], poly_level(f)-1
 
-    for i in xrange(0, df+dg+1):
+    for i in range(0, df+dg+1):
         coeff = zzX_zero(l)
 
-        for j in xrange(max(0, i-dg), min(df, i)+1):
+        for j in range(max(0, i-dg), min(df, i)+1):
             coeff = zzX_add(coeff, zzX_mul(f[j], g[i-j]))
 
         h.append(coeff)
@@ -863,7 +863,7 @@ def zzx_sqr(f):
     """Square polynomials in Z[x]. """
     df, h = zzx_degree(f), []
 
-    for i in xrange(0, 2*df+1):
+    for i in range(0, 2*df+1):
         coeff = INT_ZERO
 
         jmin = max(0, i-df)
@@ -873,7 +873,7 @@ def zzx_sqr(f):
 
         jmax = jmin + n // 2 - 1
 
-        for j in xrange(jmin, jmax+1):
+        for j in range(jmin, jmax+1):
             coeff += f[j]*f[i-j]
 
         coeff += coeff
@@ -899,7 +899,7 @@ def zzX_sqr(f):
 
     h = []
 
-    for i in xrange(0, 2*df+1):
+    for i in range(0, 2*df+1):
         coeff = zzX_zero(l)
 
         jmin = max(0, i-df)
@@ -909,7 +909,7 @@ def zzX_sqr(f):
 
         jmax = jmin + n // 2 - 1
 
-        for j in xrange(jmin, jmax+1):
+        for j in range(jmin, jmax+1):
             coeff = zzX_add(coeff, zzX_mul(f[j], f[i-j]))
 
         coeff = zzX_mul_const(coeff, 2)
@@ -1127,7 +1127,7 @@ def zzx_diff(f, m=1):
 
     deriv, c = [], INT_ONE
 
-    for i in xrange(0, m):
+    for i in range(0, m):
         c, n = c*n, n-1
 
     for coeff in f[:-m]:
@@ -1148,7 +1148,7 @@ def zzX_diff(f, m=1):
 
     deriv, c = [], INT_ONE
 
-    for i in xrange(0, m):
+    for i in range(0, m):
         c, n = c*n, n-1
 
     for coeff in f[:-m]:
@@ -1475,7 +1475,7 @@ def zzx_heu_gcd(f, g, **flags):
             2*min(f_norm // abs(poly_LC(f)),
                   g_norm // abs(poly_LC(g))) + 2)
 
-    for i in xrange(0, 6):
+    for i in range(0, 6):
         ff = zzx_eval(f, x)
         gg = zzx_eval(g, x)
 
@@ -1603,7 +1603,7 @@ def zzX_heu_gcd(f, g, **flags):
             2*min(f_norm // abs(zzX_zz_LC(f)),
                   g_norm // abs(zzX_zz_LC(g))) + 2)
 
-    for i in xrange(0, 6):
+    for i in range(0, 6):
         ff = zzX_eval(f, x)
         gg = zzX_eval(g, x)
 
@@ -1723,7 +1723,7 @@ def zzx_mod_gcd(f, g, **flags):
                 gg[p] = G
                 hh[p] = H
 
-            e = min([ gf_degree(h) for h in hh.itervalues() ])
+            e = min([ gf_degree(h) for h in hh.values() ])
 
             for p in set(primes):
                 if gf_degree(hh[p]) != e:
@@ -1769,7 +1769,7 @@ def zzx_mod_gcd(f, g, **flags):
 
         crt_mm, crt_e, crt_s = crt1(primes)
 
-        for i in xrange(0, e + 1):
+        for i in range(0, e + 1):
             C = [ b * poly_nth(hh[p], i) for p in primes ]
             c = crt2(primes, C, crt_mm, crt_e, crt_s, True)
 
@@ -1777,13 +1777,13 @@ def zzx_mod_gcd(f, g, **flags):
 
         H = zzx_strip(H)
 
-        for i in xrange(0, zzx_degree(f) - e + 1):
+        for i in range(0, zzx_degree(f) - e + 1):
             C = [ poly_nth(fff[p], i) for p in primes ]
             c = crt2(primes, C, crt_mm, crt_e, crt_s, True)
 
             F.insert(0, c)
 
-        for i in xrange(0, zzx_degree(g) - e + 1):
+        for i in range(0, zzx_degree(g) - e + 1):
             C = [ poly_nth(ggg[p], i) for p in primes ]
             c = crt2(primes, C, crt_mm, crt_e, crt_s, True)
 
@@ -1923,7 +1923,7 @@ def zzx_zassenhaus(f):
     gamma = int(ceil(2*log(C, 2)))
     prime_max = int(2*gamma*log(gamma))
 
-    for p in xrange(3, prime_max+1):
+    for p in range(3, prime_max+1):
         if not isprime(p) or b % p == 0:
             continue
 
@@ -1988,7 +1988,7 @@ def zzx_eisenstein(f):
 
     e_ff = factorint(e_fc)
 
-    for p in e_ff.iterkeys():
+    for p in e_ff.keys():
         if (lc % p) and (tc % p**2):
             return True
 
@@ -2065,7 +2065,9 @@ def zzx_factor(f, **flags):
 
         factors.append((h, k))
 
-    def compare((f_a, e_a), (f_b, e_b)):
+    def compare(xxx_todo_changeme, xxx_todo_changeme1):
+        (f_a, e_a) = xxx_todo_changeme
+        (f_b, e_b) = xxx_todo_changeme1
         i = len(f_a) - len(f_b)
 
         if not i:
@@ -2143,11 +2145,11 @@ def zzx_cyclotomic_factor(f):
     def decompose(n):
         H = [[1,-1]]
 
-        for p, k in factorint(n).iteritems():
+        for p, k in factorint(n).items():
             Q = [ zzx_quo(zzx_compose_term(h, p), h) for h in H ]
             H.extend(Q)
 
-            for i in xrange(1, k):
+            for i in range(1, k):
                 Q = [ zzx_compose_term(q, p) for q in Q ]
                 H.extend(Q)
 
@@ -2218,7 +2220,7 @@ def zzX_wang_lead_coeffs(f, V, cu, E, H, A):
         c = zzX_const(l, 1)
         d = poly_LC(h)*cu
 
-        for i in reversed(xrange(len(E))):
+        for i in reversed(range(len(E))):
             k, e, (v, _) = 0, E[i], V[i]
 
             while not (d % e):
@@ -2325,7 +2327,7 @@ def zzX_diophantine(F, c, A, d, p):
 
             T = zzx_diophantine(F, n-i, p)
 
-            for j, (s, t) in enumerate(zip(S, T)):
+            for j, (s, t) in enumerate(list(zip(S, T))):
                 t = zzx_mul_const(t, coeff)
                 S[j] = zzx_trunc(zzx_add(s, t), p)
     else:
@@ -2352,7 +2354,7 @@ def zzX_diophantine(F, c, A, d, p):
         m = zzX_value(n-1, [1, -a])
         M = zzX_const(n, 1)
 
-        for k in xrange(0, d):
+        for k in range(0, d):
             if zzX_zero_p(c):
                 break
 
@@ -2366,7 +2368,7 @@ def zzX_diophantine(F, c, A, d, p):
                 for i, t in enumerate(T):
                     T[i] = zzX_mul(zzX_lift(1, t), M)
 
-                for i, (s, t) in enumerate(zip(S, T)):
+                for i, (s, t) in enumerate(list(zip(S, T))):
                     S[i] = zzX_add(s, t)
 
                 for t, b in zip(T, B):
@@ -2390,12 +2392,12 @@ def zzX_wang_hensel_lifting(f, H, LC, A, p):
 
     d = max(zzX_degree_all(f)[1:])
 
-    for j, u, a in zip(xrange(2, n+1), U, A):
+    for j, u, a in zip(range(2, n+1), U, A):
         G = deepcopy(H)
 
         I, J = A[:j-2], A[j-1:]
 
-        for i, (h, lc) in enumerate(zip(H, LC)):
+        for i, (h, lc) in enumerate(list(zip(H, LC))):
             lc = zzX_zz_trunc(zzX_eval(lc, J), p)
             H[i] = [lc] + zzX_lift(1, h[1:])
 
@@ -2406,7 +2408,7 @@ def zzX_wang_hensel_lifting(f, H, LC, A, p):
 
         dj = zzX_degree_for(u, j)
 
-        for k in xrange(0, dj):
+        for k in range(0, dj):
             if zzX_zero_p(c):
                 break
 
@@ -2417,7 +2419,7 @@ def zzX_wang_hensel_lifting(f, H, LC, A, p):
                 C = zzX_quo_const(C, factorial(k+1))
                 T = zzX_diophantine(G, C, I, d, p)
 
-                for i, (h, t) in enumerate(zip(H, T)):
+                for i, (h, t) in enumerate(list(zip(H, T))):
                     h = zzX_add_mul(h, zzX_lift(1, t), M)
                     H[i] = zzX_zz_trunc(h, p)
 
@@ -2476,10 +2478,10 @@ def zzX_wang(f):
         configs = []
 
         while len(configs) < EEZ_NUM_OK:
-            for i in xrange(EEZ_NUM_TRY):
+            for i in range(EEZ_NUM_TRY):
                 A = []
 
-                for j in xrange(0, l-1):
+                for j in range(0, l-1):
                     A.append(randint(-mod, mod))
 
                 if tuple(A) not in bad_points:
@@ -2623,7 +2625,9 @@ def zzX_factor(f):
     for g, k in zzX_factor(G)[1]:
         factors.insert(0, ([g], k))
 
-    def compare((f_a, e_a), (f_b, e_b)):
+    def compare(xxx_todo_changeme2, xxx_todo_changeme3):
+        (f_a, e_a) = xxx_todo_changeme2
+        (f_b, e_b) = xxx_todo_changeme3
         i = len(f_a) - len(f_b)
 
         if not i:

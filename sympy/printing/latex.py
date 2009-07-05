@@ -3,7 +3,7 @@ A Printer which converts an expression into its LaTeX equivalent.
 """
 
 from sympy.core import S, C, Basic, Symbol
-from printer import Printer
+from .printer import Printer
 from sympy.simplify import fraction
 
 import sympy.mpmath.libmpf as mlib
@@ -576,7 +576,7 @@ class LatexPrinter(Printer):
     def _print_dict(self, expr):
         items = []
 
-        keys = expr.keys()
+        keys = list(expr.keys())
         keys.sort(Basic.compare_pretty)
         for key in keys:
             val = expr[key]
@@ -627,4 +627,4 @@ def latex(expr, profile=None, **kargs):
 
 def print_latex(expr):
     """Prints LaTeX representation of the given expression."""
-    print latex(expr)
+    print(latex(expr))

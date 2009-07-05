@@ -4,7 +4,7 @@
 from sympy import Symbol, Basic
 from sympy.utilities.iterables import postorder_traversal
 
-import cse_opts
+from . import cse_opts
 
 # (preprocessor, postprocessor) pairs which are commonly useful. They should
 # each take a sympy expression and return a possibly transformed expression.
@@ -146,7 +146,7 @@ def cse(exprs, symbols=None, optimizations=None):
     replacements = []
     reduced_exprs = list(exprs)
     for i, subtree in enumerate(to_eliminate):
-        sym = symbols.next()
+        sym = next(symbols)
         replacements.append((sym, subtree))
         # Make the substitution in all of the target expressions.
         for j, expr in enumerate(reduced_exprs):

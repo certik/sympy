@@ -1,7 +1,7 @@
 from sympy import symbols, raises
 from sympy.utilities.codegen import CCodeGen, Routine, InputArgument, Result, \
     codegen, CodeGenError
-from StringIO import StringIO
+from io import StringIO
 
 def get_string(dump_fn, routines, prefix="file"):
     """Wrapper for dump_fn. dump_fn writes its results to a stream object and
@@ -30,7 +30,7 @@ def test_empty_c_header():
 def test_simple_c_code():
     x,y,z = symbols('xyz')
     expr = (x+y)*z
-    routine = Routine("test", [InputArgument(symbol) for symbol in x,y,z], [Result(expr)])
+    routine = Routine("test", [InputArgument(symbol) for symbol in (x,y,z)], [Result(expr)])
     code_gen = CCodeGen()
     source = get_string(code_gen.dump_c, [routine])
     expected = (
@@ -45,7 +45,7 @@ def test_simple_c_code():
 def test_simple_c_header():
     x,y,z = symbols('xyz')
     expr = (x+y)*z
-    routine = Routine("test", [InputArgument(symbol) for symbol in x,y,z], [Result(expr)])
+    routine = Routine("test", [InputArgument(symbol) for symbol in (x,y,z)], [Result(expr)])
     code_gen = CCodeGen()
     source = get_string(code_gen.dump_h, [routine])
     expected = (
@@ -81,7 +81,7 @@ def test_multiple_results_c():
     expr2 = (x-y)*z
     routine = Routine(
         "test",
-        [InputArgument(symbol) for symbol in x,y,z],
+        [InputArgument(symbol) for symbol in (x,y,z)],
         [Result(expr1),Result(expr2)]
     )
     code_gen = CCodeGen()

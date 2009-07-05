@@ -12,14 +12,14 @@ from bisect import bisect
 #from random import getrandbits
 getrandbits = None
 
-from settings import (\
+from .settings import (\
     MP_BASE, MP_ZERO, MP_ONE, MP_TWO, MP_FIVE, MODE, STRICT, gmpy,
     round_floor, round_ceiling, round_down, round_up,
     round_nearest, round_fast,
     MP_BASE_TYPE, MODE
 )
 
-from libintmath import (
+from .libintmath import (
     giant_steps,
     trailtable, bctable, lshift, rshift, bitcount, trailing,
     sqrt_fixed, numeral, isqrt, isqrt_fast, sqrtrem,
@@ -222,8 +222,8 @@ def strict_normalize(sign, man, exp, bc, prec, rnd):
     """Additional checks on the components of an mpf. Enable tests by setting
        the environment variable MPMATH_STRICT to Y."""
     assert type(man) == MP_BASE_TYPE
-    assert type(bc) in (int, long)
-    assert type(exp) in (int, long)
+    assert type(bc) in (int, int)
+    assert type(exp) in (int, int)
     assert bc == bitcount(man)
     return _normalize(sign, man, exp, bc, prec, rnd)
 
@@ -231,8 +231,8 @@ def strict_normalize1(sign, man, exp, bc, prec, rnd):
     """Additional checks on the components of an mpf. Enable tests by setting
        the environment variable MPMATH_STRICT to Y."""
     assert type(man) == MP_BASE_TYPE
-    assert type(bc) in (int, long)
-    assert type(exp) in (int, long)
+    assert type(bc) in (int, int)
+    assert type(exp) in (int, int)
     assert bc == bitcount(man)
     assert (not man) or (man & 1)
     return _normalize1(sign, man, exp, bc, prec, rnd)
@@ -1065,7 +1065,7 @@ def to_digits_exp(s, dps):
     # TODO: account for precision when doing this
     exp_from_1 = exp + bc
     if abs(exp_from_1) > 3500:
-        from libelefun import mpf_ln2, mpf_ln10
+        from .libelefun import mpf_ln2, mpf_ln10
         # Set b = int(exp * log(2)/log(10))
         # If exp is huge, we must use high-precision arithmetic to
         # find the nearest power of ten

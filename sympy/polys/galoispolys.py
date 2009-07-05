@@ -83,9 +83,9 @@ def gf_normal(f, p):
 
 def gf_from_dict(f, p):
     """Create GF(p)[x] polynomial from a dict. """
-    n, h = max(f.iterkeys()), []
+    n, h = max(f.keys()), []
 
-    for k in xrange(n, -1, -1):
+    for k in range(n, -1, -1):
         h.append(f.get(k, 0) % p)
 
     return gf_normal(h, p)
@@ -94,7 +94,7 @@ def gf_to_dict(f, p):
     """Convert GF(p)[x] polynomial to a dict. """
     n, result = gf_degree(f), {}
 
-    for i in xrange(0, n+1):
+    for i in range(0, n+1):
         a = zp_int(f[n-i], p)
         if a: result[i] = a
 
@@ -205,10 +205,10 @@ def gf_mul(f, g, p):
     dh = df + dg
     h = [0]*(dh+1)
 
-    for i in xrange(0, dh+1):
+    for i in range(0, dh+1):
         coeff = 0
 
-        for j in xrange(max(0, i-dg), min(i, df)+1):
+        for j in range(max(0, i-dg), min(i, df)+1):
             coeff += f[j]*g[i-j]
 
         h[i] = coeff % p
@@ -222,7 +222,7 @@ def gf_sqr(f, p):
     dh = 2*df
     h = [0]*(dh+1)
 
-    for i in xrange(0, dh+1):
+    for i in range(0, dh+1):
         coeff = 0
 
         jmin = max(0, i-df)
@@ -232,7 +232,7 @@ def gf_sqr(f, p):
 
         jmax = jmin + n // 2 - 1
 
-        for j in xrange(jmin, jmax+1):
+        for j in range(jmin, jmax+1):
             coeff += f[j]*f[i-j]
 
         coeff += coeff
@@ -307,10 +307,10 @@ def gf_div(f, g, p):
 
     h, dq, dr = f[:], df-dg, dg-1
 
-    for i in xrange(0, df+1):
+    for i in range(0, df+1):
         coeff = h[i]
 
-        for j in xrange(max(0, dg-i), min(df-i, dr)+1):
+        for j in range(max(0, dg-i), min(df-i, dr)+1):
             coeff -= h[i+j-dg] * g[dg-j]
 
         if i <= dq:
@@ -334,10 +334,10 @@ def gf_quo(f, g, p):
 
     h, dq, dr = f[:], df-dg, dg-1
 
-    for i in xrange(0, dq+1):
+    for i in range(0, dq+1):
         coeff = h[i]
 
-        for j in xrange(max(0, dg-i), min(df-i, dr)+1):
+        for j in range(max(0, dg-i), min(df-i, dr)+1):
             coeff -= h[i+j-dg] * g[dg-j]
 
         h[i] = (coeff * inv) % p
@@ -620,7 +620,7 @@ def gf_random(n, p, monic=True):
     else:
         LC = [1]
 
-    return LC + [ int(uniform(0, p)) for i in xrange(0, n) ]
+    return LC + [ int(uniform(0, p)) for i in range(0, n) ]
 
 def gf_irreducible_p(f, p):
     """Test irreducibility of f over GF(p)[x] using deterministic method. """
@@ -633,7 +633,7 @@ def gf_irreducible(n, p, monic=True):
 
         H = h = gf_pow_mod([1, 0], p, f, p)
 
-        for i in xrange(1, n/2 + 1):
+        for i in range(1, n/2 + 1):
             g = gf_sub(h, [1, 0], p)
 
             if gf_gcd(f, g, p) == [1]:
@@ -722,7 +722,7 @@ def gf_sqf(f, p):
         if not sqf:
             d = gf_degree(f) // p
 
-            for i in xrange(0, d+1):
+            for i in range(0, d+1):
                 f[i] = f[i*p]
 
             f, n = f[:d+1], n*p
@@ -817,7 +817,7 @@ def gf_edf_zassenhaus(f, n, p):
         if p == 2:
             h = r
 
-            for i in xrange(0, 2**(n*N-1)):
+            for i in range(0, 2**(n*N-1)):
                 r = gf_pow_mod(r, 2, f, p)
                 h = gf_add(h, r, p)
 
@@ -874,13 +874,13 @@ def gf_ddf_shoup(f, p):
 
     U = [[1,0], h] + [0]*(k-1)
 
-    for i in xrange(2, k+1):
+    for i in range(2, k+1):
         U[i] = gf_compose_mod(U[i-1], h, f, p)
 
     h, U = U[k], U[:k]
     V = [h] + [0]*(k-1)
 
-    for i in xrange(1, k):
+    for i in range(1, k):
         V[i] = gf_compose_mod(V[i-1], h, f, p)
 
     factors = []
@@ -1070,7 +1070,9 @@ def gf_factor(f, p, **flags):
         for h in gf_factor_sqf(g, p)[1]:
             factors.append((h, k))
 
-    def compare((f_a, e_a), (f_b, e_b)):
+    def compare(xxx_todo_changeme, xxx_todo_changeme1):
+        (f_a, e_a) = xxx_todo_changeme
+        (f_b, e_b) = xxx_todo_changeme1
         i = len(f_a) - len(f_b)
 
         if not i:

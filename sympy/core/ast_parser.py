@@ -57,7 +57,7 @@ if ast_enabled:
             elif node.id in self.global_dict:
                 name_obj = self.global_dict[node.id]
 
-                if isinstance(name_obj, (Basic, type)) or callable(name_obj):
+                if isinstance(name_obj, (Basic, type)) or hasattr(name_obj, '__call__'):
                     return node
             elif node.id in ['True', 'False']:
                 return node
@@ -81,10 +81,10 @@ def parse_expr(s, local_dict):
     It converts all numbers to Integers before feeding it to Python and
     automatically creates Symbols.
     """
-    from sympify import SympifyError
+    from .sympify import SympifyError
     if ast_enabled:
         global_dict = {}
-        exec 'from sympy import *' in global_dict
+        exec('from sympy import *', global_dict)
         try:
             a = parse(s.strip(), mode="eval")
         except SyntaxError:
@@ -95,7 +95,7 @@ def parse_expr(s, local_dict):
     else:
         # in python2.4 and 2.5, the "ast" module is not available, so we need
         # to use our old implementation:
-        from ast_parser_python24 import SymPyParser
+        from .ast_parser_python24 import SymPyParser
         try:
             return SymPyParser(local_dict=local_dict).parse_expr(s)
         except SyntaxError:

@@ -92,7 +92,7 @@ def flatten(iterable, cls=None):
     adapted from http://kogs-www.informatik.uni-hamburg.de/~meine/python_tricks
     """
     if cls is None:
-        reducible = lambda x: hasattr(x, "__iter__") and not isinstance(x, basestring)
+        reducible = lambda x: hasattr(x, "__iter__") and not isinstance(x, str)
     else:
         reducible = lambda x: isinstance(x, cls)
     result = []
@@ -227,10 +227,10 @@ def variations(seq, n, repetition=False):
 
     if n == 1:
         return [[item] for item in seq]
-    result = range(len(seq))
+    result = list(range(len(seq)))
     cartesmodus = 'pair'
     for i in range(n-1):
-        result = cartes(result, range(len(seq)), cartesmodus)
+        result = cartes(result, list(range(len(seq))), cartesmodus)
         if not repetition:
             result = setrep(result)
         cartesmodus = 'triple'

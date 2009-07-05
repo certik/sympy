@@ -1,6 +1,6 @@
 from sympy.core import sympify
 from sympy.geometry.exceptions import GeometryError
-from entity import GeometryEntity
+from .entity import GeometryEntity
 
 class Curve(GeometryEntity):
     """

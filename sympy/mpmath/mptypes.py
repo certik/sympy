@@ -6,10 +6,10 @@ __docformat__ = 'plaintext'
 
 import re
 
-from settings import (MP_BASE, MP_ZERO, MP_ONE, int_types, repr_dps,
+from .settings import (MP_BASE, MP_ZERO, MP_ONE, int_types, repr_dps,
     round_floor, round_ceiling, dps_to_prec, round_nearest, prec_to_dps)
 
-from libmpf import (
+from .libmpf import (
     ComplexResult, to_pickable, from_pickable, normalize,
     from_int, from_float, from_str, to_int, to_float, to_str,
     from_rational, from_man_exp,
@@ -21,7 +21,7 @@ from libmpf import (
     mpf_sum
 )
 
-from libmpc import (
+from .libmpc import (
     mpc_to_str,
     mpc_to_complex, mpc_hash, mpc_pos, mpc_is_nonzero, mpc_neg, mpc_conjugate,
     mpc_abs, mpc_add, mpc_add_mpf, mpc_sub, mpc_sub_mpf, mpc_mul, mpc_mul_mpf,
@@ -29,9 +29,9 @@ from libmpc import (
     mpc_mpf_div
 )
 
-from libelefun import mpf_pow
+from .libelefun import mpf_pow
 
-from libmpi import (
+from .libmpi import (
     mpi_mid, mpi_delta, mpi_str,
     mpi_abs, mpi_pos, mpi_neg, mpi_add, mpi_sub,
     mpi_mul, mpi_div, mpi_pow_int, mpi_pow
@@ -126,7 +126,7 @@ class MultiPrecisionArithmetic(Context):
         eps = ctx.constant(lambda prec, rnd: (0, MP_ONE, 1-prec, 1),
             "epsilon of working precision")
         ctx.eps = eps
-        import function_docs
+        from . import function_docs
         for name, func, descr in ctx._constants:
             doc = function_docs.__dict__.get(name, descr)
             const_cls = type("_" + name, (ctx.constant,), {'__doc__':doc})
@@ -293,9 +293,9 @@ class MultiPrecisionArithmetic(Context):
             return to_str(x._mpf_, n)
         if hasattr(x, '_mpc_'):
             return "(" + mpc_to_str(x._mpc_, n)  + ")"
-        if isinstance(x, basestring):
+        if isinstance(x, str):
             return repr(x)
-        from matrices import matrix
+        from .matrices import matrix
         if isinstance(x, matrix):
             return x.__nstr__(n)
         if hasattr(x, '_mpi_'):
@@ -306,7 +306,7 @@ class MultiPrecisionArithmetic(Context):
         """
         Equivalent to ``print nstr(x, n)``.
         """
-        print ctx.nstr(x, n, **kwargs)
+        print(ctx.nstr(x, n, **kwargs))
 
     def convert(ctx, x, strings=True):
         """
@@ -335,11 +335,11 @@ class MultiPrecisionArithmetic(Context):
         if isinstance(x, float): return ctx.make_mpf(from_float(x))
         if isinstance(x, complex): return ctx.mpc(x)
         prec, rounding = ctx._prec_rounding
-        if strings and isinstance(x, basestring):
+        if strings and isinstance(x, str):
             try:
                 _mpf_ = from_str(x, prec, rounding)
                 return ctx.make_mpf(_mpf_)
-            except Exception, e:
+            except Exception as e:
                 if '/' in x:
                     fract = x.split('/')
                     assert len(fract) == 2
@@ -586,7 +586,7 @@ class MultiPrecisionArithmetic(Context):
 
         """
         if B:
-            A = zip(A, B)
+            A = list(zip(A, B))
         prec, rnd = ctx._prec_rounding
         real = []
         imag = []
@@ -792,11 +792,11 @@ class MultiPrecisionArithmetic(Context):
             if n == 1:
                 return [ctx.mpf(a)]
             step = (b - a) / ctx.mpf(n - 1)
-            y = [i*step + a for i in xrange(n)]
+            y = [i*step + a for i in range(n)]
             y[-1] = b
         else:
             step = (b - a) / ctx.mpf(n)
-            y = [i*step + a for i in xrange(n)]
+            y = [i*step + a for i in range(n)]
         return y
 
     def mpi_from_str(ctx, s):
@@ -933,7 +933,7 @@ class MultiPrecisionArithmetic(Context):
                 b.append('')
             if a[1] == b[1]:
                 if a[0] != b[0]:
-                    for i in xrange(len(a[0]) + 1):
+                    for i in range(len(a[0]) + 1):
                         if a[0][i] != b[0][i]:
                             break
                     s = (a[0][:i] + br1 + a[0][i:] + ',' + sp + b[0][i:] + br2
@@ -1004,7 +1004,7 @@ class _mpf(mpnumeric):
     def mpf_convert_arg(cls, x, prec, rounding):
         if isinstance(x, int_types): return from_int(x)
         if isinstance(x, float): return from_float(x)
-        if isinstance(x, basestring): return from_str(x, prec, rounding)
+        if isinstance(x, str): return from_str(x, prec, rounding)
         if isinstance(x, constant): return x.func(prec, rounding)
         if hasattr(x, '_mpf_'): return x._mpf_
         if hasattr(x, '_mpmath_'):
@@ -1050,10 +1050,10 @@ class _mpf(mpnumeric):
     def __str__(s): return to_str(s._mpf_, s.context.str_digits)
     def __hash__(s): return mpf_hash(s._mpf_)
     def __int__(s): return int(to_int(s._mpf_))
-    def __long__(s): return long(to_int(s._mpf_))
+    def __long__(s): return int(to_int(s._mpf_))
     def __float__(s): return to_float(s._mpf_)
     def __complex__(s): return complex(float(s))
-    def __nonzero__(s): return s._mpf_ != fzero
+    def __bool__(s): return s._mpf_ != fzero
 
     def __abs__(s):
         cls, new, (prec, rounding) = s._ctxdata
@@ -1185,7 +1185,7 @@ def binary_op(name, with_mpf='', with_int='', with_mpc=''):
     code = code.replace("%WITH_MPF%", with_mpf)
     code = code.replace("%NAME%", name)
     np = {}
-    exec code in globals(), np
+    exec(code, globals(), np)
     return np[name]
 
 _mpf.__eq__ = binary_op('__eq__',
@@ -1294,7 +1294,7 @@ class _mpc(mpnumeric):
         v._mpc_ = mpc_conjugate(s._mpc_, prec, rounding)
         return v
 
-    def __nonzero__(s):
+    def __bool__(s):
         return mpc_is_nonzero(s._mpc_)
 
     def __hash__(s):
@@ -1537,7 +1537,7 @@ class _mpi(mpnumeric):
         return make_mpi(mpi_div(self._mpi_, other._mpi_, mp.prec))
 
     def __pow__(self, other):
-        if isinstance(other, (int, long)):
+        if isinstance(other, int):
             return make_mpi(mpi_pow_int(self._mpi_, int(other), mp.prec))
         if not isinstance(other, mpi):
             other = mpi(other)
@@ -1646,7 +1646,7 @@ def def_mp_builtin(name, mpf_f, mpc_f=None, mpi_f=None, doc="<no doc>"):
                 return ctx.make_mpi(mpi_f(x._mpi_, prec))
         raise NotImplementedError("%s of a %s" % (name, type(x)))
     f.__name__ = name
-    import function_docs
+    from . import function_docs
     f.__doc__ = function_docs.__dict__.get(name, "Computes the %s of x" % doc)
     setattr(MultiPrecisionArithmetic, name, f)
     return getattr(MultiPrecisionArithmetic.default_instance, name)
@@ -1668,7 +1668,7 @@ def defun_wrapped(f):
             ctx.prec = orig_prec
         return +v
     g.__name__ = f.__name__
-    import function_docs
+    from . import function_docs
     g.__doc__ = function_docs.__dict__.get(f.__name__, f.__doc__)
     setattr(MultiPrecisionArithmetic, f.__name__, g)
     return getattr(MultiPrecisionArithmetic.default_instance, f.__name__)
@@ -1677,7 +1677,7 @@ def defun(f):
     """
     Defines function as a MultiPrecisionArithmetic method.
     """
-    import function_docs
+    from . import function_docs
     f.__doc__ = function_docs.__dict__.get(f.__name__, f.__doc__)
     setattr(MultiPrecisionArithmetic, f.__name__, f)
     return getattr(MultiPrecisionArithmetic.default_instance, f.__name__)
@@ -1686,7 +1686,7 @@ def defun_static(f):
     """
     Defines function as a MultiPrecisionArithmetic static method.
     """
-    import function_docs
+    from . import function_docs
     f.__doc__ = function_docs.__dict__.get(f.__name__, f.__doc__)
     setattr(MultiPrecisionArithmetic, f.__name__, staticmethod(f))
     return f

@@ -87,7 +87,7 @@ class Order(Basic):
             return S.NaN
 
         if symbols:
-            symbols = map(sympify, symbols)
+            symbols = list(map(sympify, symbols))
         else:
             symbols = list(expr.atoms(C.Symbol))
 
@@ -122,7 +122,7 @@ class Order(Basic):
                 expr = r.expr.subs(symbol_map)
                 symbols = []
                 for s in r.symbols:
-                    if symbol_map.has_key(s):
+                    if s in symbol_map:
                         symbols.append(symbol_map[s])
                     else:
                         symbols.append(s)

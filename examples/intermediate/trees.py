@@ -25,8 +25,8 @@ def main():
     s = Poly(A(x), x)
     num = [s.coeff(n) for n in range(11)]
 
-    print s.as_basic()
-    print num
+    print(s.as_basic())
+    print(num)
 
 if __name__ == "__main__":
     main()

@@ -1,12 +1,12 @@
 
-from basic import Basic, S, C
-from sympify import _sympify
-from cache import cacheit
+from .basic import Basic, S, C
+from .sympify import _sympify
+from .cache import cacheit
 
 # from add import Add   /cyclic/
 # from mul import Mul   /cyclic/
 # from function import Lambda, WildFunction /cyclic/
-from symbol import Symbol, Wild
+from .symbol import Symbol, Wild
 
 class AssocOp(Basic):
     """ Associative operations, can separate noncommutative and
@@ -24,12 +24,12 @@ class AssocOp(Basic):
     @cacheit
     def __new__(cls, *args, **assumptions):
         if assumptions.get('evaluate') is False:
-            return Basic.__new__(cls, *map(_sympify, args), **assumptions)
+            return Basic.__new__(cls, *list(map(_sympify, args)), **assumptions)
         if len(args)==0:
             return cls.identity()
         if len(args)==1:
             return _sympify(args[0])
-        c_part, nc_part, order_symbols = cls.flatten(map(_sympify, args))
+        c_part, nc_part, order_symbols = cls.flatten(list(map(_sympify, args)))
         if len(c_part) + len(nc_part) <= 1:
             if c_part: obj = c_part[0]
             elif nc_part: obj = nc_part[0]
@@ -66,8 +66,8 @@ class AssocOp(Basic):
 
     @classmethod
     def identity(cls):
-        from mul import Mul
-        from add import Add
+        from .mul import Mul
+        from .add import Add
         if cls is Mul: return S.One
         if cls is Add: return S.Zero
         if cls is C.Composition:
@@ -94,7 +94,7 @@ class AssocOp(Basic):
         # apply repl_dict to pattern to eliminate fixed wild parts
         if evaluate:
             pat = pattern
-            for old,new in repl_dict.items():
+            for old,new in list(repl_dict.items()):
                 pat = pat.subs(old, new)
             if pat != pattern:
                 return pat.matches(expr, repl_dict)
@@ -107,7 +107,7 @@ class AssocOp(Basic):
         # eliminate exact part from pattern: (2+a+w1+w2).matches(expr) -> (w1+w2).matches(expr-a-2)
         wild_part = []
         exact_part = []
-        from function import WildFunction
+        from .function import WildFunction
         for p in pattern.args:
             if p.atoms(Wild, WildFunction):
                 # not all Wild should stay Wilds, for example:

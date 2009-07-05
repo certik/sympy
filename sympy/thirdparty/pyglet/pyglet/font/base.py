@@ -333,7 +333,7 @@ class Font(object):
                 break
 
             # If a valid breakpoint, commit holding buffer
-            if c in u'\u0020\u200b':
+            if c in '\u0020\u200b':
                 glyphs += glyph_buffer
                 glyph_buffer = []
 

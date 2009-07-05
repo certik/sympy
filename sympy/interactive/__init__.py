@@ -3,7 +3,7 @@ from sympy import *
 
 x, y, z = symbols('xyz')
 k, m, n = symbols('kmn', integer=True)
-f, g, h = map(Function, 'fgh')
+f, g, h = list(map(Function, 'fgh'))
 
 def init_printing(stringify_func):
     """Initializes pretty-printer depending on the environment. """
@@ -26,18 +26,18 @@ def init_printing(stringify_func):
                     out = stringify_func(arg)
 
                     if '\n' in out:
-                        print
+                        print()
 
-                    print out
+                    print(out)
                 else:
-                    print repr(arg)
+                    print(repr(arg))
 
             ip.set_hook('result_display', result_display)
             return
     except ImportError:
         pass
 
-    import __builtin__, sys
+    import builtins, sys
 
     def displayhook(arg):
         """Python's pretty-printer display hook.
@@ -48,9 +48,9 @@ def init_printing(stringify_func):
 
         """
         if arg is not None:
-            __builtin__._ = None
-            print stringify_func(arg)
-            __builtin__._ = arg
+            builtins._ = None
+            print(stringify_func(arg))
+            builtins._ = arg
 
     sys.displayhook = displayhook
 
@@ -141,6 +141,6 @@ def init_session(session="ipython", pretty=True, use_unicode=None, message=None,
         sys.exit('Exiting ...')
     else:
         def shutdown_hook(self):
-            print "Exiting ..."
+            print("Exiting ...")
 
         ip.set_hook('shutdown_hook', shutdown_hook)

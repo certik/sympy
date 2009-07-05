@@ -1,8 +1,8 @@
-from mptypes import mpmathify, extraprec, eps, mpf, MultiPrecisionArithmetic
-from calculus import diff
-from functions import sqrt, sign, ldexp
-from matrices import matrix, norm as norm_
-from linalg import lu_solve
+from .mptypes import mpmathify, extraprec, eps, mpf, MultiPrecisionArithmetic
+from .calculus import diff
+from .functions import sqrt, sign, ldexp
+from .matrices import matrix, norm as norm_
+from .linalg import lu_solve
 from copy import copy
 
 ##############
@@ -262,8 +262,8 @@ class Muller:
             fx2x1x0 = (fx1x0 - fx2x1) / (x0 - x2)
             if w == 0 and fx2x1x0 == 0:
                 if self.verbose:
-                    print 'canceled with'
-                    print 'x0 =', x0, ', x1 =', x1, 'and x2 =', x2
+                    print('canceled with')
+                    print('x0 =', x0, ', x1 =', x1, 'and x2 =', x2)
                 break
             x0 = x1
             fx0 = fx1
@@ -339,7 +339,7 @@ def _getm(method):
             else:
                 return 0.5
     else:
-        raise ValueError, "method '%s' not recognized" % method
+        raise ValueError("method '%s' not recognized" % method)
     return getm
 
 class Illinois:
@@ -384,7 +384,7 @@ class Illinois:
         self.method = kwargs.get('method', 'illinois')
         self.getm = _getm(self.method)
         if self.verbose:
-            print 'using %s method' % self.method
+            print('using %s method' % self.method)
 
     def __iter__(self):
         method = self.method
@@ -404,7 +404,7 @@ class Illinois:
             if abs(fz) < self.tol:
                 # TODO: better condition (when f is very flat)
                 if self.verbose:
-                    print 'canceled with z =', z
+                    print('canceled with z =', z)
                 yield z, l
                 break
             if fz * fb < 0: # root in [z, b]
@@ -418,7 +418,7 @@ class Illinois:
                 fb = fz
                 fa = m*fa # scale down to ensure convergence
             if self.verbose and m and not method == 'illinois':
-                print 'm:', m
+                print('m:', m)
             yield (a + b)/2, abs(l)
 
 def Pegasus(*args, **kwargs):
@@ -432,7 +432,7 @@ def Pegasus(*args, **kwargs):
     return Illinois(*args, **kwargs)
 
 def Anderson(*args, **kwargs):
-    u"""
+    """
     1d-solver generating pairs of approximative root and error.
 
     Uses Anderson-Bjoerk method to find a root of f in [a, b].
@@ -487,7 +487,7 @@ class Ridder:
             if abs(fx4) < self.tol:
                 # TODO: better condition (when f is very flat)
                 if self.verbose:
-                    print 'canceled with f(x4) =', fx4
+                    print('canceled with f(x4) =', fx4)
                 yield x4, abs(x1 - x2)
                 break
             if fx4 * fx2 < 0: # root in [x4, x2]
@@ -544,14 +544,14 @@ class ANewton:
             # TODO: decide not to use convergence acceleration
             if error and abs(error - preverror) / error < 1:
                 if self.verbose:
-                    print 'converging slowly'
+                    print('converging slowly')
                 counter += 1
             if counter >= 3:
                 # accelerate convergence
                 phi = steffensen(phi)
                 counter = 0
                 if self.verbose:
-                    print 'accelerating convergence'
+                    print('accelerating convergence')
             yield x0, error
 
 # TODO: add Brent
@@ -574,11 +574,11 @@ def jacobian(f, x):
     m = len(fx)
     n = len(x)
     J = matrix(m, n)
-    for j in xrange(n):
+    for j in range(n):
         xj = x.copy()
         xj[j] += h
         Jj = (matrix(f(*xj)) - fx) / h
-        for i in xrange(m):
+        for i in range(m):
             J[i,j] = Jj[i]
     return J
 
@@ -644,16 +644,16 @@ class MDNewton:
             Jx = J(*x0)
             s = lu_solve(Jx, fxn)
             if self.verbose:
-                print 'Jx:'
-                print Jx
-                print 's:', s
+                print('Jx:')
+                print(Jx)
+                print('s:', s)
             # damping step size TODO: better strategy (hard task)
             l = one
             x1 = x0 + s
             while True:
                 if x1 == x0:
                     if self.verbose:
-                        print "canceled, won't get more excact"
+                        print("canceled, won't get more excact")
                     cancel = True
                     break
                 fx = matrix(f(*x1))
@@ -943,8 +943,8 @@ def findroot(f, x0, solver=Secant, tol=None, verbose=False, verify=True,
     i = 0
     for x, error in iterations:
         if verbose:
-            print 'x:    ', x
-            print 'error:', error
+            print('x:    ', x)
+            print('error:', error)
         i += 1
         if error < tol * max(1, norm(x)) or i >= maxsteps:
             break
@@ -973,7 +973,7 @@ def multiplicity(f, root, tol=eps, maxsteps=10, **kwargs):
     2
     """
     kwargs['d0f'] = f
-    for i in xrange(maxsteps):
+    for i in range(maxsteps):
         dfstr = 'd' + str(i) + 'f'
         if dfstr in kwargs:
             df = kwargs[dfstr]

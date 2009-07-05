@@ -169,9 +169,9 @@ class GlyphString(object):
         if from_index:
             width += self.cumulative_advance[from_index-1]
         for i, (c, w) in enumerate(
-                zip(self.text[from_index:], 
-                    self.cumulative_advance[from_index:])):
-            if c in u'\u0020\u200b':
+                list(zip(self.text[from_index:], 
+                    self.cumulative_advance[from_index:]))):
+            if c in '\u0020\u200b':
                 to_index = i + from_index + 1
             if c == '\n':
                 return i + from_index + 1
@@ -575,7 +575,7 @@ def add_file(font):
             Filename or file-like object to load fonts from.
 
     '''
-    if type(font) in (str, unicode):
+    if type(font) in (str, str):
         font = open(font, 'rb')
     if hasattr(font, 'read'):
         font = font.read()

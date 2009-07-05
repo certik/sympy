@@ -21,7 +21,7 @@ def apply_on_element(f, args, kwargs, n):
     # Define reduced function that is only dependend of the specified argument.
     def f_reduced(x):
         if hasattr(x, "__iter__"):
-            return map(f_reduced, x)
+            return list(map(f_reduced, x))
         else:
             if is_arg:
                 args[n] = x
@@ -31,7 +31,7 @@ def apply_on_element(f, args, kwargs, n):
 
     # f_reduced will call itself recursively so that in the end f is applied to
     # all basic elements.
-    return map(f_reduced, structure)
+    return list(map(f_reduced, structure))
 
 def iter_copy(structure):
     """
@@ -98,7 +98,7 @@ class vectorize:
             if self.mdargs:
                 mdargs = self.mdargs
             else:
-                mdargs = range(len(args)) + kwargs.keys()
+                mdargs = list(range(len(args))) + list(kwargs.keys())
 
             arglength = len(args)
 

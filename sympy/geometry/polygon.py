@@ -1,10 +1,10 @@
 from sympy.core.basic import Basic, S, C, sympify
 from sympy.simplify import simplify
 from sympy.geometry.exceptions import GeometryError
-from entity import GeometryEntity
-from point import Point
-from ellipse import Circle
-from line import Line, Segment
+from .entity import GeometryEntity
+from .point import Point
+from .ellipse import Circle
+from .line import Line, Segment
 
 
 class Polygon(GeometryEntity):
@@ -43,7 +43,7 @@ class Polygon(GeometryEntity):
               the orientation of the points.
         """
         area = 0
-        for ind in xrange(-1, len(self.vertices)-1):
+        for ind in range(-1, len(self.vertices)-1):
             pi = self.vertices[ind]
             pii = self.vertices[ind+1]
             area += pi[0]*pii[1]-pii[0]*pi[1]
@@ -77,7 +77,7 @@ class Polygon(GeometryEntity):
 
 
         ret = {}
-        for i in xrange(0, len(self.vertices)):
+        for i in range(0, len(self.vertices)):
             a,b,c = self.vertices[i-2], self.vertices[i-1], self.vertices[i]
             ang = Line.angle_between(Line(b, a), Line(b, c))
             if cw ^ isright(a, b, c):
@@ -90,7 +90,7 @@ class Polygon(GeometryEntity):
     def perimeter(self):
         """Returns the perimeter of the polygon."""
         p = 0
-        for ind in xrange(-1, len(self.vertices)-1):
+        for ind in range(-1, len(self.vertices)-1):
             p += Point.distance(self.vertices[ind], self.vertices[ind+1])
         return simplify(p)
 
@@ -104,7 +104,7 @@ class Polygon(GeometryEntity):
         """The centroid of the polygon."""
         A = 1 / (6*self.area)
         cx,cy = 0,0
-        for ind in xrange(-1, len(self.vertices)-1):
+        for ind in range(-1, len(self.vertices)-1):
             pi = self.vertices[ind]
             pii = self.vertices[ind+1]
             v = pi[0]*pii[1]-pii[0]*pi[1]
@@ -116,7 +116,7 @@ class Polygon(GeometryEntity):
     def sides(self):
         """A list of the segments that form the sides fo the polygon."""
         res = []
-        for ind in xrange(0, len(self.vertices)-1):
+        for ind in range(0, len(self.vertices)-1):
             res.append( Segment(self.vertices[ind], self.vertices[ind+1]) )
         res.append( Segment(self.vertices[-1], self.vertices[0]) )
         return res
@@ -134,7 +134,7 @@ class Polygon(GeometryEntity):
 
 
 
-        for i in xrange(0, len(self.vertices)):
+        for i in range(0, len(self.vertices)):
             if cw ^ isright(self.vertices[i-2], self.vertices[i-1], self.vertices[i]):
                 return False
 
@@ -156,7 +156,7 @@ class Polygon(GeometryEntity):
         # in the other polygon
         n1,n2 = len(self.vertices), len(o.vertices)
         start_indices = []
-        for ind in xrange(0, n1):
+        for ind in range(0, n1):
             if self.vertices[ind] == o.vertices[0]:
                 start_indices.append(ind)
 
@@ -179,7 +179,7 @@ class Polygon(GeometryEntity):
             # is value (i.e., dir is nonzero) then check in that direction
             if dir != 0:
                 areEqual = True
-                for ind in xrange(2, imax):
+                for ind in range(2, imax):
                     if self.vertices[(i + dir*ind) % n1] != o.vertices[ind % n2]:
                         areEqual = False
                         break
@@ -237,7 +237,7 @@ class RegularPolygon(Polygon):
         points = []
         c, r, n = self[:]
         v = 2*S.Pi/n
-        for k in xrange(0, n):
+        for k in range(0, n):
             points.append( Point(c[0] + r*C.cos(k*v), c[1] + r*C.sin(k*v)) )
         return points
 

@@ -1,4 +1,4 @@
-from str import StrPrinter
+from .str import StrPrinter
 
 class LambdaPrinter(StrPrinter):
     """

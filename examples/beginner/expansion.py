@@ -11,8 +11,8 @@ def main():
     b = sympy.Symbol('b')
     e = (a + b)**5
 
-    print e
-    print e.expand()
+    print(e)
+    print(e.expand())
 
 if __name__ == "__main__":
     main()

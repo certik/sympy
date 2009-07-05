@@ -29,14 +29,14 @@ Example:
     (x,)
 """
 
-from basic import Basic, Atom, S, C
-from basic import BasicType, BasicMeta
-from operations import AssocOp
-from cache import cacheit
+from .basic import Basic, Atom, S, C
+from .basic import BasicType, BasicMeta
+from .operations import AssocOp
+from .cache import cacheit
 from itertools import repeat
-from numbers import Rational, Integer
-from symbol import Symbol
-from multidimensional import vectorize
+from .numbers import Rational, Integer
+from .symbol import Symbol
+from .multidimensional import vectorize
 from sympy.utilities.decorator import deprecated
 
 from sympy import mpmath
@@ -55,7 +55,7 @@ class FunctionClass(BasicMeta):
     _new = type.__new__
 
     def __new__(cls, arg1, arg2, arg3=None, **options):
-        assert not options,`options`
+        assert not options,repr(options)
         if isinstance(arg1, type):
             # the following code gets executed when one types
             # FunctionClass(Function, "f")
@@ -66,7 +66,7 @@ class FunctionClass(BasicMeta):
             # return f
             ftype, name, signature = arg1, arg2, arg3
             #XXX this probably needs some fixing:
-            assert ftype.__name__.endswith('Function'),`ftype`
+            assert ftype.__name__.endswith('Function'),repr(ftype)
             attrdict = ftype.__dict__.copy()
             attrdict['undefined_Function'] = True
             if signature is not None:
@@ -80,14 +80,12 @@ class FunctionClass(BasicMeta):
     def __repr__(cls):
         return cls.__name__
 
-class Function(Basic):
+class Function(Basic, metaclass=FunctionClass):
     """
     Base class for applied functions.
     Constructor of undefined classes.
 
     """
-
-    __metaclass__ = FunctionClass
 
     is_Function = True
 
@@ -122,14 +120,14 @@ class Function(Basic):
                 return FunctionClass(Function, *args)
                 return FunctionClass(Function, *args, **options)
             else:
-                print args
-                print type(args[0])
+                print(args)
+                print(type(args[0]))
                 raise TypeError("You need to specify exactly one string")
 
         # (2) create new instance of a class created in (1)
         #     UC: Function('f')(x)
         #     UC: sin(x)
-        args = map(sympify, args)
+        args = list(map(sympify, args))
         # these lines should be refactored
         for opt in ["nargs", "dummy", "comparable", "noncommutative", "commutative"]:
             if opt in options:
@@ -304,7 +302,7 @@ class Function(Basic):
             return self.nseries(x, x0, n)
         l = []
         g = None
-        for i in xrange(n+2):
+        for i in range(n+2):
             g = self.taylor_term(i, arg, g)
             g = g.nseries(x, x0, n)
             l.append(g)
@@ -487,7 +485,7 @@ class WildFunction(Function, Atom):
         return obj
 
     def matches(pattern, expr, repl_dict={}, evaluate=False):
-        for p,v in repl_dict.items():
+        for p,v in list(repl_dict.items()):
             if p==pattern:
                 if v==expr: return repl_dict
                 return None
@@ -537,7 +535,7 @@ class Derivative(Basic):
         cases, like x.diff(x, 10**6).
         """
         last_s = sympify(symbols[len(symbols)-1])
-        for i in xrange(len(symbols)):
+        for i in range(len(symbols)):
             s = sympify(symbols[i])
             next_s = None
             if s != last_s:
@@ -615,7 +613,7 @@ class Derivative(Basic):
     def _eval_subs(self, old, new):
         if self==old:
             return new
-        return Derivative(*map(lambda x: x._eval_subs(old, new), self.args), **{'evaluate': True})
+        return Derivative(*[x._eval_subs(old, new) for x in self.args], **{'evaluate': True})
 
     def matches(pattern, expr, repl_dict={}, evaluate=False):
         # this method needs a cleanup.
@@ -623,7 +621,7 @@ class Derivative(Basic):
         #print "?   :",pattern, expr, repl_dict, evaluate
         #if repl_dict:
         #    return repl_dict
-        for p,v in repl_dict.items():
+        for p,v in list(repl_dict.items()):
             if p==pattern:
                 if v==expr: return repl_dict
                 return None
@@ -1027,5 +1025,5 @@ def expand_complex(expr, deep=True):
 #_.FunctionClass = FunctionClass
 #del _
 
-from sympify import sympify
-from add    import Add
+from .sympify import sympify
+from .add    import Add

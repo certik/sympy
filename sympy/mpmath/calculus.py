@@ -9,18 +9,18 @@ High-level, mostly calculus-oriented functions.
 etc
 """
 
-from itertools import izip
 
-from mptypes import (mp, extraprec)
-from mptypes import (mpmathify, mpf, mpc, j, inf, eps,
+
+from .mptypes import (mp, extraprec)
+from .mptypes import (mpmathify, mpf, mpc, j, inf, eps,
     AS_POINTS, arange, nstr, nprint, isinf, fsum, fprod)
-from functions import (ldexp, factorial, exp, ln, sin, cos, pi, bernoulli,
+from .functions import (ldexp, factorial, exp, ln, sin, cos, pi, bernoulli,
     sign)
-from gammazeta import int_fac
+from .gammazeta import int_fac
 
-from quadrature import quad, quadgl, quadts
-from matrices import matrix
-from linalg import lu_solve
+from .quadrature import quad, quadgl, quadts
+from .matrices import matrix
+from .linalg import lu_solve
 
 def richardson(seq):
     r"""
@@ -98,7 +98,7 @@ def richardson(seq):
     # of successive weights to obtain a recurrence relation
     c = (-1)**N * N**N / mpf(int_fac(N))
     maxc = 1
-    for k in xrange(N+1):
+    for k in range(N+1):
         s += c * seq[N+k]
         maxc = max(abs(c), maxc)
         c *= (k-N)*mpf(k+N+1)**N
@@ -250,9 +250,9 @@ def shanks(seq, table=None, randomized=False):
         from random import Random
         rnd = Random()
         rnd.seed(START)
-    for i in xrange(START, STOP):
+    for i in range(START, STOP):
         row = []
-        for j in xrange(i+1):
+        for j in range(i+1):
             if j == 0:
                 a, b = 0, seq[i+1]-seq[i]
             else:
@@ -343,27 +343,27 @@ def sumem(f, interval, tol=None, reject=10, integral=None,
     err = mpf(0)
     prev = 0
     M = 10000
-    if a == -inf: adiffs = (0 for n in xrange(M))
+    if a == -inf: adiffs = (0 for n in range(M))
     else:         adiffs = adiffs or diffs(f, a)
-    if b == inf:  bdiffs = (0 for n in xrange(M))
+    if b == inf:  bdiffs = (0 for n in range(M))
     else:         bdiffs = bdiffs or diffs(f, b)
     orig = mp.prec
     #verbose = 1
     try:
         mp.prec += 10
         s = mpf(0)
-        for k, (da, db) in enumerate(izip(adiffs, bdiffs)):
+        for k, (da, db) in enumerate(zip(adiffs, bdiffs)):
             if k & 1:
                 term = (db-da) * bernoulli(k+1) / factorial(k+1)
                 mag = abs(term)
                 if verbose:
-                    print "term", k, "magnitude =", nstr(mag)
+                    print("term", k, "magnitude =", nstr(mag))
                 if k > 4 and mag < tol:
                     s += term
                     break
                 elif k > 4 and abs(prev) / mag < reject:
                     if verbose:
-                        print "Failed to converge"
+                        print("Failed to converge")
                     err += mag
                     break
                 else:
@@ -374,13 +374,13 @@ def sumem(f, interval, tol=None, reject=10, integral=None,
         if b != inf: s += f(b)/2
         # Tail integral
         if verbose:
-            print "Integrating f(x) from x = %s to %s" % (nstr(a), nstr(b))
+            print("Integrating f(x) from x = %s to %s" % (nstr(a), nstr(b)))
         if integral:
             s += integral
         else:
             integral, ierr = quad(f, interval, error=True)
             if verbose:
-                print "Integration error:", ierr
+                print("Integration error:", ierr)
             s += integral
             err += ierr
     finally:
@@ -397,7 +397,7 @@ def adaptive_extrapolation(update, emfun, kwargs):
     maxterms = option('maxterms', mp.dps*10)
     method = option('method', 'r+s').split('+')
     skip = option('skip', 0)
-    steps = iter(option('steps', xrange(10, 10**9, 10)))
+    steps = iter(option('steps', range(10, 10**9, 10)))
     #steps = (10 for i in xrange(1000))
     if 'd' in method or 'direct' in method:
         TRY_RICHARDSON = TRY_SHANKS = TRY_EULER_MACLAURIN = False
@@ -425,20 +425,20 @@ def adaptive_extrapolation(update, emfun, kwargs):
 
             # Get new batch of terms
             try:
-                step = steps.next()
+                step = next(steps)
             except StopIteration:
                 pass
             if verbose:
-                print "-"*70
-                print "Adding terms #%i-#%i" % (index, index+step)
-            update(partial, xrange(index, index+step))
+                print("-"*70)
+                print("Adding terms #%i-#%i" % (index, index+step))
+            update(partial, range(index, index+step))
             index += step
 
             # Check direct error
             best = partial[-1]
             error = abs(best - partial[-2])
             if verbose:
-                print "Direct error: %s" % nstr(error)
+                print("Direct error: %s" % nstr(error))
             if error <= tol:
                 return best
 
@@ -448,8 +448,8 @@ def adaptive_extrapolation(update, emfun, kwargs):
                 # Convergence
                 richardson_error = abs(value - last_richardson_value)
                 if verbose:
-                    print "Richardson error: %s" % \
-                        nstr(richardson_error)
+                    print("Richardson error: %s" % \
+                        nstr(richardson_error))
                 # Convergence
                 if richardson_error <= tol:
                     return value
@@ -457,7 +457,7 @@ def adaptive_extrapolation(update, emfun, kwargs):
                 # Unreliable due to cancellation
                 if eps*maxc > tol:
                     if verbose:
-                        print "Ran out of precision for Richardson"
+                        print("Ran out of precision for Richardson")
                     TRY_RICHARDSON = False
                 if richardson_error < error:
                     error = richardson_error
@@ -472,12 +472,12 @@ def adaptive_extrapolation(update, emfun, kwargs):
                     est1, maxc, est2 = row[-1], abs(row[-2]), row[-3]
                     shanks_error = abs(est1-est2)
                 if verbose:
-                    print "Shanks error: %s" % nstr(shanks_error)
+                    print("Shanks error: %s" % nstr(shanks_error))
                 if shanks_error <= tol:
                     return est1
                 if eps*maxc > tol:
                     if verbose:
-                        print "Ran out of precision for Shanks"
+                        print("Ran out of precision for Shanks")
                     TRY_SHANKS = False
                 if shanks_error < error:
                     error = shanks_error
@@ -493,7 +493,7 @@ def adaptive_extrapolation(update, emfun, kwargs):
                     value, em_error = emfun(index, tol)
                     value += partial[-1]
                     if verbose:
-                        print "Euler-Maclaurin error: %s" % nstr(em_error)
+                        print("Euler-Maclaurin error: %s" % nstr(em_error))
                     if em_error <= tol:
                         return value
                     if em_error < error:
@@ -501,7 +501,7 @@ def adaptive_extrapolation(update, emfun, kwargs):
     finally:
         mp.prec = orig
     if verbose:
-        print "Warning: failed to converge to target accuracy"
+        print("Warning: failed to converge to target accuracy")
     return best
 
 def nsum(f, interval, **kwargs):
@@ -764,7 +764,7 @@ def nsum(f, interval, **kwargs):
             return f(0) + nsum(lambda k: f(-k) + f(k), [1, inf], **kwargs)
         return nsum(f, [-b, inf], **kwargs)
     elif b != inf:
-        return fsum(f(mpf(k)) for k in xrange(int(a), int(b)+1))
+        return fsum(f(mpf(k)) for k in range(int(a), int(b)+1))
 
     a = int(a)
 
@@ -894,7 +894,7 @@ def nprod(f, interval, **kwargs):
     """
     a, b = AS_POINTS(interval)
     if a != -inf and b != inf:
-        return fprod(f(mpf(k)) for k in xrange(int(a), int(b)+1))
+        return fprod(f(mpf(k)) for k in range(int(a), int(b)+1))
 
     orig = mp.prec
     try:
@@ -1039,7 +1039,7 @@ def difference_delta(s, n):
     """
     d = mpf(0)
     b = (-1) ** (n & 1)
-    for k in xrange(n+1):
+    for k in range(n+1):
         d += b * s[k]
         b = (b * (k-n)) // (k+1)
     return d
@@ -1150,11 +1150,11 @@ def diff(f, x, n=1, method='step', scale=1, direction=0):
             # Directed: steps x, x+h, ... x+n*h
             if direction:
                 h *= sign(direction)
-                steps = xrange(n+1)
+                steps = range(n+1)
                 norm = h**n
             # Central: steps x-n*h, x-(n-2)*h ..., x, ..., x+(n-2)*h, x+n*h
             else:
-                steps = xrange(-n, n+1, 2)
+                steps = range(-n, n+1, 2)
                 norm = (2*h)**n
             v = difference_delta([f(x+k*h) for k in steps], n)
             v = v / norm
@@ -1221,10 +1221,10 @@ def diffs(f, x, n=inf, method='step', scale=1, direction=0):
             h = ldexp(scale, -targetprec-10)
             if direction:
                 h *= sign(direction)
-                y = [f(x+h*k) for k in xrange(m+1)]
+                y = [f(x+h*k) for k in range(m+1)]
                 hnorm = h
             else:
-                y = [f(x+h*k) for k in xrange(-m, m+1, 2)]
+                y = [f(x+h*k) for k in range(-m, m+1, 2)]
                 hnorm = 2*h
             return y, hnorm, workprec
         finally:
@@ -1241,7 +1241,7 @@ def diffs(f, x, n=inf, method='step', scale=1, direction=0):
 
     while 1:
         y, hnorm, workprec = getvalues(B)
-        for k in xrange(A, B):
+        for k in range(A, B):
             try:
                 callprec = mp.prec
                 mp.prec = workprec
@@ -1518,17 +1518,17 @@ def polyroots(coeffs, maxsteps=50, cleanup=True, extraprec=10, error=False):
         # Must be monic
         lead = mpmathify(coeffs[0])
         if lead == 1:
-            coeffs = map(mpmathify, coeffs)
+            coeffs = list(map(mpmathify, coeffs))
         else:
             coeffs = [c/lead for c in coeffs]
         f = lambda x: polyval(coeffs, x)
-        roots = [mpc((0.4+0.9j)**n) for n in xrange(deg)]
-        err = [mpf(1) for n in xrange(deg)]
+        roots = [mpc((0.4+0.9j)**n) for n in range(deg)]
+        err = [mpf(1) for n in range(deg)]
         # Durand-Kerner iteration until convergence
-        for step in xrange(maxsteps):
+        for step in range(maxsteps):
             if max(err).ae(0):
                 break
-            for i in xrange(deg):
+            for i in range(deg):
                 if not err[i].ae(0):
                     p = roots[i]
                     x = f(p)
@@ -1542,7 +1542,7 @@ def polyroots(coeffs, maxsteps=50, cleanup=True, extraprec=10, error=False):
                     err[i] = abs(x)
         # Remove small imaginary parts
         if cleanup:
-            for i in xrange(deg):
+            for i in range(deg):
                 if abs(roots[i].imag) < weps:
                     roots[i] = roots[i].real
                 elif abs(roots[i].real) < weps:
@@ -1746,7 +1746,7 @@ def chebyfit(f, interval, N, error=False):
         h = mpf(0.5)
         T = chebT(mpf(2)/(b-a), mpf(-1)*(b+a)/(b-a))
         for k in range(N):
-            Tk = T.next()
+            Tk = next(T)
             for i in range(len(Tk)):
                 d[i] += c[k]*Tk[i]
         d = d[::-1]
@@ -1838,7 +1838,7 @@ def fourier(f, interval, N):
     cos_series = []
     sin_series = []
     cutoff = eps*10
-    for n in xrange(N+1):
+    for n in range(N+1):
         m = 2*n*pi/L
         an = 2*quadgl(lambda t: f(t)*cos(m*t), interval)/L
         bn = 2*quadgl(lambda t: f(t)*sin(m*t), interval)/L
@@ -1865,8 +1865,8 @@ def fourierval(series, interval, x):
     b = interval[-1]
     m = 2*pi/(ab[-1]-ab[0])
     s = mpf(0)
-    s += sum(cs[n]*cos(m*n*x) for n in xrange(len(cs)) if cs[n])
-    s += sum(ss[n]*sin(m*n*x) for n in xrange(len(ss)) if ss[n])
+    s += sum(cs[n]*cos(m*n*x) for n in range(len(cs)) if cs[n])
+    s += sum(ss[n]*sin(m*n*x) for n in range(len(ss)) if ss[n])
     return s
 
 if __name__ == '__main__':

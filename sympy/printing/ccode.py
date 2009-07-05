@@ -9,7 +9,7 @@ sympy.utilities.codegen. The codegen module can be used to generate complete
 source code files that are compilable without further modifications.
 """
 
-from str import StrPrinter
+from .str import StrPrinter
 from sympy.printing.precedence import precedence, PRECEDENCE
 from sympy.core.basic import S
 
@@ -78,4 +78,4 @@ def ccode(expr):
 
 def print_ccode(expr):
     """Prints C representation of the given expression."""
-    print ccode(expr)
+    print(ccode(expr))

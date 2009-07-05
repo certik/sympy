@@ -2,9 +2,9 @@
 
 import sympy.mpmath as mpmath
 
-from decorators import _sympifyit
-from assumptions import AssumeMeths, make__get_assumption
-from cache import cacheit, Memoizer, MemoizerArg
+from .decorators import _sympifyit
+from .assumptions import AssumeMeths, make__get_assumption
+from .cache import cacheit, Memoizer, MemoizerArg
 
 # from numbers  import Number, Integer, Rational, Real /cyclic/
 # from interval import Interval /cyclic/
@@ -98,7 +98,7 @@ class BasicMeta(BasicType):
         # initialize default_assumptions dictionary
         default_assumptions = {}
 
-        for k,v in cls.__dict__.iteritems():
+        for k,v in cls.__dict__.items():
             if not k.startswith('is_'):
                 continue
 
@@ -107,7 +107,7 @@ class BasicMeta(BasicType):
                 continue
 
             k = k[3:]
-            if isinstance(v,(bool,int,long,type(None))):
+            if isinstance(v,(bool,int,type(None))):
                 if v is not None:
                     v = bool(v)
                 default_assumptions[k] = v
@@ -124,7 +124,7 @@ class BasicMeta(BasicType):
             except AttributeError:
                 continue    # no ._default_premises is ok
 
-            for k,v in base_premises.iteritems():
+            for k,v in base_premises.items():
 
                 # if an assumption is already present in child, we should ignore base
                 # e.g. Integer.is_integer=T, but Rational.is_integer=F (for speed)
@@ -172,14 +172,14 @@ class BasicMeta(BasicType):
         # first we need to collect derived premises
         derived_premises = {}
 
-        for k,v in xass.iteritems():
+        for k,v in xass.items():
             if k not in default_assumptions:
                 derived_premises[k] = v
 
         cls._derived_premises = derived_premises
 
 
-        for k,v in xass.iteritems():
+        for k,v in xass.items():
             assert v == cls.__dict__.get('is_'+k, v),  (cls,k,v)
             # NOTE: this way Integer.is_even = False (inherited from Rational)
             # NOTE: the next code blocks add 'protection-properties' to overcome this
@@ -192,8 +192,8 @@ class BasicMeta(BasicType):
             except AttributeError:
                 continue    # no ._derived_premises is ok
 
-            for k,v in base_derived_premises.iteritems():
-                if not cls.__dict__.has_key('is_'+k):
+            for k,v in base_derived_premises.items():
+                if 'is_'+k not in cls.__dict__:
                     #print '%s -- overriding: %s' % (cls.__name__, k)
                     is_k = make__get_assumption(cls.__name__, k)
                     setattr(cls, 'is_'+k, property(is_k))
@@ -240,7 +240,7 @@ class BasicMeta(BasicType):
 
 
 
-class Basic(AssumeMeths):
+class Basic(AssumeMeths, metaclass=BasicMeta):
     """
     Base class for all objects in sympy.
 
@@ -274,8 +274,6 @@ class Basic(AssumeMeths):
 
 
     """
-
-    __metaclass__ = BasicMeta
 
     __slots__ = ['_mhash',              # hash value
                  '_args',               # arguments
@@ -385,7 +383,7 @@ class Basic(AssumeMeths):
 
     # here is what we do instead:
     for k in AssumeMeths._assume_defined:
-        exec "is_%s  = property(make__get_assumption('Basic', '%s'))" % (k,k)
+        exec("is_%s  = property(make__get_assumption('Basic', '%s'))" % (k,k))
     del k
 
     # NB: there is no need in protective __setattr__
@@ -426,7 +424,7 @@ class Basic(AssumeMeths):
         # relevant attributes as tuple.
         return self._args
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Tests if 'self' is an instance of Zero class.
 
            This should be understand as an idiom:
@@ -873,7 +871,7 @@ class Basic(AssumeMeths):
 
     def is_polynomial(self, *syms):
         if syms:
-            syms = map(sympify, syms)
+            syms = list(map(sympify, syms))
         else:
             syms = list(self.atoms(Symbol))
 
@@ -1037,7 +1035,7 @@ class Basic(AssumeMeths):
 
         """
         if isinstance(sequence, dict):
-            sequence = sequence.items()
+            sequence = list(sequence.items())
         elif not isinstance(sequence, (list, tuple)):
             raise TypeError("Not an iterable container")
 
@@ -1272,7 +1270,7 @@ class Basic(AssumeMeths):
 
         if evaluate:
             pat = pattern
-            for old,new in repl_dict.items():
+            for old,new in list(repl_dict.items()):
                 pat = pat.subs(old, new)
             if pat!=pattern:
                 return pat.matches(expr, repl_dict)
@@ -1797,7 +1795,7 @@ class Basic(AssumeMeths):
                     return None
             return C.Add(*newargs)
         elif self.is_Mul:
-            for i in xrange(len(self.args)):
+            for i in range(len(self.args)):
                 newargs = list(self.args)
                 del(newargs[i])
                 tmp = C.Mul(*newargs).extract_multiplicatively(c)
@@ -1943,7 +1941,7 @@ class Basic(AssumeMeths):
     ###################################################################################
 
     def diff(self, *symbols, **assumptions):
-        new_symbols = map(sympify, symbols)
+        new_symbols = list(map(sympify, symbols))
         if not "evaluate" in assumptions:
             assumptions["evaluate"] = True
         ret = Derivative(self, *new_symbols, **assumptions)
@@ -2162,7 +2160,7 @@ class Basic(AssumeMeths):
         elif not symbols:
             return self
         x = sympify(symbols[0])
-        assert x.is_Symbol, `x`
+        assert x.is_Symbol, repr(x)
         if not self.has(x):
             return self
         obj = self._eval_as_leading_term(x)
@@ -2288,7 +2286,7 @@ class SingletonMeta(BasicMeta):
 
         cls_new.__name__ = '%s.__new__' % (cls.__name__)
 
-        assert not cls.__dict__.has_key('__new__'), \
+        assert '__new__' not in cls.__dict__, \
                 'Singleton classes are not allowed to redefine __new__'
 
         # inject singletonic __new__
@@ -2299,7 +2297,7 @@ class SingletonMeta(BasicMeta):
             return ()
         cls_getnewargs.__name__ = '%s.__getnewargs__' % cls.__name__
 
-        assert not cls.__dict__.has_key('__getnewargs__'), \
+        assert '__getnewargs__' not in cls.__dict__, \
                 'Singleton classes are not allowed to redefine __getnewargs__'
         cls.__getnewargs__ = cls_getnewargs
 
@@ -2368,12 +2366,12 @@ C = ClassesRegistry()
 #_.S         = S
 #del _
 
-from symbol import Wild, Symbol
-from sympify import _sympify, sympify, SympifyError
+from .symbol import Wild, Symbol
+from .sympify import _sympify, sympify, SympifyError
 S.__call__ = sympify
-from mul import Mul
-from power import Pow
-from add import Add
-from relational import Inequality, StrictInequality
-from function import FunctionClass, Derivative
-from numbers import Rational, Integer
+from .mul import Mul
+from .power import Pow
+from .add import Add
+from .relational import Inequality, StrictInequality
+from .function import FunctionClass, Derivative
+from .numbers import Rational, Integer

@@ -96,9 +96,9 @@ if _debug_win32:
                 result = fn(*args)
                 err = _GetLastError()
                 if err != 0:
-                    map(_log_win32.write,
-                        traceback.format_list(traceback.extract_stack()[:-1]))
-                    print >> _log_win32, format_error(err)
+                    list(map(_log_win32.write,
+                        traceback.format_list(traceback.extract_stack()[:-1])))
+                    print(format_error(err), file=_log_win32)
                 return result
             return f
 else:
@@ -333,7 +333,7 @@ class Win32ConfigARB(Win32Config):
         self._hdc = hdc
         self._pf = pf
         
-        names, attrs = map(None, *self.attribute_ids.items())
+        names, attrs = list(map(None, *list(self.attribute_ids.items())))
         attrs = (c_int * len(attrs))(*attrs)
         values = (c_int * len(attrs))()
         
@@ -453,7 +453,7 @@ class Win32Window(BaseWindow):
             module = _kernel32.GetModuleHandleW(None)
             white = _gdi32.GetStockObject(WHITE_BRUSH)
             self._window_class = WNDCLASS()
-            self._window_class.lpszClassName = u'GenericAppClass%d' % id(self)
+            self._window_class.lpszClassName = 'GenericAppClass%d' % id(self)
             self._window_class.lpfnWndProc = WNDPROC(self._wnd_proc)
             self._window_class.style = CS_VREDRAW | CS_HREDRAW
             self._window_class.hInstance = 0
@@ -468,7 +468,7 @@ class Win32Window(BaseWindow):
             self._hwnd = _user32.CreateWindowExW(
                 self._ex_ws_style,
                 self._window_class.lpszClassName,
-                u'',
+                '',
                 self._ws_style,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
@@ -925,7 +925,7 @@ class Win32Window(BaseWindow):
 
     @Win32EventHandler(WM_CHAR)
     def _event_char(self, msg, wParam, lParam):
-        text = unichr(wParam)
+        text = chr(wParam)
         if unicodedata.category(text) != 'Cc' or text == '\r':
             self.dispatch_event('on_text', text)
         return 0

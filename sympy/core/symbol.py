@@ -1,6 +1,6 @@
 
-from basic import Atom
-from cache import cacheit
+from .basic import Atom
+from .cache import cacheit
 
 # from function import Function, WildFunction   /cyclic/
 
@@ -47,7 +47,7 @@ class Symbol(Atom):
             return Symbol.__xnew_cached_(cls, name, commutative, **assumptions)
 
     def __new_stage2__(cls, name, commutative=True, **assumptions):
-        assert isinstance(name, str),`type(name)`
+        assert isinstance(name, str),repr(type(name))
         obj = Basic.__new__(cls, **assumptions)
         obj.is_commutative = commutative
         obj.name = name
@@ -158,7 +158,7 @@ class Wild(Symbol):
 
     # TODO add check against another Wild
     def matches(pattern, expr, repl_dict={}, evaluate=False):
-        for p,v in repl_dict.items():
+        for p,v in list(repl_dict.items()):
             if p==pattern:
                 if v==expr: return repl_dict
                 return None
@@ -290,6 +290,6 @@ def var(*names, **kwargs):
 #_.Temporary = Temporary
 #del _
 
-from basic import Basic, Atom, S, C
-from sympify import sympify
-from function import Function
+from .basic import Basic, Atom, S, C
+from .sympify import sympify
+from .function import Function

@@ -152,7 +152,7 @@ _compression_formats = {
 def _check_error():
     e = glGetError()
     if e != 0:
-        print 'GL error %d' % e
+        print('GL error %d' % e)
 
 class DDSImageDecoder(codecs.ImageDecoder):
     def get_file_extensions(self):

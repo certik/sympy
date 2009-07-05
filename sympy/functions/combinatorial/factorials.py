@@ -5,6 +5,7 @@ from sympy.ntheory import sieve
 from math import sqrt
 
 from sympy.utilities.decorator import deprecated
+from functools import reduce
 
 ###############################################################################
 ######################## FACTORIAL and MULTI-FACTORIAL ########################
@@ -215,14 +216,14 @@ class RisingFactorial(Function):
                         else:
                             return S.Infinity
                     else:
-                        return reduce(lambda r, i: r*(x+i), xrange(0, int(k)), 1)
+                        return reduce(lambda r, i: r*(x+i), list(range(0, int(k))), 1)
                 else:
                     if x is S.Infinity:
                         return S.Infinity
                     elif x is S.NegativeInfinity:
                         return S.Infinity
                     else:
-                        return 1/reduce(lambda r, i: r*(x-i), xrange(1, abs(int(k))+1), 1)
+                        return 1/reduce(lambda r, i: r*(x-i), list(range(1, abs(int(k))+1)), 1)
 
     def _eval_rewrite_as_gamma(self, x, k):
         return C.gamma(x + k) / C.gamma(x)
@@ -283,14 +284,14 @@ class FallingFactorial(Function):
                         else:
                             return S.Infinity
                     else:
-                        return reduce(lambda r, i: r*(x-i), xrange(0, int(k)), 1)
+                        return reduce(lambda r, i: r*(x-i), range(0, int(k)), 1)
                 else:
                     if x is S.Infinity:
                         return S.Infinity
                     elif x is S.NegativeInfinity:
                         return S.Infinity
                     else:
-                        return 1/reduce(lambda r, i: r*(x+i), xrange(1, abs(int(k))+1), 1)
+                        return 1/reduce(lambda r, i: r*(x+i), range(1, abs(int(k))+1), 1)
 
 
     def _eval_rewrite_as_gamma(self, x, k):
@@ -359,7 +360,7 @@ class Binomial(Function):
 
     @classmethod
     def eval(cls, r, k):
-        r, k = map(sympify, (r, k))
+        r, k = list(map(sympify, (r, k)))
 
         if k.is_Number:
             if k is S.Zero:
@@ -402,7 +403,7 @@ class Binomial(Function):
                     else:
                         result = r - k + 1
 
-                        for i in xrange(2, k+1):
+                        for i in range(2, k+1):
                             result *= r-k+i
                             result /= i
 

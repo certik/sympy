@@ -1,9 +1,9 @@
 # TODO: interpret list as vectors (for multiplication)
 
-from __future__ import division
 
-from mptypes import mpmathify, absmax, mpf, mpc, rand, inf, nstr, fsum, fdot
-from functions import nthroot, sqrt
+
+from .mptypes import mpmathify, absmax, mpf, mpc, rand, inf, nstr, fsum, fdot
+from .functions import nthroot, sqrt
 
 rowsep = '\n'
 colsep = '  '
@@ -330,8 +330,8 @@ class matrix(object):
                 self.force_type = A.force_type
             elif self.force_type:
                 # apply specified force_type
-                for i in xrange(A.__rows):
-                    for j in xrange(A.__cols):
+                for i in range(A.__rows):
+                    for j in range(A.__cols):
                         A[i,j] = self.force_type(A[i,j])
         elif hasattr(args[0], 'tolist'):
             A = matrix(args[0].tolist())
@@ -373,9 +373,9 @@ class matrix(object):
         If avoid_type: avoid multiple 'mpf's.
         """
         s = '['
-        for i in xrange(self.__rows):
+        for i in range(self.__rows):
             s += '['
-            for j in xrange(self.__cols):
+            for j in range(self.__cols):
                 if not avoid_type or not isinstance(self[i,j], (mpf, mpc)):
                     a = repr(self[i,j])
                 else:
@@ -439,8 +439,8 @@ class matrix(object):
             self._LU = None
 
     def __iter__(self):
-        for i in xrange(self.__rows):
-            for j in xrange(self.__cols):
+        for i in range(self.__rows):
+            for j in range(self.__cols):
                 yield self[i,j]
 
     def __mul__(self, other):
@@ -449,16 +449,16 @@ class matrix(object):
             if self.__cols != other.__rows:
                 raise ValueError('dimensions not compatible for multiplication')
             new = matrix(self.__rows, other.__cols)
-            for i in xrange(self.__rows):
-                for j in xrange(other.__cols):
+            for i in range(self.__rows):
+                for j in range(other.__cols):
                     new[i, j] = fdot((self[i,k], other[k,j])
-                                     for k in xrange(other.__rows))
+                                     for k in range(other.__rows))
             return new
         else:
             # try scalar multiplication
             new = matrix(self.__rows, self.__cols)
-            for i in xrange(self.__rows):
-                for j in xrange(self.__cols):
+            for i in range(self.__rows):
+                for j in range(self.__cols):
                     new[i, j] = other * self[i, j]
             return new
 
@@ -469,7 +469,7 @@ class matrix(object):
 
     def __pow__(self, other):
         # avoid cyclic import problems
-        from linalg import inverse
+        from .linalg import inverse
         if not isinstance(other, int):
             raise ValueError('only integer exponents are supported')
         if not self.__rows == self.__cols:
@@ -498,8 +498,8 @@ class matrix(object):
         # assume other is scalar and do element-wise divison
         assert not isinstance(other, matrix)
         new = matrix(self.__rows, self.__cols)
-        for i in xrange(self.__rows):
-            for j in xrange(self.__cols):
+        for i in range(self.__rows):
+            for j in range(self.__cols):
                 new[i,j] = self[i,j] / other
         return new
 
@@ -510,15 +510,15 @@ class matrix(object):
             if not (self.__rows == other.__rows and self.__cols == other.__cols):
                 raise ValueError('incompatible dimensions for addition')
             new = matrix(self.__rows, self.__cols)
-            for i in xrange(self.__rows):
-                for j in xrange(self.__cols):
+            for i in range(self.__rows):
+                for j in range(self.__cols):
                     new[i,j] = self[i,j] + other[i,j]
             return new
         else:
             # assume other is scalar and add element-wise
             new = matrix(self.__rows, self.__cols)
-            for i in xrange(self.__rows):
-                for j in xrange(self.__cols):
+            for i in range(self.__rows):
+                for j in range(self.__cols):
                     new[i,j] += self[i,j] + other
             return new
 
@@ -553,7 +553,7 @@ class matrix(object):
         return self.__rows
 
     def __setrows(self, value):
-        for key in self.__data.copy().iterkeys():
+        for key in self.__data.copy().keys():
             if key[0] >= value:
                 del self.__data[key]
         self.__rows = value
@@ -564,7 +564,7 @@ class matrix(object):
         return self.__cols
 
     def __setcols(self, value):
-        for key in self.__data.copy().iterkeys():
+        for key in self.__data.copy().keys():
             if key[1] >= value:
                 del self.__data[key]
         self.__cols = value
@@ -573,8 +573,8 @@ class matrix(object):
 
     def transpose(self):
         new = matrix(self.__cols, self.__rows)
-        for i in xrange(self.__rows):
-            for j in xrange(self.__cols):
+        for i in range(self.__rows):
+            for j in range(self.__cols):
                 new[j,i] = self[i,j]
         return new
 
@@ -598,7 +598,7 @@ def eye(n, **kwargs):
     Create square identity matrix n x n.
     """
     A = matrix(n, **kwargs)
-    for i in xrange(n):
+    for i in range(n):
         A[i,i] = 1
     return A
 
@@ -615,7 +615,7 @@ def diag(diagonal, **kwargs):
      ['0.0', '0.0', '3.0']])
     """
     A = matrix(len(diagonal), **kwargs)
-    for i in xrange(len(diagonal)):
+    for i in range(len(diagonal)):
         A[i,i] = diagonal[i]
     return A
 
@@ -639,8 +639,8 @@ def zeros(*args, **kwargs):
     else:
         raise TypeError('zeros expected at most 2 arguments, got %i' % len(args))
     A = matrix(m, n, **kwargs)
-    for i in xrange(m):
-        for j in xrange(n):
+    for i in range(m):
+        for j in range(n):
             A[i,j] = 0
     return A
 
@@ -664,8 +664,8 @@ def ones(*args, **kwargs):
     else:
         raise TypeError('ones expected at most 2 arguments, got %i' % len(args))
     A = matrix(m, n, **kwargs)
-    for i in xrange(m):
-        for j in xrange(n):
+    for i in range(m):
+        for j in range(n):
             A[i,j] = 1
     return A
 
@@ -680,8 +680,8 @@ def hilbert(m, n=None):
     if n is None:
         n = m
     A = matrix(m, n)
-    for i in xrange(m):
-        for j in xrange(n):
+    for i in range(m):
+        for j in range(n):
             A[i,j] = 1./ (i + j + 1)
     return A
 
@@ -702,8 +702,8 @@ def randmatrix(m, n=None, min=0, max=1, **kwargs):
     if not n:
         n = m
     A = matrix(m, n, **kwargs)
-    for i in xrange(m):
-        for j in xrange(n):
+    for i in range(m):
+        for j in range(n):
             A[i,j] = rand() * (max - min) + min
     return A
 
@@ -714,7 +714,7 @@ def swap_row(A, i, j):
     if i == j:
         return
     if isinstance(A, matrix):
-        for k in xrange(A.cols):
+        for k in range(A.cols):
             A[i,k], A[j,k] = A[j,k], A[i,k]
     elif isinstance(A, list):
         A[i], A[j] = A[j], A[i]
@@ -729,7 +729,7 @@ def extend(A, b):
     assert A.rows == len(b)
     A = A.copy()
     A.cols += 1
-    for i in xrange(A.rows):
+    for i in range(A.rows):
         A[i, A.cols-1] = b[i]
     return A
 
@@ -830,9 +830,9 @@ def mnorm(A, p=1):
         p = mpmathify(p)
     m, n = A.rows, A.cols
     if p == 1:
-        return max(fsum((A[i,j] for i in xrange(m)), absolute=1) for j in xrange(n))
+        return max(fsum((A[i,j] for i in range(m)), absolute=1) for j in range(n))
     elif p == inf:
-        return max(fsum((A[i,j] for j in xrange(n)), absolute=1) for i in xrange(m))
+        return max(fsum((A[i,j] for j in range(n)), absolute=1) for i in range(m))
     else:
         raise NotImplementedError("matrix p-norm for arbitrary p")
 

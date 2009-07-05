@@ -8,15 +8,15 @@ pyglet = import_thirdparty("pyglet")
 
 from pyglet.gl import *
 
-from plot_object import PlotObject
-from plot_axes import PlotAxes
-from plot_window import PlotWindow
-from plot_mode import PlotMode
-import plot_modes
+from .plot_object import PlotObject
+from .plot_axes import PlotAxes
+from .plot_window import PlotWindow
+from .plot_mode import PlotMode
+from . import plot_modes
 
 from time import sleep
 from os import getcwd, listdir
-from util import parse_option_string
+from .util import parse_option_string
 
 from sympy.geometry.entity import GeometryEntity
 
@@ -342,7 +342,7 @@ class Plot(object):
         """
         Allows iteration of the function list.
         """
-        return self._functions.itervalues()
+        return iter(self._functions.values())
 
     def __repr__(self):
         return str(self)
@@ -388,7 +388,7 @@ class ScreenShot:
         self.invisibleMode = False
         self.flag = 0
 
-    def __nonzero__(self):
+    def __bool__(self):
         if self.screenshot_requested:
             return 1
         return 0
@@ -404,7 +404,7 @@ class ScreenShot:
         glReadPixels(0,0,size_x,size_y, GL_RGBA, GL_UNSIGNED_BYTE, image)
         from PIL import Image
         im = Image.frombuffer('RGBA',(size_x,size_y),image.raw, 'raw', 'RGBA', 0, 1)
-        if type(self.outfile) in (str, unicode):
+        if type(self.outfile) in (str, str):
             im.transpose(Image.FLIP_TOP_BOTTOM).save(self.outfile)
         elif type(self.outfile)==file:
             im.transpose(Image.FLIP_TOP_BOTTOM).save(self.outfile, self.format)
@@ -428,14 +428,14 @@ class ScreenShot:
             self._plot._window = PlotWindow(self._plot, **self._plot._win_args)
             self.invisibleMode = True
 
-        if type(self.outfile) in (str, unicode):
+        if type(self.outfile) in (str, str):
             self.screenshot_requested = True
         elif type(self.outfile)==file and self.format:
             self.screenshot_requested = True
         elif self.outfile==None:
             self.outfile=self._create_unique_path()
             self.screenshot_requested = True
-            print self.outfile
+            print(self.outfile)
 
     def _create_unique_path(self):
         cwd = getcwd()

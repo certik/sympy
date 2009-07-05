@@ -15,15 +15,15 @@ or the need to support multiple arguments of mixed types.
 
 """
 
-import libmpf
-import libelefun
-import libmpc
-import libmpi
-import gammazeta
-import libhyper
-import libintmath
+from . import libmpf
+from . import libelefun
+from . import libmpc
+from . import libmpi
+from . import gammazeta
+from . import libhyper
+from . import libintmath
 
-from mptypes import (\
+from .mptypes import (\
     MultiPrecisionArithmetic,
     def_mp_builtin,
     defun_wrapped,
@@ -605,7 +605,7 @@ def fac2(ctx, x):
 #                                                                           #
 #---------------------------------------------------------------------------#
 
-from libmpf import from_rational
+from .libmpf import from_rational
 
 class _mpq(tuple):
 
@@ -636,7 +636,7 @@ def _hyp_parse_param(ctx, x):
     if isinstance(x, tuple):
         p, q = x
         return [[p, q]], [], []
-    if isinstance(x, (int, long)):
+    if isinstance(x, int):
         return [[x, 1]], [], []
     x = ctx.convert(x)
     if hasattr(x, '_mpf_'):
@@ -673,7 +673,7 @@ def eval_hyp2f1(ctx,a,b,c,z):
     if absz == 1:
         # TODO: determine whether it actually does, and otherwise
         # return infinity instead
-        print "Warning: 2F1 might not converge for |z| = 1"
+        print("Warning: 2F1 might not converge for |z| = 1")
     if absz <= 1:
         # All rational
         if ar and br and cr:
@@ -1105,7 +1105,7 @@ def lambertw(ctx, z, k=0, approx=None):
     # Use Halley iteration to solve w*exp(w) = z
     two = ctx.mpf(2)
     weps = ctx.ldexp(ctx.eps, 15)
-    for i in xrange(100):
+    for i in range(100):
         ew = ctx.exp(w)
         wew = w*ew
         wewz = wew-z
@@ -1114,7 +1114,7 @@ def lambertw(ctx, z, k=0, approx=None):
             return wn
         else:
             w = wn
-    print "Warning: Lambert W iteration failed to converge:", z
+    print("Warning: Lambert W iteration failed to converge:", z)
     return wn
 
 @defun_wrapped
@@ -1143,7 +1143,7 @@ def barnesg(ctx, z):
     s += (z**2/2-ctx.mpf(1)/12)*ctx.log(z)
     s -= 3*z**2/4
     z2k = z2 = z**2
-    for k in xrange(1, N+1):
+    for k in range(1, N+1):
         t = ctx.bernoulli(2*k+2) / (4*k*(k+1)*z2k)
         if abs(t) < ctx.eps:
             #print k, N      # check how many terms were needed
@@ -1252,8 +1252,8 @@ _zeta_zeros = [
 ]
 
 def _load_zeta_zeros(url):
-    import urllib
-    d = urllib.urlopen(url)
+    import urllib.request, urllib.parse, urllib.error
+    d = urllib.request.urlopen(url)
     L = [float(x) for x in d.readlines()]
     # Sanity check
     assert round(L[0]) == 14
@@ -1300,7 +1300,7 @@ def primepi(x):
     x = int(x)
     if x < 2:
         return 0
-    from gammazeta import list_primes
+    from .gammazeta import list_primes
     return len(list_primes(x))
 
 @defun_wrapped
@@ -1356,7 +1356,7 @@ def bernpoly(ctx, n, z):
     n = int(n)
     assert n >= 0
     # XXX: optimize
-    return sum(ctx.binomial(n,k)*ctx.bernoulli(k)*z**(n-k) for k in xrange(0,n+1))
+    return sum(ctx.binomial(n,k)*ctx.bernoulli(k)*z**(n-k) for k in range(0,n+1))
 
 # TODO: this should be implemented low-level
 def polylog_series(ctx, s, z):
@@ -1524,5 +1524,5 @@ if __name__ == '__main__':
     import doctest
     globs = globals().copy()
     for obj in globs: #sorted(globs.keys()):
-        print obj
+        print(obj)
         doctest.run_docstring_examples(globs[obj], {})

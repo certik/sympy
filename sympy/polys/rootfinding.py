@@ -12,6 +12,7 @@ from sympy.polys.factortools import poly_factors
 
 from sympy.ntheory import divisors
 from sympy.functions import exp
+from functools import reduce
 
 def roots_linear(f):
     """Returns a list of roots of a linear polynomial."""
@@ -123,7 +124,7 @@ def roots_binomial(f):
 
     roots, I = [], S.ImaginaryUnit
 
-    for k in xrange(n):
+    for k in range(n):
         zeta = exp(2*k*S.Pi*I/n).expand(complex=True)
         roots.append((alpha*zeta).expand(power_base=False))
 
@@ -213,7 +214,7 @@ def roots(f, *symbols, **flags):
         for factor in factors[1:]:
             last, result = result.copy(), {}
 
-            for last_r, i in last.iteritems():
+            for last_r, i in last.items():
                 g = factor.sub_term(last_r, (0,))
 
                 for j, h in enumerate(poly_sqf(g)):
@@ -316,14 +317,14 @@ def roots(f, *symbols, **flags):
         except KeyError:
             raise ValueError("Invalid domain: %s" % domain)
 
-        for zero in dict(result).iterkeys():
+        for zero in dict(result).keys():
             if not query(zero):
                 del result[zero]
 
     predicate = flags.get('predicate', None)
 
     if predicate is not None:
-        for zero in dict(result).iterkeys():
+        for zero in dict(result).keys():
             if not predicate(zero):
                 del result[zero]
 
@@ -332,7 +333,7 @@ def roots(f, *symbols, **flags):
     else:
         zeros = []
 
-        for zero, k in result.iteritems():
+        for zero, k in result.items():
             zeros.extend([zero] * k)
 
         return zeros
@@ -368,7 +369,7 @@ def poly_root_factors(f, *symbols, **flags):
     else:
         factors, N = [], 0
 
-        for r, n in zeros.iteritems():
+        for r, n in list(zeros.items()):
             h = Poly([(S.One, 1), (-r, 0)], x)
             factors, N = factors + [h]*n, N + n
 
@@ -444,7 +445,7 @@ def number_of_real_roots(f, *symbols, **flags):
     def sign_changes(seq):
         count = 0
 
-        for i in xrange(1, len(seq)):
+        for i in range(1, len(seq)):
             if (seq[i-1] < 0 and seq[i] >= 0) or \
                (seq[i-1] > 0 and seq[i] <= 0):
                 count += 1
@@ -504,7 +505,7 @@ def _exact_roots(f):
     else:
         exact, zeros = roots(f), []
 
-        for zero, k in exact.iteritems():
+        for zero, k in exact.items():
             zeros += [zero] * k
 
         _exact_roots_cache[f] = zeros

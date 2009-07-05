@@ -32,7 +32,7 @@ def intersection(*entities):
           knows exists because the required quantities were not fully
           simplified internally.
     """
-    from entity import GeometryEntity
+    from .entity import GeometryEntity
 
     entities = GeometryEntity.extract_entities(entities, False)
     if len(entities) <= 1: return []
@@ -65,15 +65,15 @@ def convex_hull(*args):
     ===========================
         See http://en.wikipedia.org/wiki/Graham_scan.
     """
-    from point import Point
-    from line import Segment
-    from polygon import Polygon
+    from .point import Point
+    from .line import Segment
+    from .polygon import Polygon
 
     def uniquify(a):
         ret = {}
         # not order preserving
-        map(ret.__setitem__, a, [])
-        return ret.keys()
+        list(map(ret.__setitem__, a, []))
+        return list(ret.keys())
 
     p = args[0]
     if isinstance(p, Point):

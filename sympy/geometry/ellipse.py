@@ -2,9 +2,9 @@ from sympy.core.basic import S, C, Basic, sympify
 from sympy.simplify import simplify, trigsimp
 from sympy.functions.elementary.miscellaneous import sqrt
 from sympy.geometry.exceptions import GeometryError
-from entity import GeometryEntity
-from point import Point
-from line import LinearEntity, Line
+from .entity import GeometryEntity
+from .point import Point
+from .line import LinearEntity, Line
 
 class Ellipse(GeometryEntity):
     """
@@ -166,7 +166,7 @@ class Ellipse(GeometryEntity):
     def random_point(self):
         """Returns a random point on the ellipse."""
         from random import random
-        from sys import maxint
+        from sys import maxsize
         t = C.Symbol('t', real=True)
         p = self.arbitrary_point('t')
         # get a random value in [-pi, pi)
@@ -180,8 +180,8 @@ class Ellipse(GeometryEntity):
         Optional parameters x and y can be used to specify symbols, or the
         names of the symbols used in the equation.
         """
-        if isinstance(x, basestring):   x = C.Symbol(x, real=True)
-        if isinstance(y, basestring):   y = C.Symbol(y, real=True)
+        if isinstance(x, str):   x = C.Symbol(x, real=True)
+        if isinstance(y, str):   y = C.Symbol(y, real=True)
         t1 = ((x - self.center[0]) / self.hradius)**2
         t2 = ((y - self.center[1]) / self.vradius)**2
         return t1 + t2 - 1
@@ -195,7 +195,7 @@ class Ellipse(GeometryEntity):
         """
         def dot(p1, p2):
             sum = 0
-            for ind in xrange(0, len(p1)):
+            for ind in range(0, len(p1)):
                 sum += p1[ind] * p2[ind]
             return simplify(sum)
 
@@ -243,7 +243,7 @@ class Ellipse(GeometryEntity):
             # of intersection for coincidence first
             result = self._do_line_intersection(o)
             if result is not None:
-                for ind in xrange(len(result)-1, -1, -1):
+                for ind in range(len(result)-1, -1, -1):
                     if result[ind] not in o:
                         del result[ind]
             return result
@@ -291,7 +291,7 @@ class Circle(Ellipse):
     def __new__(cls, *args, **kwargs):
         c, r = None, None
         if len(args) == 3 and isinstance(args[0], Point):
-            from polygon import Triangle
+            from .polygon import Triangle
             t = Triangle(args[0], args[1], args[2])
             if t.area == 0:
                 raise GeometryError("Cannot construct a circle from three collinear points")
@@ -334,8 +334,8 @@ class Circle(Ellipse):
         Optional parameters x and y can be used to specify symbols, or the
         names of the symbols used in the equation.
         """
-        if isinstance(x, basestring):   x = C.Symbol(x, real=True)
-        if isinstance(y, basestring):   y = C.Symbol(y, real=True)
+        if isinstance(x, str):   x = C.Symbol(x, real=True)
+        if isinstance(y, str):   y = C.Symbol(y, real=True)
         t1 = (x - self.center[0])**2
         t2 = (y - self.center[1])**2
         return t1 + t2 - self.hradius**2

@@ -2,8 +2,8 @@
 Plotting (requires matplotlib)
 """
 
-from mptypes import mpc, inf, isnan, isinf, arange, complex_types
-from functions import sqrt, arg
+from .mptypes import mpc, inf, isnan, isinf, arange, complex_types
+from .functions import sqrt, arg
 
 from colorsys import hsv_to_rgb, hls_to_rgb
 
@@ -48,7 +48,7 @@ def plot(f, xlim=[-5,5], ylim=None, points=200, file=None, dpi=None,
         segments = []
         segment = []
         in_complex = False
-        for i in xrange(len(x)):
+        for i in range(len(x)):
             try:
                 if i != 0:
                     for sing in singularities:
@@ -150,8 +150,8 @@ def cplot(f, re=[-5,5], im=[-5,5], points=2000, color=default_color_function,
     #   cplot(lambda z: z if z.real < 0 else 0)
     #   cplot(lambda z: z if z.imag < 0 else 0)
     w = pylab.zeros((N, M, 3))
-    for n in xrange(N):
-        for m in xrange(M):
+    for n in range(N):
+        for m in range(M):
             z = mpc(x[m], y[n])
             try:
                 v = color(f(z))
@@ -159,7 +159,7 @@ def cplot(f, re=[-5,5], im=[-5,5], points=2000, color=default_color_function,
                 v = (0.5, 0.5, 0.5)
             w[n,m] = v
         if verbose:
-            print n, "of", N
+            print(n, "of", N)
     pylab.imshow(w, extent=(rea, reb, ima, imb), origin='lower')
     pylab.xlabel('Re(z)')
     pylab.ylabel('Im(z)')

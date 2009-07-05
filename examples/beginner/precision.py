@@ -8,7 +8,7 @@ import sympy
 
 def main():
     e = sympy.Rational(2)**50/sympy.Rational(10)**50
-    print e
+    print(e)
 
 if __name__ == "__main__":
     main()

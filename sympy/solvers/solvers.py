@@ -146,7 +146,7 @@ def solve(f, *symbols, **flags):
         if isinstance(symbols[0], (list, tuple, set)):
             symbols = symbols[0]
 
-    symbols = map(sympify, symbols)
+    symbols = list(map(sympify, symbols))
     result = list()
 
     # Begin code handling for Function and Derivative instances
@@ -180,7 +180,7 @@ def solve(f, *symbols, **flags):
         i += 1
 
         if symbol_swapped:
-            swap_back_dict = dict(zip(symbols_new, symbols))
+            swap_back_dict = dict(list(zip(symbols_new, symbols)))
     # End code for handling of Function and Derivative instances
 
     if not isinstance(f, (tuple, list, set)):
@@ -189,7 +189,7 @@ def solve(f, *symbols, **flags):
         # Create a swap dictionary for storing the passed symbols to be solved
         # for, so that they may be swapped back.
         if symbol_swapped:
-            swap_dict = zip(symbols, symbols_new)
+            swap_dict = list(zip(symbols, symbols_new))
             f = f.subs(swap_dict)
             symbols = symbols_new
 
@@ -206,7 +206,7 @@ def solve(f, *symbols, **flags):
         if strategy == GS_POLY:
             poly = f.as_poly( symbol )
             assert poly is not None
-            result = roots(poly, cubics=True, quartics=True).keys()
+            result = list(roots(poly, cubics=True, quartics=True).keys())
 
         elif strategy == GS_RATIONAL:
             P, Q = f.as_numer_denom()
@@ -278,7 +278,7 @@ def solve(f, *symbols, **flags):
             raise NotImplementedError("No algorithms are implemented to solve equation %s" % f)
 
         if flags.get('simplified', True):
-            return map(simplify, result)
+            return list(map(simplify, result))
         else:
             return result
     else:
@@ -288,7 +288,7 @@ def solve(f, *symbols, **flags):
             # Create a swap dictionary for storing the passed symbols to be
             # solved for, so that they may be swapped back.
             if symbol_swapped:
-                swap_dict = zip(symbols, symbols_new)
+                swap_dict = list(zip(symbols, symbols_new))
                 f = [fi.subs(swap_dict) for fi in f]
                 symbols = symbols_new
 
@@ -328,7 +328,7 @@ def solve(f, *symbols, **flags):
             if symbol_swapped:
                 if isinstance(soln, dict):
                     res = {}
-                    for k in soln.keys():
+                    for k in list(soln.keys()):
                         res.update({swap_back_dict[k]: soln[k]})
                     return res
                 else:
@@ -387,7 +387,7 @@ def solve_linear_system(system, *symbols, **flags):
         if not matrix[i, i]:
             # there is no pivot in current column
             # so try to find one in other colums
-            for k in xrange(i+1, m):
+            for k in range(i+1, m):
                 if matrix[i, k]:
                     break
             else:
@@ -409,7 +409,7 @@ def solve_linear_system(system, *symbols, **flags):
         # divide all elements in the current row by the pivot
         matrix.row(i, lambda x, _: x * pivot_inv)
 
-        for k in xrange(i+1, matrix.lines):
+        for k in range(i+1, matrix.lines):
             if matrix[k, i]:
                 coeff = matrix[k, i]
 
@@ -434,7 +434,7 @@ def solve_linear_system(system, *symbols, **flags):
             content = matrix[k, m]
 
             # run back-substitution for variables
-            for j in xrange(k+1, m):
+            for j in range(k+1, m):
                 content -= matrix[k, j]*solutions[syms[j]]
 
             if simplified:
@@ -454,11 +454,11 @@ def solve_linear_system(system, *symbols, **flags):
             content = matrix[k, m]
 
             # run back-substitution for variables
-            for j in xrange(k+1, i):
+            for j in range(k+1, i):
                 content -= matrix[k, j]*solutions[syms[j]]
 
             # run back-substitution for parameters
-            for j in xrange(i, m):
+            for j in range(i, m):
                 content -= matrix[k, j]*syms[j]
 
             if simplified:
@@ -497,7 +497,7 @@ def solve_undetermined_coeffs(equ, coeffs, sym, **flags):
         # terms to the left hand side
         equ = equ.lhs - equ.rhs
 
-    system = collect(equ.expand(), sym, evaluate=False).values()
+    system = list(collect(equ.expand(), sym, evaluate=False).values())
 
     if not any([ equ.has(sym) for equ in system ]):
         # consecutive powers in the input expressions have
@@ -931,13 +931,13 @@ def nsolve(*args, **kwargs):
         raise NotImplementedError('need at least as many equations as variables')
     verbose = kwargs.get('verbose', False)
     if verbose:
-        print 'f(x):'
-        print f
+        print('f(x):')
+        print(f)
     # derive Jacobian
     J = f.jacobian(fargs)
     if verbose:
-        print 'J(x):'
-        print J
+        print('J(x):')
+        print(J)
     # create functions
     f = lambdify(fargs, f.T, modules)
     J = lambdify(fargs, J, modules)

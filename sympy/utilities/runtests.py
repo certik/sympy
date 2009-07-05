@@ -34,7 +34,7 @@ def isgeneratorfunction(object):
     """
     CO_GENERATOR = 0x20
     if (inspect.isfunction(object) or inspect.ismethod(object)) and \
-        object.func_code.co_flags & CO_GENERATOR:
+        object.__code__.co_flags & CO_GENERATOR:
         return True
     return False
 
@@ -137,8 +137,8 @@ def doctest(*paths, **kwargs):
             text = open(doc_file).read()
             test = parser.get_doctest(text, {}, doc_file, doc_file, 0)
             runner.run(test)
-            print "Testing ", doc_file
-            print "Failed %s, tested %s" % (runner.failures, runner.tries)
+            print("Testing ", doc_file)
+            print("Failed %s, tested %s" % (runner.failures, runner.tries))
     return dtest
 
 class SymPyDocTestRunner(pdoctest.DocTestRunner):
@@ -187,7 +187,7 @@ class SymPyTests(object):
             try:
                 self.test_file(f)
             except KeyboardInterrupt:
-                print " interrupted by user"
+                print(" interrupted by user")
                 break
         return self._reporter.finish()
 
@@ -197,7 +197,7 @@ class SymPyTests(object):
         self._count += 1
         gl = {'__file__':filename}
         try:
-            execfile(filename, gl)
+            exec(compile(open(filename).read(), filename, 'exec'), gl)
         except (ImportError, SyntaxError):
             self._reporter.import_error(filename, sys.exc_info())
             return
@@ -211,7 +211,7 @@ class SymPyTests(object):
             # we need to filter only those functions that begin with 'test_'
             # that are defined in the testing file or in the file where
             # is defined the XFAIL decorator
-            funcs = [gl[f] for f in gl.keys() if f.startswith("test_") and
+            funcs = [gl[f] for f in list(gl.keys()) if f.startswith("test_") and
                                                  (inspect.isfunction(gl[f])
                                                     or inspect.ismethod(gl[f])) and
                                                  (inspect.getsourcefile(gl[f]) == filename or
@@ -339,7 +339,7 @@ class SymPyDocTests(object):
             try:
                 self.test_file(f)
             except KeyboardInterrupt:
-                print " interrupted by user"
+                print(" interrupted by user")
                 break
         return self._reporter.finish()
 
@@ -356,7 +356,7 @@ class SymPyDocTests(object):
 
         import doctest
         import unittest
-        from StringIO import StringIO
+        from io import StringIO
 
         rel_name = filename[len(self._root_dir)+1:]
         module = rel_name.replace(os.sep, '.')[:-3]

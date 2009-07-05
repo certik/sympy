@@ -9,9 +9,9 @@ from sympy.core.sympify import sympify
 
 from sympy.core.numbers import igcd, ilcm
 
-from polynomial import Poly, SymbolsError, MultivariatePolyError
+from .polynomial import Poly, SymbolsError, MultivariatePolyError
 
-from monomial import monomial_cmp, monomial_lcm, \
+from .monomial import monomial_cmp, monomial_lcm, \
     monomial_gcd, monomial_mul, monomial_div
 
 from sympy.utilities.iterables import all, any
@@ -284,9 +284,9 @@ def poly_groebner(f, *symbols, **flags):
     R, P, G, B = generate(R, P, G, B)
 
     while B:
-        k, M = B.items()[0]
+        k, M = list(B.items())[0]
 
-        for l, N in B.iteritems():
+        for l, N in B.items():
             if compare(M, N) == 1:
                 k, M = l, N
 
@@ -400,7 +400,7 @@ def poly_lcm(f, g, *symbols):
                    [ (1,) + monom for monom in g.monoms ]
 
         g_coeffs = list(g.coeffs) + [ -coeff for coeff in g.coeffs ]
-        G = Poly(dict(zip(g_monoms, g_coeffs)), t, *symbols, **lex)
+        G = Poly(dict(list(zip(g_monoms, g_coeffs))), t, *symbols, **lex)
 
         def independent(h):
             return all(not monom[0] for monom in h.monoms)
@@ -414,7 +414,7 @@ def poly_lcm(f, g, *symbols):
 
         h_monoms = [ monom[1:] for monom in H[0].monoms ]
 
-        return Poly(dict(zip(h_monoms, h_coeffs)), *symbols, **flags)
+        return Poly(dict(list(zip(h_monoms, h_coeffs))), *symbols, **flags)
     else:
         h = poly_div(f * g, poly_gcd(f, g))[0]
 
@@ -595,20 +595,20 @@ def poly_resultant(f, g, *symbols):
 
     B = sympy.matrices.zeros(N)
 
-    for i in xrange(N):
-        for j in xrange(i, N):
+    for i in range(N):
+        for j in range(i, N):
             if i in p and j+1 in q:
                 B[i, j] += p[i] * q[j+1]
 
             if j+1 in p and i in q:
                 B[i, j] -= p[j+1] * q[i]
 
-    for i in xrange(1, N-1):
-        for j in xrange(i, N-1):
+    for i in range(1, N-1):
+        for j in range(i, N-1):
             B[i, j] += B[i-1, j+1]
 
-    for i in xrange(N):
-        for j in xrange(i+1, N):
+    for i in range(N):
+        for j in range(i+1, N):
             B[j, i] = B[i, j]
 
     det = B.det()
@@ -874,10 +874,10 @@ def poly_decompose(f, *symbols):
 
         r = n // s
 
-        for k in xrange(1, s):
+        for k in range(1, s):
             coeff = S.Zero
 
-            for j in xrange(0, k):
+            for j in range(0, k):
                 if not n+j-k in f:
                     continue
 
@@ -912,7 +912,7 @@ def poly_decompose(f, *symbols):
     def decompose(f):
         deg = f.degree
 
-        for s in xrange(2, deg):
+        for s in range(2, deg):
             if deg % s != 0:
                 continue
 

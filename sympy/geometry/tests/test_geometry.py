@@ -89,7 +89,7 @@ def test_line():
     assert simplify(l3.equation()) in (x-x1, x1-x)
 
     assert l2.arbitrary_point() in l2
-    for ind in xrange(0, 5):
+    for ind in range(0, 5):
         assert l3.random_point() in l3
 
     # Orthogonality
@@ -211,7 +211,7 @@ def test_ellipse():
     assert c1.circumference == 2*pi
 
     assert e2.arbitrary_point() in e2
-    for ind in xrange(0, 5):
+    for ind in range(0, 5):
         assert e3.random_point() in e3
 
     # Foci
@@ -372,9 +372,9 @@ def test_polygon():
     assert altitudes[p3] == s1[2]
 
     # Ensure
-    assert len(intersection(*bisectors.values())) == 1
-    assert len(intersection(*altitudes.values())) == 1
-    assert len(intersection(*m.values())) == 1
+    assert len(intersection(*list(bisectors.values()))) == 1
+    assert len(intersection(*list(altitudes.values()))) == 1
+    assert len(intersection(*list(m.values()))) == 1
 
 def test_convex_hull():
     p = [Point(-5,-1), Point(-2,1), Point(-2,-1), Point(-1,-3), Point(0,0),
@@ -408,7 +408,7 @@ if __name__ == "__main__":
                 sys.stderr.write("Testing %s..." % member)
                 curr_module.__dict__[member]()
                 sys.stderr.write("SUCCESS!\n")
-            except AssertionError, e:
+            except AssertionError as e:
                 sys.stderr.write("FAILED!\n")
                 sys.stderr.write('-' * 25 + '\n')
                 excepthook(*exc_info())

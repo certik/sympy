@@ -51,7 +51,7 @@ from pyglet.media import MediaFormatException
 
 import ctypes
 import struct
-import StringIO
+import io
 
 WAVE_FORMAT_PCM = 0x0001
 IBM_FORMAT_MULAW = 0x0101
@@ -137,7 +137,7 @@ class RIFFFile(RIFFForm):
 
     def __init__(self, file):
         if not hasattr(file, 'seek'):
-            file = StringIO.StringIO(file.read())
+            file = io.StringIO(file.read())
 
         super(RIFFFile, self).__init__(file, 0)
 

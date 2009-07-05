@@ -1,15 +1,15 @@
 
-from polynomial import Poly
+from .polynomial import Poly
 
 def LexPoly(*args):
     """Returns a polynomial with lexicographic order of terms. """
     return Poly(*args, **{ 'order' : 'lex' })
 
-from algorithms import poly_div, poly_pdiv, poly_groebner, poly_lcm, poly_gcd, \
+from .algorithms import poly_div, poly_pdiv, poly_groebner, poly_lcm, poly_gcd, \
     poly_half_gcdex, poly_gcdex, poly_sqf, poly_resultant, poly_subresultants, \
     poly_decompose, poly_quo, poly_rem, poly_pquo, poly_prem
 
-from rootfinding import poly_root_factors, poly_sturm
+from .rootfinding import poly_root_factors, poly_sturm
 
 def _conv_args(n, args):
     symbols = args[n:]
@@ -53,8 +53,8 @@ def %s(*args, **kwargs):
 %s.__doc__ = poly_%s.__doc__
 """
 
-for _func, _n in _funcs.iteritems():
-    exec _func_def % (_func, _func, _n, _func, _func)
+for _func, _n in _funcs.items():
+    exec(_func_def % (_func, _func, _n, _func, _func))
 
 def div(*args, **kwargs):
     q, r = poly_div(*_conv_args(2, args), **kwargs)

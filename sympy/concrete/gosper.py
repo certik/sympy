@@ -40,7 +40,7 @@ def normal(f, g, n=None):
        (1/4, 3/2 + n, 1/4 + n)
 
     """
-    f, g = map(sympify, (f, g))
+    f, g = list(map(sympify, (f, g)))
 
     p = f.as_poly(n)
     q = g.as_poly(n)
@@ -57,8 +57,8 @@ def normal(f, g, n=None):
 
     res = resultant(A, B.subs(n, n+h), n)
 
-    nni_roots = roots(res, h, domain='Z',
-        predicate=lambda r: r >= 0).keys()
+    nni_roots = list(roots(res, h, domain='Z',
+        predicate=lambda r: r >= 0).keys())
 
     if not nni_roots:
         return (f, g, S.One)
@@ -69,7 +69,7 @@ def normal(f, g, n=None):
             A = quo(A, d, n)
             B = quo(B, d.subs(n, n-i), n)
 
-            C *= Mul(*[ d.subs(n, n-j) for j in xrange(1, i+1) ])
+            C *= Mul(*[ d.subs(n, n-j) for j in range(1, i+1) ])
 
         return (Z*A, B, C)
 

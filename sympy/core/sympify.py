@@ -2,7 +2,7 @@
 # from basic import Basic, BasicType, S
 # from numbers  import Integer, Real
 import decimal
-from decorators import _sympifyit
+from .decorators import _sympifyit
 
 class SympifyError(ValueError):
     def __init__(self, expr, base_exc=None):
@@ -61,12 +61,12 @@ def sympify(a, locals=None, convert_xor=True):
         return a
     elif isinstance(a, bool):
         return a
-    elif isinstance(a, (int, long)):
+    elif isinstance(a, int):
         return Integer(a)
     elif isinstance(a, (float, decimal.Decimal)):
         return Real(a)
     elif isinstance(a, complex):
-        real, imag = map(sympify, (a.real, a.imag))
+        real, imag = list(map(sympify, (a.real, a.imag)))
         ireal, iimag = int(real), int(imag)
 
         if ireal + iimag*1j == a:
@@ -119,7 +119,7 @@ def sympify(a, locals=None, convert_xor=True):
 
         if convert_xor:
             a = a.replace('^','**')
-        import ast_parser
+        from . import ast_parser
         return ast_parser.parse_expr(a, locals)
     raise SympifyError("%r is NOT a valid SymPy expression" % a)
 
@@ -156,12 +156,12 @@ def _sympify(a):
         return a
     if isinstance(a, BasicType):
         return a
-    elif isinstance(a, (int, long)):
+    elif isinstance(a, int):
         return Integer(a)
     elif isinstance(a, (float, decimal.Decimal)):
         return Real(a)
     elif isinstance(a, complex):
-        real, imag = map(sympify, (a.real, a.imag))
+        real, imag = list(map(sympify, (a.real, a.imag)))
         ireal, iimag = int(real), int(imag)
 
         if ireal + iimag*1j == a:
@@ -198,5 +198,5 @@ def _sympify(a):
 
 
 
-from numbers import Integer, Real
-from basic import Basic, BasicType, S
+from .numbers import Integer, Real
+from .basic import Basic, BasicType, S

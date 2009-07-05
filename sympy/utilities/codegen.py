@@ -77,7 +77,7 @@ from sympy.core.basic import Basic
 from sympy.utilities.iterables import postorder_traversal
 from sympy.printing.ccode import ccode
 
-from StringIO import StringIO
+from io import StringIO
 import sympy, os
 
 
@@ -265,11 +265,11 @@ This file is part of '%(project)s'
 class CCodeGen(CodeGen):
     def _dump_header(self, f):
         """Writes a common header for the .c and the .h file."""
-        print >> f, "/****************************************************************************** "
+        print("/****************************************************************************** ", file=f)
         tmp = header_comment % {"version": sympy.__version__, "project": self.project}
         for line in tmp.splitlines():
-            print >> f, " *%s* " % line.center(76)
-        print >> f, " ******************************************************************************/"
+            print(" *%s* " % line.center(76), file=f)
+        print(" ******************************************************************************/", file=f)
 
     def get_prototype_result(self, routine):
         """Returns a string for the function prototype for the given routine and
@@ -316,21 +316,21 @@ class CCodeGen(CodeGen):
         """
         if header:
             self._dump_header(f)
-        if empty: print >> f
-        print >> f, "#include \"%s.h\"" % os.path.basename(prefix)
-        print >> f, "#include <math.h>"
-        if empty: print >> f
+        if empty: print(file=f)
+        print("#include \"%s.h\"" % os.path.basename(prefix), file=f)
+        print("#include <math.h>", file=f)
+        if empty: print(file=f)
         for routine in routines:
             # function definitions.
             prototype, result = self.get_prototype_result(routine)
-            print >> f, "%s {" % prototype
+            print("%s {" % prototype, file=f)
             # return value
             if result is not None:
-                print >> f, "  return %s;" % ccode(result.expr)
+                print("  return %s;" % ccode(result.expr), file=f)
             # curly closing brackets
-            print >> f, "}"
-            if empty: print >> f
-        if empty: print >> f
+            print("}", file=f)
+            if empty: print(file=f)
+        if empty: print(file=f)
     dump_c.extension = "c"
 
     def dump_h(self, routines, f, prefix, header=True, empty=True):
@@ -354,18 +354,18 @@ class CCodeGen(CodeGen):
             self._dump_header(f)
         guard_name = "%s__%s__H" % (self.project.replace(" ", "_").upper(), prefix.replace("/", "_").upper())
         # include guards
-        if empty: print >> f
-        print >> f, "#ifndef %s" % guard_name
-        print >> f, "#define %s" % guard_name
-        if empty: print >> f
+        if empty: print(file=f)
+        print("#ifndef %s" % guard_name, file=f)
+        print("#define %s" % guard_name, file=f)
+        if empty: print(file=f)
         # declaration of the function prototypes
         for routine in routines:
             prototype, result = self.get_prototype_result(routine)
-            print >> f, "%s;" % prototype
+            print("%s;" % prototype, file=f)
         # end if include guards
-        if empty: print >> f
-        print >> f, "#endif"
-        if empty: print >> f
+        if empty: print(file=f)
+        print("#endif", file=f)
+        if empty: print(file=f)
     dump_h.extension = "h"
 
     # This list of dump functions is used by CodeGen.write to know which dump
@@ -435,7 +435,7 @@ def codegen(name_expr, language, prefix, project="project", to_files=False, head
     # Construct the routines based on the name_expression pairs.
     #  mainly the input arguments require some work
     routines = []
-    if isinstance(name_expr[0], basestring):
+    if isinstance(name_expr[0], str):
         # single tuple is given, turn it into a singleton list with a tuple.
         name_expr = [name_expr]
     for name, expr in name_expr:

@@ -1,6 +1,6 @@
 __version__ = '0.12'
 
-from mptypes import (
+from .mptypes import (
     mpnumeric, mpf, mpc, mpi, mpmathify,
     make_mpf, make_mpc, make_mpi,
     mp, extraprec, extradps, workprec, workdps,
@@ -11,9 +11,9 @@ from mptypes import (
     chop
 )
 
-from usertools import monitor, timing
+from .usertools import monitor, timing
 
-from functions import (
+from .functions import (
     pi, degree, e, ln2, ln10, phi, euler,
     catalan, khinchin, glaisher, apery, mertens, twinprime,
     sqrt, cbrt, exp, ln, log, log10, power,
@@ -47,29 +47,29 @@ from functions import (
     expm1
 )
 
-from elliptic import jtheta, djtheta, jsn, jcn, jdn
+from .elliptic import jtheta, djtheta, jsn, jcn, jdn
 
-from calculus import richardson, shanks, nsum, nprod
-from calculus import diff, diffun, diffs, taylor, pade
-from calculus import polyval, polyroots
-from calculus import fourier, fourierval
-from calculus import sumem, chebyfit, limit
-from calculus import odeint
+from .calculus import richardson, shanks, nsum, nprod
+from .calculus import diff, diffun, diffs, taylor, pade
+from .calculus import polyval, polyroots
+from .calculus import fourier, fourierval
+from .calculus import sumem, chebyfit, limit
+from .calculus import odeint
 
-from odes import odefun
+from .odes import odefun
 
-from quadrature import quad, quadgl, quadts, quadosc, TanhSinh, GaussLegendre
+from .quadrature import quad, quadgl, quadts, quadosc, TanhSinh, GaussLegendre
 
-from identification import pslq, identify, findpoly
+from .identification import pslq, identify, findpoly
 
-from matrices import matrix, eye, diag, zeros, ones, hilbert, randmatrix, \
+from .matrices import matrix, eye, diag, zeros, ones, hilbert, randmatrix, \
     norm, mnorm
-from linalg import lu_solve, inverse, residual, qr_solve, cholesky_solve, det, \
+from .linalg import lu_solve, inverse, residual, qr_solve, cholesky_solve, det, \
     cond, lu
 
-from visualization import plot, cplot
+from .visualization import plot, cplot
 
-from optimization import findroot, multiplicity
+from .optimization import findroot, multiplicity
 
 # be careful when changing this name, don't use test*!
 def runtests():

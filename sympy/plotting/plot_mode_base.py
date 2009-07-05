@@ -1,7 +1,7 @@
 from pyglet.gl import *
-from plot_mode import PlotMode
+from .plot_mode import PlotMode
 from threading import Thread, Event, RLock
-from color_scheme import ColorScheme
+from .color_scheme import ColorScheme
 from sympy.core.basic import S
 from time import sleep
 
@@ -175,7 +175,7 @@ class PlotModeBase(PlotMode):
         used to build a display list. (The list is
         built outside of the function)
         """
-        assert callable(function)
+        assert hasattr(function, '__call__')
         self._draw_wireframe.append(function)
         if len(self._draw_wireframe) > self._max_render_stack_size:
             del self._draw_wireframe[1] # leave marker element
@@ -187,7 +187,7 @@ class PlotModeBase(PlotMode):
         used to build a display list. (The list is
         built outside of the function)
         """
-        assert callable(function)
+        assert hasattr(function, '__call__')
         self._draw_solid.append(function)
         if len(self._draw_solid) > self._max_render_stack_size:
             del self._draw_solid[1] # leave marker element
@@ -203,7 +203,7 @@ class PlotModeBase(PlotMode):
         top = render_stack[-1]
         if top == -1:
             return -1 # nothing to display
-        elif callable(top):
+        elif hasattr(top, '__call__'):
             dl = self._create_display_list(top)
             render_stack[-1] = (dl, top)
             return dl # display newly added list
@@ -231,7 +231,7 @@ class PlotModeBase(PlotMode):
     @synchronized
     def draw(self):
         for f in self.predraw:
-            if callable(f): f()
+            if hasattr(f, '__call__'): f()
         if self.style_override:
             style = self.styles[self.style_override]
         else:
@@ -247,7 +247,7 @@ class PlotModeBase(PlotMode):
             if dl > 0 and GL_TRUE == glIsList(dl):
                 self._draw_wireframe_display_list(dl)
         for f in self.postdraw:
-            if callable(f): f()
+            if hasattr(f, '__call__'): f()
 
     def _on_change_color(self, color):
         Thread(target=self._calculate_cverts).start()
@@ -264,7 +264,7 @@ class PlotModeBase(PlotMode):
         self._calculating_verts.set()
         try: self._on_calculate_verts()
         finally: self._calculating_verts.clear()
-        if callable(self.bounds_callback):
+        if hasattr(self.bounds_callback, '__call__'):
             self.bounds_callback()
 
     def _calculate_cverts(self):
@@ -329,7 +329,7 @@ class PlotModeBase(PlotMode):
             if repr(v) == repr(self._color): return
             self._on_change_color(v)
             self._color = v
-        except Exception, e:
+        except Exception as e:
             raise RuntimeError(("Color change failed. "
                              "Reason: %s" % (str(e))))
 

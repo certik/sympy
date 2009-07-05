@@ -1,8 +1,8 @@
 from sympy.core.basic import Basic, S, C
 from sympy.simplify import simplify
 from sympy.geometry.exceptions import GeometryError
-from entity import GeometryEntity
-from point import Point
+from .entity import GeometryEntity
+from .point import Point
 
 class LinearEntity(GeometryEntity):
     """
@@ -292,7 +292,7 @@ class LinearEntity(GeometryEntity):
     def random_point(self):
         """Returns a random point on this Ray."""
         from random import randint
-        from sys import maxint
+        from sys import maxsize
 
         # The lower and upper
         lower, upper = -maxint-1, maxint

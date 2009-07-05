@@ -78,7 +78,7 @@ class Matrix(object):
         [0, 1]
         [0, 2]
         """
-        if len(args) == 3 and callable(args[2]):
+        if len(args) == 3 and hasattr(args[2], '__call__'):
             operation = args[2]
             assert isinstance(args[0], int) and isinstance(args[1], int)
             self.lines = args[0]
@@ -94,7 +94,7 @@ class Matrix(object):
             mat = args[2]
             if len(mat) != self.lines*self.cols:
                 raise MatrixError('List length should be equal to rows*columns')
-            self.mat = map(lambda i: sympify(i), mat)
+            self.mat = [sympify(i) for i in mat]
         elif len(args) == 1:
             mat = args[0]
             if isinstance(mat, Matrix):
@@ -109,12 +109,12 @@ class Matrix(object):
                 arr = mat.__array__()
                 if len(arr.shape) == 2:
                     self.lines, self.cols = arr.shape[0], arr.shape[1]
-                    self.mat = map(lambda i: sympify(i), arr.ravel())
+                    self.mat = [sympify(i) for i in arr.ravel()]
                     return
                 elif len(arr.shape) == 1:
                     self.lines, self.cols = 1, arr.shape[0]
                     self.mat = [0]*self.cols
-                    for i in xrange(len(arr)):
+                    for i in range(len(arr)):
                         self.mat[i] = sympify(arr[i])
                     return
                 else:
@@ -125,15 +125,15 @@ class Matrix(object):
             if len(mat) != 0:
                 if not isinstance(mat[0], (list, tuple)):
                     self.cols = 1
-                    self.mat = map(lambda i: sympify(i), mat)
+                    self.mat = [sympify(i) for i in mat]
                     return
                 self.cols = len(mat[0])
             else:
                 self.cols = 0
             self.mat = []
-            for j in xrange(self.lines):
+            for j in range(self.lines):
                 assert len(mat[j])==self.cols
-                for i in xrange(self.cols):
+                for i in range(self.cols):
                     self.mat.append(sympify(mat[j][i]))
         elif len(args) == 0:
             # Empty Matrix
@@ -149,9 +149,9 @@ class Matrix(object):
             self.lines=len(mat)
             self.cols=len(mat[0])
             self.mat=[]
-            for j in xrange(self.lines):
+            for j in range(self.lines):
                 assert len(mat[j])==self.cols
-                for i in xrange(self.cols):
+                for i in range(self.cols):
                     self.mat.append(sympify(mat[j][i]))
             #raise TypeError("Data type not understood")
 
@@ -162,7 +162,7 @@ class Matrix(object):
                     %repr(key))
         i,j=key
         if not (i>=0 and i<self.lines and j>=0 and j < self.cols):
-            print self.lines, " ", self.cols
+            print(self.lines, " ", self.cols)
             raise IndexError("Index out of range: a[%s]"%repr(key))
         return i,j
 
@@ -182,7 +182,7 @@ class Matrix(object):
         True
         """
         a = [0]*self.cols*self.lines
-        for i in xrange(self.cols):
+        for i in range(self.cols):
             a[i*self.lines:(i+1)*self.lines] = self.mat[i::self.cols]
         return Matrix(self.cols,self.lines,a)
 
@@ -350,7 +350,7 @@ class Matrix(object):
         [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
         """
         ret = [0]*self.lines
-        for i in xrange(self.lines):
+        for i in range(self.lines):
             ret[i] = self.mat[i*self.cols:(i+1)*self.cols]
         return ret
 
@@ -378,19 +378,19 @@ class Matrix(object):
     def __rmul__(self,a):
         if hasattr(a, "__array__"):
             return matrix_multiply(a,self)
-        out = Matrix(self.lines,self.cols,map(lambda i: a*i,self.mat))
+        out = Matrix(self.lines,self.cols,[a*i for i in self.mat])
         return out
 
     def expand(self):
-        out = Matrix(self.lines,self.cols,map(lambda i: i.expand(), self.mat))
+        out = Matrix(self.lines,self.cols,[i.expand() for i in self.mat])
         return out
 
     def combine(self):
-        out = Matrix(self.lines,self.cols,map(lambda i: i.combine(),self.mat))
+        out = Matrix(self.lines,self.cols,[i.combine() for i in self.mat])
         return out
 
     def subs(self, *args):
-        out = Matrix(self.lines,self.cols,map(lambda i: i.subs(*args),self.mat))
+        out = Matrix(self.lines,self.cols,[i.subs(*args) for i in self.mat])
         return out
 
     def __sub__(self,a):
@@ -399,7 +399,7 @@ class Matrix(object):
     def __mul__(self,a):
         if hasattr(a, "__array__"):
             return matrix_multiply(self,a)
-        out = Matrix(self.lines,self.cols,map(lambda i: i*a,self.mat))
+        out = Matrix(self.lines,self.cols,[i*a for i in self.mat])
         return out
 
     def __pow__(self, num):
@@ -678,7 +678,7 @@ class Matrix(object):
             raise IndexError("Slice indices out of range: a[%s]"%repr(keys))
         outLines, outCols = rhi-rlo, chi-clo
         outMat = [0]*outLines*outCols
-        for i in xrange(outLines):
+        for i in range(outLines):
             outMat[i*outCols:(i+1)*outCols] = self.mat[(i+rlo)*self.cols+clo:(i+rlo)*self.cols+chi]
         return Matrix(outLines,outCols,outMat)
 
@@ -719,8 +719,8 @@ class Matrix(object):
         [0, 2]
         [4, 6]
         """
-        assert callable(f)
-        out = Matrix(self.lines,self.cols,map(f,self.mat))
+        assert hasattr(f, '__call__')
+        out = Matrix(self.lines,self.cols,list(map(f,self.mat)))
         return out
 
     def evalf(self, prec=None, **options):
@@ -744,7 +744,7 @@ class Matrix(object):
         [1, 1]
         """
         if self.lines*self.cols != _rows*_cols:
-            print "Invalid reshape parameters %d %d" % (_rows, _cols)
+            print("Invalid reshape parameters %d %d" % (_rows, _cols))
         return Matrix(_rows, _cols, lambda i,j: self.mat[i*_cols + j])
 
     def print_nonzero (self, symb="X"):
@@ -774,7 +774,7 @@ class Matrix(object):
                 else:
                     s+= symb+""
             s+="]\n"
-        print s
+        print(s)
 
     def LUsolve(self, rhs, iszerofunc=_iszero):
         """
@@ -985,7 +985,7 @@ class Matrix(object):
 
     # Utility functions
     def simplify(self):
-        for i in xrange(len(self.mat)):
+        for i in range(len(self.mat)):
             self.mat[i] = simplify(self.mat[i])
 
     #def evaluate(self):    # no more eval() so should be removed
@@ -1328,7 +1328,7 @@ class Matrix(object):
         A, N = self, self.lines
         transforms = [0] * (N-1)
 
-        for n in xrange(N, 1, -1):
+        for n in range(N, 1, -1):
             T, k = zeros((n+1,n)), n - 1
 
             R, C = -A[k,:k], A[:k,k]
@@ -1336,7 +1336,7 @@ class Matrix(object):
 
             items = [ C ]
 
-            for i in xrange(0, n-2):
+            for i in range(0, n-2):
                 items.append(A * items[i])
 
             for i, B in enumerate(items):
@@ -1344,7 +1344,7 @@ class Matrix(object):
 
             items = [ S.One, a ] + items
 
-            for i in xrange(n):
+            for i in range(n):
                 T[i:,i] = items[:n-i+1]
 
             transforms[k-1] = T
@@ -1374,7 +1374,7 @@ class Matrix(object):
 
     def berkowitz_charpoly(self, x):
         """Computes characteristic polynomial minors using Berkowitz method."""
-        coeffs, monoms = self.berkowitz()[-1], range(self.lines+1)
+        coeffs, monoms = self.berkowitz()[-1], list(range(self.lines+1))
         return Poly(list(zip(coeffs, reversed(monoms))), x)
 
     charpoly = berkowitz_charpoly
@@ -1393,7 +1393,7 @@ class Matrix(object):
 
         out, vlist = [], self.eigenvals(**flags)
 
-        for r, k in vlist.iteritems():
+        for r, k in vlist.items():
             tmp = self - eye(self.lines)*r
             basis = tmp.nullspace()
             # check if basis is right size, don't do it if symbolic - too many solutions
@@ -1462,14 +1462,14 @@ class Matrix(object):
         count = 0
         if diagonal:
             v = zeros( (c * (c + 1) // 2, 1) )
-            for j in xrange(c):
-                for i in xrange(j,c):
+            for j in range(c):
+                for i in range(j,c):
                     v[count] = self[i,j]
                     count += 1
         else:
             v = zeros( (c * (c - 1) // 2, 1) )
-            for j in xrange(c):
-                for i in xrange(j+1,c):
+            for j in range(c):
+                for i in range(j+1,c):
                     v[count] = self[i,j]
                     count += 1
         return v
@@ -1484,9 +1484,9 @@ def matrix_multiply(A,B):
     alst = A.tolist()
     return Matrix(A.shape[0], B.shape[1], lambda i,j:
                                         reduce(lambda k,l: k+l,
-                                        map(lambda n,m: n*m,
+                                        list(map(lambda n,m: n*m,
                                         alst[i],
-                                        blst[j])).expand())
+                                        blst[j]))).expand())
                                         # .expand() is a test
 
 def matrix_add(A,B):
@@ -1496,8 +1496,8 @@ def matrix_add(A,B):
     alst = A.tolist()
     blst = B.tolist()
     ret = [0]*A.shape[0]
-    for i in xrange(A.shape[0]):
-        ret[i] = map(lambda j,k: j+k, alst[i], blst[i])
+    for i in range(A.shape[0]):
+        ret[i] = list(map(lambda j,k: j+k, alst[i], blst[i]))
     return Matrix(ret)
 
 def zero(n):
@@ -1599,7 +1599,7 @@ def wronskian(functions, var):
     see: http://en.wikipedia.org/wiki/Wronskian
     """
 
-    for index in xrange(0, len(functions)):
+    for index in range(0, len(functions)):
         functions[index] = sympify(functions[index])
     n = len(functions)
     W = Matrix(n, n, lambda i,j: functions[i].diff(var, j) )
@@ -1635,7 +1635,7 @@ def casoratian(seqs, n, zero=True):
        True
 
     """
-    seqs = map(sympify, seqs)
+    seqs = list(map(sympify, seqs))
 
     if not zero:
         f = lambda i, j: seqs[j].subs(n, n+i)
@@ -1650,7 +1650,7 @@ class SMatrix(Matrix):
     """Sparse matrix"""
 
     def __init__(self, *args):
-        if len(args) == 3 and callable(args[2]):
+        if len(args) == 3 and hasattr(args[2], '__call__'):
             op = args[2]
             assert isinstance(args[0], int) and isinstance(args[1], int)
             self.lines = args[0]
@@ -1678,7 +1678,7 @@ class SMatrix(Matrix):
             self.cols = args[1]
             self.mat = {}
             # manual copy, copy.deepcopy() doesn't work
-            for key in args[2].keys():
+            for key in list(args[2].keys()):
                 self.mat[key] = args[2][key]
         else:
             if len(args) == 1:
@@ -1703,7 +1703,7 @@ class SMatrix(Matrix):
             L = []
             for i in range(lo, hi):
                 m,n = self.rowdecomp(i)
-                if self.mat.has_key((m,n)):
+                if (m,n) in self.mat:
                     L.append(self.mat[(m,n)])
                 else:
                     L.append(0)
@@ -1745,12 +1745,12 @@ class SMatrix(Matrix):
             testval = sympify(value)
             if testval != 0:
                 self.mat[(i,j)] = testval
-            elif self.mat.has_key((i,j)):
+            elif (i,j) in self.mat:
                 del self.mat[(i,j)]
 
     def row_del(self, k):
         newD = {}
-        for (i,j) in self.mat.keys():
+        for (i,j) in list(self.mat.keys()):
             if i==k:
                 pass
             elif i > k:
@@ -1762,7 +1762,7 @@ class SMatrix(Matrix):
 
     def col_del(self, k):
         newD = {}
-        for (i,j) in self.mat.keys():
+        for (i,j) in list(self.mat.keys()):
             if j==k:
                 pass
             elif j > k:
@@ -1815,12 +1815,12 @@ class SMatrix(Matrix):
 
     def reshape(self, _rows, _cols):
         if self.lines*self.cols != _rows*_cols:
-            print "Invalid reshape parameters %d %d" % (_rows, _cols)
+            print("Invalid reshape parameters %d %d" % (_rows, _cols))
         newD = {}
         for i in range(_rows):
             for j in range(_cols):
                 m,n = self.rowdecomp(i*_cols + j)
-                if self.mat.has_key((m,n)):
+                if (m,n) in self.mat:
                     newD[(i,j)] = self.mat[(m,n)]
         return SMatrix(_rows, _cols, newD)
 

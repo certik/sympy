@@ -1,5 +1,5 @@
 from sympy.core.numbers import igcd
-from primetest import isprime
+from .primetest import isprime
 
 def totient_(n):
     """returns the number of integers less than n
@@ -7,7 +7,7 @@ def totient_(n):
     if n < 1:
         raise ValueError("n must be a positive integer")
     tot=0
-    for x in xrange(1,n):
+    for x in range(1,n):
         if igcd(x,n)==1:
             tot+=1
     return tot
@@ -19,7 +19,7 @@ def n_order(a,n):
     """
     assert igcd(a,n)==1
     if a>n : a=a%n
-    for x in xrange(1,totient_(n)+1):
+    for x in range(1,totient_(n)+1):
         if (a**x)%n==1:
             return x
 

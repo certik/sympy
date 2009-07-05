@@ -62,16 +62,15 @@ class Piecewise(Function):
         # Check types first
         for ec in args:
             if not isinstance(ec, tuple) or len(ec) != 2:
-                raise TypeError, "args may only include (expr, cond) pairs"
+                raise TypeError("args may only include (expr, cond) pairs")
             cond_type = type(ec[1])
             if not (cond_type is bool or issubclass(cond_type, Relational) or \
                     issubclass(cond_type, Number)):
-                raise TypeError, \
-                    "Cond %s is of type %s, but must be a bool," \
-                    " Relational or Number" % (ec[1], cond_type)
+                raise TypeError("Cond %s is of type %s, but must be a bool," \
+                    " Relational or Number" % (ec[1], cond_type))
 
         # sympify args
-        args = map(lambda x:ExprCondPair(*x), args)
+        args = [ExprCondPair(*x) for x in args]
 
         r = cls.eval(*args)
 
@@ -159,11 +158,10 @@ class Piecewise(Function):
             elif cond.args[1] == sym:
                 curr[1] = S.Infinity
             else:
-                raise NotImplementedError, \
-                    "Currently only supporting evaluation with only " \
-                    "sym on one side of the relation."
+                raise NotImplementedError("Currently only supporting evaluation with only " \
+                    "sym on one side of the relation.")
             curr = [max(a, curr[0]), min(b, curr[1])]
-            for n in xrange(len(int_expr)):
+            for n in range(len(int_expr)):
                 if self.__eval_cond(curr[0] < int_expr[n][1]) and \
                         self.__eval_cond(curr[0] >= int_expr[n][0]):
                     curr[0] = int_expr[n][1]
@@ -187,9 +185,9 @@ class Piecewise(Function):
         if holes and default != None:
             int_expr.extend(holes)
         elif holes and default == None:
-            raise ValueError, "Called interval evaluation over piecewise " \
+            raise ValueError("Called interval evaluation over piecewise " \
                               "function on undefined intervals %s" % \
-                              ", ".join([str((h[0], h[1])) for h in holes])
+                              ", ".join([str((h[0], h[1])) for h in holes]))
 
         # Finally run through the intervals and sum the evaluation.
         ret_fun = 0

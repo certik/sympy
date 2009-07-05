@@ -3,11 +3,11 @@ Implements the PSLQ algorithm for integer relation detection,
 and derivative algorithms for constant recognition.
 """
 
-from mptypes import (mpf, eps, mp, mpmathify, nstr, inf)
-from functions import (log, exp, sqrt)
+from .mptypes import (mpf, eps, mp, mpmathify, nstr, inf)
+from .functions import (log, exp, sqrt)
 
-from libmpf import to_fixed, from_man_exp, MODE
-from libelefun import sqrt_fixed
+from .libmpf import to_fixed, from_man_exp, MODE
+from .libelefun import sqrt_fixed
 
 # round to nearest integer (can be done more elegantly...)
 def round_fixed(x, prec):
@@ -130,7 +130,7 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
     assert prec >= 53
 
     if verbose and prec // max(2,n) < 5:
-        print "Warning: precision for PSLQ may be too low"
+        print("Warning: precision for PSLQ may be too low")
 
     target = int(prec * 0.75)
 
@@ -143,7 +143,7 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
     prec += extra
 
     if verbose:
-        print "PSLQ using prec %i and tol %s" % (prec, nstr(tol))
+        print("PSLQ using prec %i and tol %s" % (prec, nstr(tol)))
 
     tol = to_fixed(tol._mpf_, prec)
     assert tol
@@ -160,7 +160,7 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
         raise ValueError("PSLQ requires a vector of nonzero numbers")
     if minx < tol//100:
         if verbose:
-            print "STOPPING: (one number is too small)"
+            print("STOPPING: (one number is too small)")
         return None
 
     g = sqrt_fixed((4<<prec)//3, prec)
@@ -169,25 +169,25 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
     H = {}
     # Initialization
     # step 1
-    for i in xrange(1, n+1):
-        for j in xrange(1, n+1):
+    for i in range(1, n+1):
+        for j in range(1, n+1):
             A[i,j] = B[i,j] = (i==j) << prec
             H[i,j] = 0
     # step 2
     s = [None] + [0] * n
-    for k in xrange(1, n+1):
+    for k in range(1, n+1):
         t = 0
-        for j in xrange(k, n+1):
+        for j in range(k, n+1):
             t += (x[j]**2 >> prec)
         s[k] = sqrt_fixed(t, prec)
     t = s[1]
     y = x[:]
-    for k in xrange(1, n+1):
+    for k in range(1, n+1):
         y[k] = (x[k] << prec) // t
         s[k] = (s[k] << prec) // t
     # step 3
-    for i in xrange(1, n+1):
-        for j in xrange(i+1, n):
+    for i in range(1, n+1):
+        for j in range(i+1, n):
             H[i,j] = 0
         if i <= n-1:
             if s[i]:
@@ -201,8 +201,8 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
             else:
                 H[i,j] = 0
     # step 4
-    for i in xrange(2, n+1):
-        for j in xrange(i-1, 0, -1):
+    for i in range(2, n+1):
+        for j in range(i-1, 0, -1):
             #t = floor(H[i,j]/H[j,j] + 0.5)
             if H[j,j]:
                 t = round_fixed((H[i,j] << prec)//H[j,j], prec)
@@ -210,9 +210,9 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
                 #t = 0
                 continue
             y[j] = y[j] + (t*y[i] >> prec)
-            for k in xrange(1, j+1):
+            for k in range(1, j+1):
                 H[i,k] = H[i,k] - (t*H[j,k] >> prec)
-            for k in xrange(1, n+1):
+            for k in range(1, n+1):
                 A[i,k] = A[i,k] - (t*A[j,k] >> prec)
                 B[k,j] = B[k,j] + (t*B[k,i] >> prec)
     # Main algorithm
@@ -229,9 +229,9 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
         # Step 2
         y[m], y[m+1] = y[m+1], y[m]
         tmp = {}
-        for i in xrange(1,n+1): H[m,i], H[m+1,i] = H[m+1,i], H[m,i]
-        for i in xrange(1,n+1): A[m,i], A[m+1,i] = A[m+1,i], A[m,i]
-        for i in xrange(1,n+1): B[i,m], B[i,m+1] = B[i,m+1], B[i,m]
+        for i in range(1,n+1): H[m,i], H[m+1,i] = H[m+1,i], H[m,i]
+        for i in range(1,n+1): A[m,i], A[m+1,i] = A[m+1,i], A[m,i]
+        for i in range(1,n+1): B[i,m], B[i,m+1] = B[i,m+1], B[i,m]
         # Step 3
         if m <= n - 2:
             t0 = sqrt_fixed((H[m,m]**2 + H[m,m+1]**2)>>prec, prec)
@@ -242,23 +242,23 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
                 break
             t1 = (H[m,m] << prec) // t0
             t2 = (H[m,m+1] << prec) // t0
-            for i in xrange(m, n+1):
+            for i in range(m, n+1):
                 t3 = H[i,m]
                 t4 = H[i,m+1]
                 H[i,m] = (t1*t3+t2*t4) >> prec
                 H[i,m+1] = (-t2*t3+t1*t4) >> prec
         # Step 4
-        for i in xrange(m+1, n+1):
-            for j in xrange(min(i-1, m+1), 0, -1):
+        for i in range(m+1, n+1):
+            for j in range(min(i-1, m+1), 0, -1):
                 try:
                     t = round_fixed((H[i,j] << prec)//H[j,j], prec)
                 # Precision probably exhausted
                 except ZeroDivisionError:
                     break
                 y[j] = y[j] + ((t*y[i]) >> prec)
-                for k in xrange(1, j+1):
+                for k in range(1, j+1):
                     H[i,k] = H[i,k] - (t*H[j,k] >> prec)
-                for k in xrange(1, n+1):
+                for k in range(1, n+1):
                     A[i,k] = A[i,k] - (t*A[j,k] >> prec)
                     B[k,j] = B[k,j] + (t*B[k,i] >> prec)
         # Until a relation is found, the error typically decreases
@@ -268,7 +268,7 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
         # "high quality" relation was detected. Reporting this to
         # the user somehow might be useful.
         best_err = maxcoeff<<prec
-        for i in xrange(1, n+1):
+        for i in range(1, n+1):
             err = abs(y[i])
             # Maybe we are done?
             if err < tol:
@@ -277,27 +277,27 @@ def pslq(x, tol=None, maxcoeff=1000, maxsteps=100, verbose=False):
                 range(1,n+1)]
                 if max(abs(v) for v in vec) < maxcoeff:
                     if verbose:
-                        print "FOUND relation at iter %i/%i, error: %s" % \
-                            (REP, maxsteps, nstr(err / mpf(2)**prec, 1))
+                        print("FOUND relation at iter %i/%i, error: %s" % \
+                            (REP, maxsteps, nstr(err / mpf(2)**prec, 1)))
                     return vec
             best_err = min(err, best_err)
         # Calculate a lower bound for the norm. We could do this
         # more exactly (using the Euclidean norm) but there is probably
         # no practical benefit.
-        recnorm = max(abs(h) for h in H.values())
+        recnorm = max(abs(h) for h in list(H.values()))
         if recnorm:
             norm = ((1 << (2*prec)) // recnorm) >> prec
             norm //= 100
         else:
             norm = inf
         if verbose:
-            print "%i/%i:  Error: %8s   Norm: %s" % \
-                (REP, maxsteps, nstr(best_err / mpf(2)**prec, 1), norm)
+            print("%i/%i:  Error: %8s   Norm: %s" % \
+                (REP, maxsteps, nstr(best_err / mpf(2)**prec, 1), norm))
         if norm >= maxcoeff:
             break
     if verbose:
-        print "CANCELLING after step %i/%i." % (REP, maxsteps)
-        print "Could not find an integer relation. Norm bound: %s" % norm
+        print("CANCELLING after step %i/%i." % (REP, maxsteps))
+        print("Could not find an integer relation. Norm bound: %s" % norm)
     return None
 
 def findpoly(x, n=1, **kwargs):
@@ -440,7 +440,7 @@ def pslqstring(r, constants):
                 cs = ''
             else:
                 cs = '*' + cs
-            if isinstance(z, (int, long)):
+            if isinstance(z, int):
                 if z > 0: term = str(z) + cs
                 else:     term = ("(%s)" % z) + cs
             else:
@@ -461,7 +461,7 @@ def prodstring(r, constants):
         if p:
             z = fracgcd(-p,q)
             cs = constants[i][1]
-            if isinstance(z, (int, long)):
+            if isinstance(z, int):
                 if abs(z) == 1: t = cs
                 else:           t = '%s**%s' % (cs, abs(z))
                 ([num,den][z<0]).append(t)
@@ -736,7 +736,7 @@ def identify(x, constants=[], tol=None, maxcoeff=1000, full=False,
     solutions = []
 
     def addsolution(s):
-        if verbose: print "Found: ", s
+        if verbose: print("Found: ", s)
         solutions.append(s)
 
     x = mpf(x)
@@ -761,7 +761,7 @@ def identify(x, constants=[], tol=None, maxcoeff=1000, full=False,
     M = maxcoeff
 
     if isinstance(constants, dict):
-        constants = [(mpf(v), name) for (name, v) in constants.items()]
+        constants = [(mpf(v), name) for (name, v) in list(constants.items())]
     else:
         import sympy.mpmath
         constants = [(eval(p, sympy.mpmath.__dict__), p) for p in constants]
@@ -800,7 +800,7 @@ def identify(x, constants=[], tol=None, maxcoeff=1000, full=False,
                 if not full: return solutions[0]
 
             if verbose:
-                print "."
+                print(".")
 
     # Check for a direct multiplicative formula
     if x != 1:

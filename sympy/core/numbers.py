@@ -1,6 +1,6 @@
-from basic import Atom, SingletonMeta, S, Basic
-from decorators import _sympifyit
-from cache import Memoizer, MemoizerArg
+from .basic import Atom, SingletonMeta, S, Basic
+from .decorators import _sympifyit
+from .cache import Memoizer, MemoizerArg
 import sympy.mpmath as mpmath
 import sympy.mpmath.libmpf as mlib
 import sympy.mpmath.libmpc as mlibc
@@ -97,7 +97,7 @@ def igcdex(a, b):
 
     return (x*x_sign, y*y_sign, a)
 
-@Memoizer((int, long), return_value_converter = lambda d: d.copy())
+@Memoizer((int, int), return_value_converter = lambda d: d.copy())
 def factor_trial_division(n):
     """
     Factor any integer into a product of primes, 0, 1, and -1.
@@ -163,7 +163,7 @@ class Number(Atom):
 
     def __new__(cls, *obj):
         if len(obj)==1: obj=obj[0]
-        if isinstance(obj, (int, long)):
+        if isinstance(obj, int):
             return Integer(obj)
         if isinstance(obj,tuple) and len(obj)==2:
             return Rational(*obj)
@@ -272,7 +272,7 @@ class Real(Number):
 
     def __new__(cls, num, prec=15):
         prec = mpmath.settings.dps_to_prec(prec)
-        if isinstance(num, (int, long)):
+        if isinstance(num, int):
             return Integer(num)
         if isinstance(num, (str, decimal.Decimal)):
             _mpf_ = mlib.from_str(str(num), prec, rnd)
@@ -492,7 +492,7 @@ class Rational(Number):
 
     is_Rational = True
 
-    @Memoizer(type, (int, long, str, 'Integer'), MemoizerArg((int, long, 'Integer', type(None)), name="q"))
+    @Memoizer(type, (int, int, str, 'Integer'), MemoizerArg((int, int, 'Integer', type(None)), name="q"))
     def __new__(cls, p, q = None):
         if q is None:
             if isinstance(p, str):
@@ -675,7 +675,7 @@ class Rational(Number):
 
     def factors(self):
         f = factor_trial_division(self.p).copy()
-        for p,e in factor_trial_division(self.q).items():
+        for p,e in list(factor_trial_division(self.q).items()):
             try: f[p] += -e
             except KeyError: f[p] = -e
 
@@ -702,23 +702,23 @@ def _intcache_printinfo():
     nmiss= _intcache_misses
 
     if nhit == 0 and nmiss == 0:
-        print
-        print 'Integer cache statistic was not collected'
+        print()
+        print('Integer cache statistic was not collected')
         return
 
     miss_ratio = float(nmiss) / (nhit+nmiss)
 
-    print
-    print 'Integer cache statistic'
-    print '-----------------------'
-    print
-    print '#items: %i' % len(ints)
-    print
-    print ' #hit   #miss               #total'
-    print
-    print '%5i   %5i (%7.5f %%)   %5i'    % (nhit, nmiss, miss_ratio*100, nhit+nmiss)
-    print
-    print ints
+    print()
+    print('Integer cache statistic')
+    print('-----------------------')
+    print()
+    print('#items: %i' % len(ints))
+    print()
+    print(' #hit   #miss               #total')
+    print()
+    print('%5i   %5i (%7.5f %%)   %5i'    % (nhit, nmiss, miss_ratio*100, nhit+nmiss))
+    print()
+    print(ints)
 
 _intcache_hits   = 0
 _intcache_misses = 0
@@ -770,7 +770,7 @@ class Integer(Rational):
         except KeyError:
             # The most often situation is when Integers are created from Python
             # int or long
-            if isinstance(i, (int, long)):
+            if isinstance(i, int):
                 obj = Basic.__new__(cls)
                 obj.p = i
                 _intcache[i] = obj
@@ -954,7 +954,7 @@ class Integer(Rational):
         sqr_int = 1
         sqr_gcd = 0
         sqr_dict = {}
-        for prime,exponent in dict.iteritems():
+        for prime,exponent in dict.items():
             exponent *= exp.p
             div_e = exponent // exp.q
             div_m = exponent % exp.q
@@ -962,12 +962,12 @@ class Integer(Rational):
                 out_int *= prime**div_e
             if div_m > 0:
                 sqr_dict[prime] = div_m
-        for p,ex in sqr_dict.iteritems():
+        for p,ex in sqr_dict.items():
             if sqr_gcd == 0:
                 sqr_gcd = ex
             else:
                 sqr_gcd = igcd(sqr_gcd, ex)
-        for k,v in sqr_dict.iteritems():
+        for k,v in sqr_dict.items():
             sqr_int *= k**(v // sqr_gcd)
         if sqr_int == base.p and out_int == 1:
             result = None
@@ -988,9 +988,7 @@ class Integer(Rational):
     def __rfloordiv__(self, other):
         return Integer(Integer(other).p // self.p)
 
-class Zero(Integer):
-    __metaclass__ = SingletonMeta
-
+class Zero(Integer, metaclass=SingletonMeta):
     p = 0
     q = 1
     is_positive = False
@@ -1030,9 +1028,7 @@ class Zero(Integer):
         # Order(0,x) -> 0
         return self
 
-class One(Integer):
-    __metaclass__ = SingletonMeta
-
+class One(Integer, metaclass=SingletonMeta):
     p = 1
     q = 1
 
@@ -1058,9 +1054,7 @@ class One(Integer):
     def factors():
         return {1: 1}
 
-class NegativeOne(Integer):
-    __metaclass__ = SingletonMeta
-
+class NegativeOne(Integer, metaclass=SingletonMeta):
     p = -1
     q = 1
 
@@ -1098,9 +1092,7 @@ class NegativeOne(Integer):
                     return b ** q * b ** (e - q)
         return
 
-class Half(Rational):
-    __metaclass__ = SingletonMeta
-
+class Half(Rational, metaclass=SingletonMeta):
     p = 1
     q = 2
 
@@ -1111,9 +1103,7 @@ class Half(Rational):
         return S.Half
 
 
-class Infinity(Rational):
-    __metaclass__ = SingletonMeta
-
+class Infinity(Rational, metaclass=SingletonMeta):
     p = 1
     q = 0
 
@@ -1179,9 +1169,7 @@ class Infinity(Rational):
         return False
 
 
-class NegativeInfinity(Rational):
-    __metaclass__ = SingletonMeta
-
+class NegativeInfinity(Rational, metaclass=SingletonMeta):
     p = -1
     q = 0
 
@@ -1246,9 +1234,7 @@ class NegativeInfinity(Rational):
         return True
 
 
-class NaN(Rational):
-    __metaclass__ = SingletonMeta
-
+class NaN(Rational, metaclass=SingletonMeta):
     p = 0
     q = 0
 
@@ -1278,9 +1264,7 @@ class NaN(Rational):
         import sage.all as sage
         return sage.NaN
 
-class ComplexInfinity(Atom):
-    __metaclass__ = SingletonMeta
-
+class ComplexInfinity(Atom, metaclass=SingletonMeta):
     is_commutative = True
     is_comparable = None
     is_bounded = False
@@ -1309,9 +1293,7 @@ class ComplexInfinity(Atom):
                 else:
                     return S.Zero
 
-class NumberSymbol(Atom):
-    __metaclass__ = SingletonMeta
-
+class NumberSymbol(Atom, metaclass=SingletonMeta):
     is_commutative = True
     is_comparable = True
     is_bounded = True
@@ -1510,9 +1492,7 @@ class Catalan(NumberSymbol):
         import sage.all as sage
         return sage.catalan
 
-class ImaginaryUnit(Atom):
-    __metaclass__ = SingletonMeta
-
+class ImaginaryUnit(Atom, metaclass=SingletonMeta):
     is_commutative = True
     is_imaginary = True
     is_bounded = True
@@ -1613,8 +1593,8 @@ Basic.singleton['GoldenRatio'] = GoldenRatio
 Basic.singleton['EulerGamma'] = EulerGamma
 Basic.singleton['Catalan'] = Catalan
 
-from basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg
-from sympify import _sympify, SympifyError
-from function import FunctionClass
-from power import Pow, integer_nthroot
-from mul import Mul
+from .basic import Basic, Atom, S, C, SingletonMeta, Memoizer, MemoizerArg
+from .sympify import _sympify, SympifyError
+from .function import FunctionClass
+from .power import Pow, integer_nthroot
+from .mul import Mul

@@ -1,9 +1,9 @@
-from mptypes import (mp, mpf, mpmathify, inf,
+from .mptypes import (mp, mpf, mpmathify, inf,
    eps, nstr, make_mpf, AS_POINTS, fdot)
 
-from functions import pi, exp, log, ldexp
+from .functions import pi, exp, log, ldexp
 
-from libmpf import mpf_neg
+from .libmpf import mpf_neg
 
 import math
 
@@ -216,7 +216,7 @@ class Quadrature(object):
         the standard interval and then calls :func:`sum_next`.
         """
         I = err = mpf(0)
-        for i in xrange(len(points)-1):
+        for i in range(len(points)-1):
             a, b = points[i], points[i+1]
             if a == b:
                 continue
@@ -228,22 +228,22 @@ class Quadrature(object):
                 f = lambda x: _f(NEG(x)) + _f(x)
                 a, b = (mpf(0), inf)
             results = []
-            for degree in xrange(1, max_degree+1):
+            for degree in range(1, max_degree+1):
                 nodes = self.get_nodes(a, b, degree, prec, verbose)
                 if verbose:
-                    print "Integrating from %s to %s (degree %s of %s)" % \
-                        (nstr(a), nstr(b), degree, max_degree)
+                    print("Integrating from %s to %s (degree %s of %s)" % \
+                        (nstr(a), nstr(b), degree, max_degree))
                 results.append(self.sum_next(f, nodes, degree, prec, results, verbose))
                 if degree > 1:
                     err = self.estimate_error(results, prec, epsilon)
                     if err <= epsilon:
                         break
                     if verbose:
-                        print "Estimated error:", nstr(err)
+                        print("Estimated error:", nstr(err))
             I += results[-1]
         if err > epsilon:
             if verbose:
-                print "Failed to reach full accuracy. Estimated error:", nstr(err)
+                print("Failed to reach full accuracy. Estimated error:", nstr(err))
         return I, err
 
     def sum_next(self, f, nodes, degree, prec, previous, verbose=False):
@@ -352,7 +352,7 @@ class TanhSinh(Quadrature):
         udelta = exp(h)
         urdelta = 1/udelta
 
-        for k in xrange(0, 20*2**degree+1):
+        for k in range(0, 20*2**degree+1):
             # Reference implementation:
             # t = t0 + k*h
             # x = tanh(pi/2 * sinh(t))
@@ -379,7 +379,7 @@ class TanhSinh(Quadrature):
                 # Note: the number displayed is rather arbitrary. Should
                 # figure out how to print something that looks more like a
                 # percentage
-                print "Calculating nodes:", nstr(-log(diff, 10) / prec)
+                print("Calculating nodes:", nstr(-log(diff, 10) / prec))
 
         mp.prec -= extra
         return nodes
@@ -430,7 +430,7 @@ class GaussLegendre(Quadrature):
         nodes = []
         n = 3*2**(degree-1)
         upto = n//2 + 1
-        for j in xrange(1, upto):
+        for j in range(1, upto):
             # Asymptotic formula for the roots
             r = mpf(math.cos(math.pi*(j-0.25)/(n+0.5)))
             # Newton iteration
@@ -438,7 +438,7 @@ class GaussLegendre(Quadrature):
                 t1, t2 = 1, 0
                 # Evaluates the Legendre polynomial using its defining
                 # recurrence relation
-                for j1 in xrange(1,n+1):
+                for j1 in range(1,n+1):
                     t3, t2, t1 = t2, t1, ((2*j1-1)*r*t1 - (j1-1)*t2)/j1
                 t4 = n*(r*t1- t2)/(r**2-1)
                 t5 = r
@@ -449,7 +449,7 @@ class GaussLegendre(Quadrature):
             x = r
             w = 2/((1-r**2)*t4**2)
             if verbose  and j % 30 == 15:
-                print "Computing nodes (%i of %i)" % (j, upto)
+                print("Computing nodes (%i of %i)" % (j, upto))
             nodes.append((x, w))
             nodes.append((NEG(x), w))
         mp.prec = orig
@@ -989,7 +989,7 @@ def quadosc(f, interval, omega=None, period=None, zeros=None):
     #if n >= 9:
     #    raise ValueError("zeros do not appear to be correctly indexed")
     n = 1
-    from calculus import nsum
+    from .calculus import nsum
     s = quadgl(f, [a, zeros(n)])
     s += nsum(lambda k: quadgl(f, [zeros(k), zeros(k+1)]), [n, inf])
     return s

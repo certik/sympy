@@ -20,7 +20,8 @@ def indexsymbol(a):
 
 class _BigOperator(Basic):
 
-    def __new__(cls, f, (i, a, b)):
+    def __new__(cls, f, xxx_todo_changeme):
+        (i, a, b) = xxx_todo_changeme
         self = Basic.__new__(cls)
         assert isinstance(i, Symbol)
         self.i = i

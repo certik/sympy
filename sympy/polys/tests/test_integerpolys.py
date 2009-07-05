@@ -1023,7 +1023,7 @@ def test_zzx_content():
 def test_zzX_content():
     f, g, F = [3,2,1], [1], []
 
-    for i in xrange(0, 5):
+    for i in range(0, 5):
         g = zzX_mul(g, f)
         F.insert(0, g)
 
@@ -1066,7 +1066,7 @@ def test_zzx_primitive():
 def test_zzX_primitive():
     f, g, F = [3,2,1], [1], []
 
-    for i in xrange(0, 5):
+    for i in range(0, 5):
         g = zzX_mul(g, f)
         F.insert(0, g)
 
@@ -1174,7 +1174,7 @@ def test_zzx_factor():
 
     f = [1,0,0,1,1]
 
-    for i in xrange(0, 20):
+    for i in range(0, 20):
         assert zzx_factor(f) == (1, [(f, 1)])
 
     assert zzx_factor([2,4]) == \
@@ -1312,7 +1312,7 @@ def test_zzX_wang():
     K = [k_1, k_2, k_3, k_4]
     E = [E_1, E_2, E_3, E_4]
 
-    V = zip(V, K)
+    V = list(zip(V, K))
 
     A = [-14, 3]
 
@@ -1341,7 +1341,7 @@ def test_zzX_wang():
 
     assert zzX_wang_lead_coeffs(f, V, cu, E, H, A) == (f, H, LC)
 
-    H_1 = [[44L, 42L, 1L], [126L, -9L, 28L], [187L, 0L, -23L]]
+    H_1 = [[44, 42, 1], [126, -9, 28], [187, 0, -23]]
     C_1 = [-70686, -5863, -17826, 2009, 5031, 74]
 
     H_2 = [[[-4, -12], [-3, 0], [1]], [[-9, 0], [-9], [-2, 0]], [[1, 0, -9], [], [1, -9]]]

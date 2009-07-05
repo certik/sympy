@@ -73,7 +73,7 @@ class Not(BooleanFunction):
     @classmethod
     def eval(cls, *args):
         if len(args) > 1:
-            return map(cls, args)
+            return list(map(cls, args))
         arg = args[0]
         # apply De Morgan Rules
         if isinstance(arg, And):
@@ -166,10 +166,10 @@ def distribute_and_over_or(expr):
                 break
         else: return type(expr)(*expr.args)
         rest = Or(*[a for a in expr.args if a is not conj])
-        return And(*map(distribute_and_over_or,
-                   [Or(c, rest) for c in conj.args]))
+        return And(*list(map(distribute_and_over_or,
+                   [Or(c, rest) for c in conj.args])))
     elif isinstance(expr, And):
-        return And(*map(distribute_and_over_or, expr.args))
+        return And(*list(map(distribute_and_over_or, expr.args)))
     else:
         return expr
 
@@ -188,7 +188,7 @@ def eliminate_implications(expr):
     """
     expr = sympify(expr)
     if expr.is_Atom: return expr     ## (Atoms are unchanged.)
-    args = map(eliminate_implications, expr.args)
+    args = list(map(eliminate_implications, expr.args))
     a, b = args[0], args[-1]
     if isinstance(expr, Implies):
         return (~a) | b

@@ -8,7 +8,7 @@ def gathen_poly(n, p):
 
 def shoup_poly(n, p):
     f = [1] * (n+1)
-    for i in xrange(1, n+1):
+    for i in range(1, n+1):
         f[i] = (f[i-1]**2 + 1) % p
     return f
 

@@ -12,7 +12,7 @@ def main():
     c = sympy.Symbol('c')
     e = ( a*b*b + 2*b*a*b )**c
 
-    print e
+    print(e)
 
 if __name__ == "__main__":
     main()

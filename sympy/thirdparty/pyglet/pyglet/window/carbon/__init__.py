@@ -353,7 +353,7 @@ class CarbonGLConfig(gl.Config):
         self._pformat = pformat
         self._attributes = {}
 
-        for name, attr in self._attribute_ids.items():
+        for name, attr in list(self._attribute_ids.items()):
             value = c_int()
             result = agl.aglDescribePixelFormat(pformat, attr, byref(value))
             if result:
@@ -925,7 +925,7 @@ class CarbonWindow(BaseWindow):
                 self.dispatch_event('on_text_motion_select', motion)
             else:
                 self.dispatch_event('on_text_motion', motion)
-        elif ((unicodedata.category(text[0]) != 'Cc' or text == u'\r') and
+        elif ((unicodedata.category(text[0]) != 'Cc' or text == '\r') and
             not (modifiers & key.MOD_COMMAND)):
             self.dispatch_event('on_text', text)
         return noErr

@@ -157,7 +157,7 @@ def multiproduct(seq=(), start=1):
     if not seq:
         return start
     if isinstance(seq, dict):
-        seq = seq.iteritems()
+        seq = iter(seq.items())
     units = start
     multi = []
     for base, exp in seq:
@@ -196,7 +196,7 @@ def test_factorint():
     assert factorint(64015937) == {7993:1, 8009:1}
     assert factorint(2**(2**6) + 1) == {274177:1, 67280421310721:1}
     assert multiproduct(factorint(fac(200))) == fac(200)
-    for b, e in factorint(fac(150)).items():
+    for b, e in list(factorint(fac(150)).items()):
         assert e == fac_multiplicity(150, b)
     assert factorint(103005006059**7) == {103005006059:7}
     assert factorint(31337**191) == {31337:191}

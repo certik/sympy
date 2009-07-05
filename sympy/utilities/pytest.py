@@ -19,7 +19,7 @@ def raises(ExpectedException, code):
     frame = sys._getframe(1)
     loc = frame.f_locals.copy()
     try:
-        exec code in frame.f_globals, loc
+        exec(code, frame.f_globals, loc)
     except ExpectedException:
         return
     raise AssertionError("DID NOT RAISE")
@@ -87,7 +87,7 @@ else:
         if texts:
             self.out.line()
             self.out.sep('_', '*** XPASS ***')
-            for text, dict in texts.items():
+            for text, dict in list(texts.items()):
                 #for (fn, lineno), outcome in dict.items():
                 #    self.out.line('Skipped in %s:%d' %(fn, lineno+1))
                 #self.out.line("reason: %s" % text)
@@ -123,8 +123,8 @@ else:
             except Outcome:
                 raise   # pass-through test outcome
             except:
-                raise XFail('XFAIL: %s' % func.func_name)
+                raise XFail('XFAIL: %s' % func.__name__)
             else:
-                raise XPass('XPASS: %s' % func.func_name)
+                raise XPass('XPASS: %s' % func.__name__)
 
         return func_wrapper

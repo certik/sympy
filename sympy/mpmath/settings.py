@@ -2,11 +2,11 @@ import os
 import sys
 
 # All supported rounding modes
-round_nearest = intern('n')
-round_floor = intern('f')
-round_ceiling = intern('c')
-round_up = intern('u')
-round_down = intern('d')
+round_nearest = sys.intern('n')
+round_floor = sys.intern('f')
+round_ceiling = sys.intern('c')
+round_up = sys.intern('u')
+round_down = sys.intern('d')
 
 round_fast = round_down
 
@@ -50,7 +50,7 @@ gmpy = None
 sage = None
 
 MODE = 'python'
-MP_BASE = long
+MP_BASE = int
 
 if 'MPMATH_NOGMPY' not in os.environ:
     try:
@@ -71,7 +71,7 @@ if 'MPMATH_NOSAGE' not in os.environ:
     except:
         pass
 
-if os.environ.has_key('MPMATH_STRICT'):
+if 'MPMATH_STRICT' in os.environ:
     STRICT = True
 else:
     STRICT = False
@@ -84,7 +84,7 @@ MP_THREE = MP_BASE(3)
 MP_FIVE = MP_BASE(5)
 
 if MODE == 'gmpy':
-    int_types = (int, long, MP_BASE_TYPE)
+    int_types = (int, int, MP_BASE_TYPE)
 else:
-    int_types = (int, long)
+    int_types = (int, int)
 

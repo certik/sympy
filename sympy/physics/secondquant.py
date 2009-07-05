@@ -88,7 +88,7 @@ class KroneckerDelta(Basic):
     """
 
     def __new__(cls, i, j):
-        i, j = map(sympify, (i, j))
+        i, j = list(map(sympify, (i, j)))
         r = cls.eval(i, j)
         if isinstance(r, Basic):
             return r
@@ -202,7 +202,7 @@ class FockState(Basic):
     """
 
     def __new__(cls, occupations):
-        o = map(sympify, occupations)
+        o = list(map(sympify, occupations))
         obj = Basic.__new__(cls, tuple(o), commutative=False)
         return obj
 
@@ -467,7 +467,7 @@ class FixedBosonicBasis(BosonicBasis):
             var = var + i + ","
         var = var + tup[-1] + ")"
         cmd = "result = [%s %s %s]" % (var, first_loop, other_loops)
-        exec cmd
+        exec(cmd)
         if self.n_particles==1:
             result = [(item,) for item in result]
         self.particle_locations = result

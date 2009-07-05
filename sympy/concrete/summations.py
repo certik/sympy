@@ -142,7 +142,7 @@ class Sum(Basic):
         fa, fb = fpoint(f)
         iterm = (fa + fb)/2
         g = f.diff(i)
-        for k in xrange(1, n+2):
+        for k in range(1, n+2):
             ga, gb = fpoint(g)
             term = C.bernoulli(2*k)/C.Factorial(2*k)*(gb-ga)
             if (eps and term and abs(term.evalf(3)) < eps) or (k > n):
@@ -168,7 +168,7 @@ def getab(expr):
     cls = expr.__class__
     return cls(expr.args[0]), cls(*expr.args[1:])
 
-def telescopic_direct(L, R, n, (i, a, b)):
+def telescopic_direct(L, R, n, xxx_todo_changeme):
     '''Returns the direct summation of the terms of a telescopic sum
 
     L is the term with lower index
@@ -181,16 +181,18 @@ def telescopic_direct(L, R, n, (i, a, b)):
     >>> telescopic_direct(1/k, -1/(k+2), 2, (k, a, b))
     1/a + 1/(1 + a) - 1/(1 + b) - 1/(2 + b)
     '''
+    (i, a, b) = xxx_todo_changeme
     s = 0
-    for m in xrange(n):
+    for m in range(n):
         s += L.subs(i,a+m) + R.subs(i,b-m)
     return s
 
-def telescopic(L, R, (i, a, b)):
+def telescopic(L, R, xxx_todo_changeme1):
     '''Tries to perform the summation using the telescopic property
 
     return None if not possible
     '''
+    (i, a, b) = xxx_todo_changeme1
     if L.is_Add or R.is_Add:
         return None
     s = None
@@ -216,7 +218,8 @@ def telescopic(L, R, (i, a, b)):
             return telescopic_direct(L, R, s, (i, a, b))
     return None
 
-def eval_sum(f, (i, a, b)):
+def eval_sum(f, xxx_todo_changeme2):
+    (i, a, b) = xxx_todo_changeme2
     if not f.has(i):
         return f*(b-a+1)
     definite = a.is_Integer and b.is_Integer
@@ -233,7 +236,8 @@ def eval_sum(f, (i, a, b)):
     if definite:
         return eval_sum_direct(f, (i, a, b))
 
-def eval_sum_symbolic(f, (i, a, b)):
+def eval_sum_symbolic(f, xxx_todo_changeme3):
+    (i, a, b) = xxx_todo_changeme3
     if not f.has(i):
         return f*(b-a+1)
     # Linearity
@@ -275,12 +279,13 @@ def eval_sum_symbolic(f, (i, a, b)):
         return c1**c3 * (c1**(a*c2) - c1**(c2+b*c2)) / (1 - c1**c2)
     return None
 
-def eval_sum_direct(expr, (i, a, b)):
+def eval_sum_direct(expr, xxx_todo_changeme4):
+    (i, a, b) = xxx_todo_changeme4
     s = S.Zero
     if expr.has(i):
-        for j in xrange(a, b+1):
+        for j in range(a, b+1):
             s += expr.subs(i, j)
     else:
-        for j in xrange(a, b+1):
+        for j in range(a, b+1):
             s += expr
     return s

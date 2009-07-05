@@ -5,7 +5,7 @@ The most important function here is srepr that returns a string so that the
 relation eval(srepr(expr))=expr holds in an apropriate environment.
 """
 
-from printer import Printer
+from .printer import Printer
 from sympy.printing.precedence import precedence
 from sympy.core import Basic
 import sympy.mpmath.libmpf as mlib
@@ -35,7 +35,7 @@ class ReprPrinter(Printer):
     def _print_Add(self, expr):
         args = list(expr.args)
         args.sort(Basic._compare_pretty)
-        args = map(self._print, args)
+        args = list(map(self._print, args))
         return "Add(%s)"%", ".join(args)
 
     def _print_Function(self, expr):

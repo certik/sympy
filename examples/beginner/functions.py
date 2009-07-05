@@ -10,13 +10,13 @@ def main():
     a = sympy.Symbol('a')
     b = sympy.Symbol('b')
     e = sympy.log((a + b)**5)
-    print e
+    print(e)
 
     e = sympy.exp(e)
-    print e
+    print(e)
 
     e = sympy.log(sympy.exp((a + b)**5))
-    print e
+    print(e)
 
 if __name__ == "__main__":
     main()

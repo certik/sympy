@@ -1,7 +1,7 @@
 
 from sympy.core import Basic, Add, S, C, sympify
 from sympy.core.function import Function
-from zeta_functions import zeta
+from .zeta_functions import zeta
 from sympy.functions.elementary.exponential import log
 from sympy.functions.elementary.miscellaneous import sqrt
 
@@ -172,7 +172,7 @@ class polygamma(Function):
 
     @classmethod
     def eval(cls, n, z):
-        n, z = map(sympify, (n, z))
+        n, z = list(map(sympify, (n, z)))
 
         if n.is_integer:
             if n.is_negative:
@@ -210,13 +210,13 @@ class polygamma(Function):
                 coeff, factors = z.as_coeff_factors()
 
                 if coeff.is_Integer:
-                    tail = Add(*[ z + i for i in xrange(0, int(coeff)) ])
+                    tail = Add(*[ z + i for i in range(0, int(coeff)) ])
                     return polygamma(n, z-coeff) + (-1)**n*C.Factorial(n)*tail
             elif z.is_Mul:
                 coeff, terms = z.as_coeff_terms()
 
                 if coeff.is_Integer and coeff.is_positive:
-                    tail = [ polygamma(n, z + i//coeff) for i in xrange(0, int(coeff)) ]
+                    tail = [ polygamma(n, z + i//coeff) for i in range(0, int(coeff)) ]
 
                     if n is S.Zero:
                         return log(coeff) + Add(*tail)/coeff**(n+1)

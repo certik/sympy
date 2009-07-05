@@ -64,14 +64,14 @@ def solve_poly_system(system, *symbols):
             else:
                 return None
 
-        univariate = filter(is_univariate, basis)
+        univariate = list(filter(is_univariate, basis))
 
         if len(univariate) == 1:
             f = univariate.pop()
         else:
             raise PolynomialError("Not a zero-dimensional system")
 
-        zeros = roots(Poly(f, f.symbols[-1])).keys()
+        zeros = list(roots(Poly(f, f.symbols[-1])).keys())
 
         if not zeros:
             return []

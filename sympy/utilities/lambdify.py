@@ -3,7 +3,7 @@ This module provides convenient functions to transform sympy expressions to
 lambda functions which can be used to calculate numerical values very fast.
 """
 
-from __future__ import division
+
 from sympy.core.sympify import sympify
 
 # These are the namespaces the lambda functions will use.
@@ -87,12 +87,12 @@ def _import(module, reload="False"):
     # It's possible that numpy is not available.
     for import_command in import_commands:
         try:
-            exec import_command in {}, namespace
+            exec(import_command, {}, namespace)
         except ImportError:
             raise ImportError("Can't import %s with command %s" % (module, import_command))
 
     # Add translated names to namespace
-    for sympyname, translation in translations.iteritems():
+    for sympyname, translation in translations.items():
         namespace[sympyname] = namespace[translation]
 
 def lambdify(args, expr, modules=None):

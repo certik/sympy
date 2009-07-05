@@ -136,7 +136,7 @@ def test_trig_near_n_pi():
     mp.dps = 15
 
 if __name__ == '__main__':
-    for f in globals().keys():
+    for f in list(globals().keys()):
         if f.startswith("test_"):
-            print f
+            print(f)
             globals()[f]()

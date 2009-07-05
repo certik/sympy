@@ -214,7 +214,7 @@ class EventDispatcher(object):
                 for name in dir(object):
                     if name in self.event_types:
                         self.set_handler(name, getattr(object, name))
-        for name, handler in kwargs.items():
+        for name, handler in list(kwargs.items()):
             # Function for handling given event (no magic)
             if name not in self.event_types:
                 raise EventException('Unknown event "%s"' % name)
@@ -297,7 +297,7 @@ class EventDispatcher(object):
         n_handler_args = len(handler_args)
 
         # Remove "self" arg from handler if it's a bound method
-        if inspect.ismethod(handler) and handler.im_self:
+        if inspect.ismethod(handler) and handler.__self__:
             n_handler_args -= 1
 
         # Allow *args varargs to overspecify arguments
@@ -313,9 +313,9 @@ class EventDispatcher(object):
         if n_handler_args != n_args:
             if inspect.isfunction(handler) or inspect.ismethod(handler):
                 descr = '%s at %s:%d' % (
-                    handler.func_name,
-                    handler.func_code.co_filename,
-                    handler.func_code.co_firstlineno)
+                    handler.__name__,
+                    handler.__code__.co_filename,
+                    handler.__code__.co_firstlineno)
             else:
                 descr = repr(handler)
             
@@ -355,7 +355,7 @@ class EventDispatcher(object):
             name = func.__name__
             setattr(self, name, func)
             return args[0]
-        elif type(args[0]) in (str, unicode):   # @window.event('on_resize')
+        elif type(args[0]) in (str, str):   # @window.event('on_resize')
             name = args[0]
             def decorator(func):
                 setattr(self, name, func)

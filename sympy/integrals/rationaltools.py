@@ -115,13 +115,13 @@ def ratint_ratpart(f, g, x):
     m = v.degree - 1
     d = g.degree
 
-    A_coeff = [ Symbol('a' + str(n-i), dummy=True) for i in xrange(0, n+1) ]
-    B_coeff = [ Symbol('b' + str(m-i), dummy=True) for i in xrange(0, m+1) ]
+    A_coeff = [ Symbol('a' + str(n-i), dummy=True) for i in range(0, n+1) ]
+    B_coeff = [ Symbol('b' + str(m-i), dummy=True) for i in range(0, m+1) ]
 
     symbols = A_coeff + B_coeff
 
-    A = Poly(zip(A_coeff, xrange(n, -1, -1)), x)
-    B = Poly(zip(B_coeff, xrange(m, -1, -1)), x)
+    A = Poly(list(zip(A_coeff, range(n, -1, -1))), x)
+    B = Poly(list(zip(B_coeff, range(m, -1, -1))), x)
 
     H = f - A.diff()*v + A*poly_div(u.diff()*v, u)[0] - B*u
 
@@ -172,7 +172,7 @@ def ratint_logpart(f, g, x, t=None):
                 h = R_map[i]
                 A = poly_sqf(h.LC, t)
 
-                for j in xrange(0, len(A)):
+                for j in range(0, len(A)):
                     T = poly_gcd(A[j], q)**(j+1)
                     h = poly_div(h, Poly(T, x))[0]
 
@@ -183,7 +183,7 @@ def ratint_logpart(f, g, x, t=None):
                     T = poly_div(inv*coeff, q)[1]
                     coeffs.append(T.as_basic())
 
-                h = Poly(zip(coeffs, h.monoms), x)
+                h = Poly(list(zip(coeffs, h.monoms)), x)
 
                 H.append((h, q))
 
@@ -247,7 +247,7 @@ def log_to_real(h, q, x, t):
 
     result = S(0)
 
-    for r_u in R_u.iterkeys():
+    for r_u in R_u.keys():
         C = Poly(c.subs({u:r_u}), v)
         R_v = roots(C, domain='R')
 
@@ -275,7 +275,7 @@ def log_to_real(h, q, x, t):
     if len(R_q) != number_of_real_roots(q):
         return None
 
-    for r in R_q.iterkeys():
+    for r in R_q.keys():
         result += r*log(h.subs(t, r).as_basic())
 
     return result

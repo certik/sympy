@@ -4,7 +4,7 @@ A MathML printer.
 
 from sympy import Basic, sympify, C, S
 from sympy.simplify import fraction
-from printer import Printer
+from .printer import Printer
 
 
 class MathMLPrinter(Printer):
@@ -172,7 +172,7 @@ class MathMLPrinter(Printer):
         """We use unicode #x3c6 for greek letter phi as defined here
         http://www.w3.org/Math/characters/"""
         x = self.dom.createElement('cn')
-        x.appendChild(self.dom.createTextNode(u"\u03c6"))
+        x.appendChild(self.dom.createTextNode("\u03c6"))
         return x
 
     def _print_Exp1(self,e):
@@ -316,4 +316,4 @@ def print_mathml(expr):
     </apply>
     """
     s = MathMLPrinter()
-    print s._print(sympify(expr)).toprettyxml(encoding="utf-8")
+    print(s._print(sympify(expr)).toprettyxml(encoding="utf-8"))

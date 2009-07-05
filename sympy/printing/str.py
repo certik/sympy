@@ -2,7 +2,7 @@
 A Printer for generating readable representation of most sympy classes.
 """
 
-from printer import Printer
+from .printer import Printer
 from sympy.printing.precedence import precedence, PRECEDENCE
 from sympy.core.basic import S
 from sympy.core.numbers import One, Rational
@@ -87,7 +87,7 @@ class StrPrinter(Printer):
         return 'D(%s)'%", ".join(map(self._print, expr.args))
 
     def _print_dict(self, expr):
-        keys = expr.keys()
+        keys = list(expr.keys())
         keys.sort( Basic.compare_pretty )
 
         items = []
@@ -189,8 +189,8 @@ class StrPrinter(Printer):
         if len(a)==0:
             a = [S.One]
 
-        a_str = map(lambda x:self.parenthesize(x, precedence(expr)), a)
-        b_str = map(lambda x:self.parenthesize(x, precedence(expr)), b)
+        a_str = [self.parenthesize(x, precedence(expr)) for x in a]
+        b_str = [self.parenthesize(x, precedence(expr)) for x in b]
 
         if len(b)==0:
             return sign + '*'.join(a_str)

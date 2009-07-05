@@ -37,7 +37,7 @@ def check_directory_tree(base_path):
     genRaise = re.compile(r'raise(\s+Exception|\s*(\(\s*)+Exception)')
     for root, dirs, files in walk(base_path):
         for fname in glob(join(root, "*.py")):
-            if filter(lambda ex: ex in fname, EXCLUDE):
+            if [ex for ex in EXCLUDE if ex in fname]:
                 continue
             file = open(fname, "r")
             try:
@@ -79,7 +79,7 @@ def test_no_trailing_whitespace_and_no_tabs():
 def check_directory_tree_imports(p, exclude):
     for root, dirs, files in walk(p):
         for fname in glob(join(root, "*.py")):
-            if filter(lambda ex: ex in fname, exclude):
+            if [ex for ex in exclude if ex in fname]:
                 continue
             file = open(fname, "r")
             try:

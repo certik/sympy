@@ -17,6 +17,7 @@ from sympy.simplify import simplify, together
 
 from sympy.polys import Poly, quo, gcd, lcm, root_factors, \
     monomials, factor, PolynomialError
+from functools import reduce
 
 def components(f, x):
     """Returns a set of all functional components of the given expression
@@ -158,10 +159,10 @@ def heurisch(f, x, **kwargs):
     rewrite = kwargs.pop('rewrite', False)
 
     if rewrite:
-        for candidates, rule in rewritables.iteritems():
+        for candidates, rule in list(rewritables.items()):
             f = f.rewrite(candidates, rule)
     else:
-        for candidates in rewritables.iterkeys():
+        for candidates in list(rewritables.keys()):
             if f.has(*candidates):
                 break
         else:
@@ -200,11 +201,11 @@ def heurisch(f, x, **kwargs):
 
     V = _symbols('x', len(terms))
 
-    mapping = dict(zip(terms, V))
+    mapping = dict(list(list(zip(terms, V))))
 
     rev_mapping = {}
 
-    for k, v in mapping.iteritems():
+    for k, v in list(mapping.items()):
         rev_mapping[v] = k
 
     def substitute(expr):
@@ -274,9 +275,9 @@ def heurisch(f, x, **kwargs):
     u_split = splitter(denom)
     v_split = splitter(Q)
 
-    polys = list(v_split) + [ u_split[0] ] + special.keys()
+    polys = list(v_split) + [ u_split[0] ] + list(list(special.keys()))
 
-    s = u_split[0] * Mul(*[ k for k, v in special.iteritems() if v ])
+    s = u_split[0] * Mul(*[ k for k, v in list(special.items()) if v ])
     a, b, c = [ p.as_poly(*V).degree for p in [s, P, Q] ]
 
     poly_denom = s * v_split[0] * deflation(v_split[1])
@@ -362,7 +363,7 @@ def heurisch(f, x, **kwargs):
             else:
                 equations[dependent] = coeff
 
-        solution = solve(equations.values(), *coeffs)
+        solution = solve(list(list(equations.values())), *coeffs)
 
         if solution is not None:
             return (solution, candidate, coeffs)

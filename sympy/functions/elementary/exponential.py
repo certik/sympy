@@ -219,7 +219,7 @@ class exp(Function):
     def _taylor(self, x, x0, n):
         l = []
         g = None
-        for i in xrange(n):
+        for i in range(n):
             g = self.taylor_term(i, self.args[0], g)
             g = g.nseries(x, x0, n)
             l.append(g)
@@ -476,10 +476,10 @@ class log(Function):
             except TypeError:
                 #well, the n is something more complicated (like 1+log(2))
                 n = int(n.evalf()) + 1
-            assert n>=0,`n`
+            assert n>=0,repr(n)
             l = []
             g = None
-            for i in xrange(n+2):
+            for i in range(n+2):
                 g = ln.taylor_term(i, z, g)
                 g = g.nseries(x, x0, n)
                 l.append(g)

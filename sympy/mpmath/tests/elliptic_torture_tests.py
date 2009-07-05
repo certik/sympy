@@ -84,7 +84,7 @@ class precisemathTests(unittest.TestCase):
             if result < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Result (~ 0): %e' % result
+                print('Result (~ 0): %e' % result, file=sys.stderr)
                 self.assertEquals(False, True)
 
     def testJacobiTheta2(self):
@@ -115,7 +115,7 @@ class precisemathTests(unittest.TestCase):
             if result < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, result
+                print(result, file=sys.stderr)
                 self.assertEquals(False, True)
 
         z = mpmath.mpf('0')
@@ -230,7 +230,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # Abramowitz 16.28.2
@@ -254,7 +254,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # Abramowitz 16.28.3
@@ -278,7 +278,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # Abramowitz 16.28.4
@@ -302,7 +302,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # Abramowitz 16.28.5
@@ -322,7 +322,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
     def testJacobiEllipticSn(self):
@@ -359,7 +359,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Sn, sn(0, m) == 0: %e' % equality
+                print('Sn, sn(0, m) == 0: %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # Abramowitz Table 16.5
@@ -381,7 +381,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Sn, sn(K, m) - 1 == 0: %e' % equality
+                print('Sn, sn(K, m) - 1 == 0: %e' % equality, file=sys.stderr)
                 equality = jacobi_elliptic_sn(K, m, True)   # verbose
                 self.assertEquals(False, True)
 
@@ -431,8 +431,8 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Cn (~ 1): %e' % cn
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Cn (~ 1): %e' % cn, file=sys.stderr)
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # Abramowitz Table 16.5
@@ -451,10 +451,10 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, '\n**** Cn failure ****'
-                print >> sys.stderr, '\nK: %e' % K,
-                print >> sys.stderr, '\tm: %f' % m,
-                print >> sys.stderr, '\tcn: %e' % equality
+                print('\n**** Cn failure ****', file=sys.stderr)
+                print('\nK: %e' % K, end=' ', file=sys.stderr)
+                print('\tm: %f' % m, end=' ', file=sys.stderr)
+                print('\tcn: %e' % equality, file=sys.stderr)
                 equality = jacobi_elliptic_cn(K, k, True)
                 self.assertEquals(False, True)
 
@@ -496,10 +496,10 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, '\n**** Dn failure ****'
-                print >> sys.stderr, '\tm: %f' % m,
-                print >> sys.stderr, '\tdn: %e' % dn,
-                print >> sys.stderr, '\tEquality: %e' % equality
+                print('\n**** Dn failure ****', file=sys.stderr)
+                print('\tm: %f' % m, end=' ', file=sys.stderr)
+                print('\tdn: %e' % dn, end=' ', file=sys.stderr)
+                print('\tEquality: %e' % equality, file=sys.stderr)
                 equality = jacobi_elliptic_dn(zero, m, True)
                 self.assertEquals(False, True)
 
@@ -518,7 +518,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
     def testJacobiEllipticIdentidies(self):
@@ -556,7 +556,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # MathWorld
@@ -579,7 +579,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
         # MathWorld
@@ -603,7 +603,7 @@ class precisemathTests(unittest.TestCase):
             if equality < testlimit:
                 self.assertEquals(True, True)
             else:
-                print >> sys.stderr, 'Equality (~ zero): %e' % equality
+                print('Equality (~ zero): %e' % equality, file=sys.stderr)
                 self.assertEquals(False, True)
 
 

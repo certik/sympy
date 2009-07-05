@@ -150,7 +150,7 @@ def test_simplify_fail1():
     assert simplify(e) == 1 / (-2*y)
 
 def test_fraction():
-    x, y, z = map(Symbol, 'xyz')
+    x, y, z = list(map(Symbol, 'xyz'))
 
     assert fraction(Rational(1, 2)) == (1, 2)
 
@@ -171,7 +171,7 @@ def test_fraction():
     assert fraction(exp(-x), exact=True) == (exp(-x), 1)
 
 def test_together():
-    x, y, z = map(Symbol, 'xyz')
+    x, y, z = list(map(Symbol, 'xyz'))
 
     assert together(1/x) == 1/x
 
@@ -198,7 +198,7 @@ def test_together():
     assert together(1/x**y + 1/x**(y-1)) == x**(-y)*(1 + x)
 
 def test_separate():
-    x, y, z = map(Symbol, 'xyz')
+    x, y, z = list(map(Symbol, 'xyz'))
 
     assert separate((x*y*z)**4) == x**4*y**4*z**4
     assert separate((x*y*z)**x) == x**x*y**x*z**x

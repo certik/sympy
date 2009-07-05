@@ -395,14 +395,14 @@ class Poly(Basic):
                         monoms = tuple(M + T for M in poly.monoms)
 
                         if order != poly.order:
-                            terms = dict(zip(monoms, coeffs))
+                            terms = dict(list(zip(monoms, coeffs)))
                     else:
                         terms = Poly._permute(poly, *symbols)
         else:
             terms = Poly._decompose(poly, *symbols)
 
         if terms:
-            if N == 1 and type(terms.keys()[0]) is not tuple:
+            if N == 1 and type(list(terms.keys())[0]) is not tuple:
                 keys = tuple(reversed(sorted(terms.keys())))
 
                 coeffs = [ terms[i] for i in keys ]
@@ -410,7 +410,7 @@ class Poly(Basic):
             else:
                 f = monomial_cmp(order)
 
-                monoms = terms.keys()
+                monoms = list(terms.keys())
                 monoms.sort(f, reverse=True)
 
                 coeffs = [ terms[monom] for monom in monoms ]
@@ -616,7 +616,7 @@ class Poly(Basic):
 
         if symbols is None:
             if denom.is_Add:
-                a, b, c = map(Wild, 'abc')
+                a, b, c = list(map(Wild, 'abc'))
 
                 r = denom.match(a + b*c**S.Half)
 
@@ -673,7 +673,7 @@ class Poly(Basic):
            3 + x**2
 
         """
-        multinomial = dict(zip(self.monoms, self.coeffs))
+        multinomial = dict(list(zip(self.monoms, self.coeffs)))
         return multinomial_as_basic(multinomial, *self.symbols)
 
     def as_dict(self):
@@ -696,7 +696,7 @@ class Poly(Basic):
            {(0,): 3, (2,): 1}
 
         """
-        return dict(zip(self.monoms, self.coeffs))
+        return dict(list(zip(self.monoms, self.coeffs)))
 
     def as_uv_dict(self):
         """Return dictionary representation with integer keys.
@@ -716,7 +716,7 @@ class Poly(Basic):
 
         """
         if self.is_univariate:
-            return dict(zip([ M[0] for M in self.monoms ], self.coeffs))
+            return dict(list(zip([ M[0] for M in self.monoms ], self.coeffs)))
         else:
             raise MultivariatePolyError(self)
 
@@ -795,7 +795,7 @@ class Poly(Basic):
         if self.is_univariate:
             terms = self.as_uv_dict()
 
-            for i in xrange(self.degree, -1, -1):
+            for i in range(self.degree, -1, -1):
                 if i in terms:
                     yield terms[i]
                 else:
@@ -805,7 +805,7 @@ class Poly(Basic):
 
     def iter_all_monoms(self):
         if self.is_univariate:
-            for i in xrange(self.degree, -1, -1):
+            for i in range(self.degree, -1, -1):
                 yield (i,)
         else:
             raise MultivariatePolyError(self)
@@ -814,7 +814,7 @@ class Poly(Basic):
         if self.is_univariate:
             terms = self.as_uv_dict()
 
-            for i in xrange(self.degree, -1, -1):
+            for i in range(self.degree, -1, -1):
                 if i in terms:
                     yield terms[i], (i,)
                 else:
@@ -999,10 +999,10 @@ class Poly(Basic):
 
             coeffs, monoms = [], []
 
-            for k in xrange(N+M, -1, -1):
+            for k in range(N+M, -1, -1):
                 coeff = 0
 
-                for i in xrange(k+1):
+                for i in range(k+1):
                     if i in p and k-i in q:
                         coeff += Poly.cancel(p[i] * q[k-i])
 
@@ -1475,7 +1475,7 @@ class Poly(Basic):
             if all(e == 0 for e in self.monoms[-1]):
                 return self.coeffs[-1]
         else:
-            for i in xrange(len(self.monoms)):
+            for i in range(len(self.monoms)):
                 if self.monoms[i] == monom:
                     return self.coeffs[i]
 
@@ -1591,13 +1591,13 @@ class Poly(Basic):
             if s in symbols:
                 i = indices[s]
 
-                for M, coeff in poly.iteritems():
+                for M, coeff in poly.items():
                     n = M[i] - k
 
                     if n >= 0:
                         monom = M[:i]+(n,)+M[i+1:]
 
-                        for j in xrange(n, M[i]):
+                        for j in range(n, M[i]):
                             coeff *= j+1
 
                         if monom in new_poly:
@@ -1609,7 +1609,7 @@ class Poly(Basic):
 
                         new_poly[monom] = coeff
             elif not isinstance(self, IntegerPoly):
-                for monom, coeff in poly.iteritems():
+                for monom, coeff in poly.items():
                     if coeff.has_any_symbols(s):
                         coeff = coeff.diff(*([s]*k))
 
@@ -1682,12 +1682,12 @@ class Poly(Basic):
             if s in symbols:
                 i = indices[s]
 
-                for M, coeff in poly.iteritems():
+                for M, coeff in poly.items():
                     n = M[i] + k
 
                     monom = M[:i]+(n,)+M[i+1:]
 
-                    for j in xrange(M[i], n):
+                    for j in range(M[i], n):
                         coeff /= j+1
 
                     if monom in new_poly:
@@ -1699,7 +1699,7 @@ class Poly(Basic):
 
                     new_poly[monom] = coeff
             else:
-                for M, coeff in poly.iteritems():
+                for M, coeff in poly.items():
                     new_poly[M] = C.Integral(coeff, *([s]*k)).doit()
 
             if not new_poly:
@@ -1957,7 +1957,7 @@ class Poly(Basic):
 
             point, result = point[0], 0
 
-            for k in xrange(self.degree, -1, -1):
+            for k in range(self.degree, -1, -1):
                 result *= point
 
                 if k in terms:
@@ -1968,7 +1968,7 @@ class Poly(Basic):
             def evaluate(terms):
                 count = [0] * N
 
-                for monom in terms.iterkeys():
+                for monom in terms.keys():
                     for i, M in enumerate(monom):
                         if M != 0:
                             count[i] += 1
@@ -1978,7 +1978,7 @@ class Poly(Basic):
                 if K <= 1:
                     result = 0
 
-                    for monom, coeff in terms.iteritems():
+                    for monom, coeff in terms.items():
                         for base, exp in zip(point, monom):
                             if exp != 0:
                                 if exp == 1:
@@ -1992,9 +1992,9 @@ class Poly(Basic):
                 else:
                     k, indeps, depend = count.index(K), {}, {}
 
-                    n = min([ M[k] for M in terms.iterkeys() if M[k] ])
+                    n = min([ M[k] for M in terms.keys() if M[k] ])
 
-                    for M, coeff in terms.iteritems():
+                    for M, coeff in terms.items():
                         if M[k] != 0:
                             depend[M[:k]+(M[k]-n,)+M[k+1:]] = coeff
                         else:
@@ -2014,7 +2014,7 @@ class Poly(Basic):
         symbols = list(self.symbols)
 
         if type(pattern) is dict:
-            pattern = pattern.items()
+            pattern = list(pattern.items())
         elif type(pattern) is tuple:
             pattern = [pattern]
 
@@ -2035,7 +2035,7 @@ class Poly(Basic):
 
             terms = {}
 
-            for M, coeff in poly.iteritems():
+            for M, coeff in poly.items():
                 monom = M[:i] + M[i+1:]
                 coeff *= value ** M[i]
 
@@ -2107,7 +2107,7 @@ class Poly(Basic):
                     return self.evaluate((old, new))
         elif not new.has_any_symbols(*symbols):
             coeffs = [ sympify(coeff)._eval_subs(old, new) for coeff in self.coeffs ]
-            return self.__class__(zip(coeffs, self.monoms), *symbols, **self.flags)
+            return self.__class__(list(zip(coeffs, self.monoms)), *symbols, **self.flags)
 
         result = self.as_basic()._eval_subs(old, new)
 
@@ -2156,7 +2156,7 @@ class Poly(Basic):
 
         return False
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.coeffs not in ((S.Zero,), (0,))
 
     def _eval_is_polynomial(self, symbols):
@@ -2178,7 +2178,7 @@ def multinomial_as_basic(multinomial, *symbols):
     python integers, coefficient is a python integer.
     """
     l = []
-    for powers, k in multinomial.iteritems():
+    for powers, k in multinomial.items():
         term = [k]
         for i,e in enumerate(powers):
             term.append(Pow(symbols[i], powers[i]))

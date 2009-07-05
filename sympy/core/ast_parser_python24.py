@@ -5,8 +5,8 @@ from compiler.ast import CallFunc, Name, Const
 from compiler.pycodegen import ExpressionCodeGenerator
 import re
 
-from basic import Basic
-from symbol import Symbol
+from .basic import Basic
+from .symbol import Symbol
 
 _is_integer = re.compile(r'\A\d+(l|L)?\Z').match
 
@@ -23,7 +23,7 @@ class SymPyTransformer(Transformer):
         n = Transformer.atom_number(self, nodelist)
         number, lineno = nodelist[0][1:]
         if _is_integer(number):
-            n = Const(long(number), lineno)
+            n = Const(int(number), lineno)
             return CallFunc(Name('Integer'), [n])
         if number.endswith('j'):
             n = Const(complex(number), lineno)
@@ -34,13 +34,13 @@ class SymPyTransformer(Transformer):
     def atom_name(self, nodelist):
         name, lineno = nodelist[0][1:]
 
-        if self.local_dict.has_key(name):
+        if name in self.local_dict:
             name_obj = self.local_dict[name]
             return Const(name_obj, lineno=lineno)
-        elif self.global_dict.has_key(name):
+        elif name in self.global_dict:
             name_obj = self.global_dict[name]
 
-            if isinstance(name_obj, (Basic, type)) or callable(name_obj):
+            if isinstance(name_obj, (Basic, type)) or hasattr(name_obj, '__call__'):
                 return Const(name_obj, lineno=lineno)
         elif name in ['True', 'False']:
             return Const(eval(name), lineno=lineno)
@@ -62,7 +62,7 @@ class SymPyTransformer(Transformer):
         lineno = nodelist[1][2]
         code = self.com_node(nodelist[-1])
 
-        assert not defaults,`defaults` # sympy.Lambda does not support optional arguments
+        assert not defaults,repr(defaults) # sympy.Lambda does not support optional arguments
 
         if len(names) == 0:
             argument = ['x']
@@ -80,7 +80,7 @@ class SymPyTransformer(Transformer):
 class SymPyParser:
     def __init__(self, local_dict={}): #Contents of local_dict change, but it has proper effect only in global scope
         global_dict = {}
-        exec 'from sympy import *' in global_dict
+        exec('from sympy import *', global_dict)
 
         self.r_transformer = SymPyTransformer(local_dict, global_dict)
         self.local_dict = local_dict

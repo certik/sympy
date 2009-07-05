@@ -103,11 +103,11 @@ and equation solving with rigorous error bounds::
 # *test unitvector
 # *iterative solving
 
-from __future__ import division
 
-from mptypes import extraprec, absmin, mp, eps, mpf, fsum
-from functions import sqrt, sign, log, factorial
-from matrices import matrix, eye, swap_row, extend, norm, mnorm
+
+from .mptypes import extraprec, absmin, mp, eps, mpf, fsum
+from .functions import sqrt, sign, log, factorial
+from .matrices import matrix, eye, swap_row, extend, norm, mnorm
 from copy import copy
 
 def LU_decomp(A, overwrite=False, use_cache=True):
@@ -128,11 +128,11 @@ def LU_decomp(A, overwrite=False, use_cache=True):
     tol = absmin(mnorm(A,1) * eps) # each pivot element has to be bigger
     n = A.rows
     p = [None]*(n - 1)
-    for j in xrange(n - 1):
+    for j in range(n - 1):
         # pivoting, choose max(abs(reciprocal row sum)*abs(pivot element))
         biggest = 0
-        for k in xrange(j, n):
-            s = fsum([absmin(A[k,l]) for l in xrange(j, n)])
+        for k in range(j, n):
+            s = fsum([absmin(A[k,l]) for l in range(j, n)])
             if absmin(s) <= tol:
                 raise ZeroDivisionError('matrix is numerically singular')
             current = 1/s * absmin(A[k,j])
@@ -144,9 +144,9 @@ def LU_decomp(A, overwrite=False, use_cache=True):
         if absmin(A[j,j]) <= tol:
             raise ZeroDivisionError('matrix is numerically singular')
         # calculate elimination factors and add rows
-        for i in xrange(j + 1, n):
+        for i in range(j + 1, n):
             A[i,j] /= A[j,j]
-            for k in xrange(j + 1, n):
+            for k in range(j + 1, n):
                 A[i,k] -= A[i,j]*A[j,k]
     if absmin(A[n - 1,n - 1]) <= tol:
         raise ZeroDivisionError('matrix is numerically singular')
@@ -164,11 +164,11 @@ def L_solve(L, b, p=None):
     assert len(b) == n
     b = copy(b)
     if p: # swap b according to p
-        for k in xrange(0, len(p)):
+        for k in range(0, len(p)):
             swap_row(b, k, p[k])
     # solve
-    for i in xrange(1, n):
-        for j in xrange(i):
+    for i in range(1, n):
+        for j in range(i):
             b[i] -= L[i,j] * b[j]
     return b
 
@@ -180,8 +180,8 @@ def U_solve(U, y):
     n = U.rows
     assert len(y) == n
     x = copy(y)
-    for i in xrange(n - 1, -1, -1):
-        for j in xrange(i + 1, n):
+    for i in range(n - 1, -1, -1):
+        for j in range(i + 1, n):
             x[i] -= U[i,j] * x[j]
         x[i] /= U[i,i]
     return x
@@ -223,7 +223,7 @@ def improve_solution(A, x, b, maxsteps=1):
     Usually 3 up to 4 iterations are giving the maximal improvement.
     """
     assert A.rows == A.cols, 'need n*n matrix' # TODO: really?
-    for _ in xrange(maxsteps):
+    for _ in range(maxsteps):
         r = residual(A, x, b)
         if norm(r, 2) < 10*eps:
             break
@@ -249,8 +249,8 @@ def lu(A):
     n = A.rows
     L = matrix(n)
     U = matrix(n)
-    for i in xrange(n):
-        for j in xrange(n):
+    for i in range(n):
+        for j in range(n):
             if i > j:
                 L[i,j] = A[i,j]
             elif i == j:
@@ -260,7 +260,7 @@ def lu(A):
                 U[i,j] = A[i,j]
     # calculate permutation matrix
     P = eye(n)
-    for k in xrange(len(p)):
+    for k in range(len(p)):
         swap_row(P, k, p[k])
     return P, L, U
 
@@ -286,15 +286,15 @@ def inverse(A, **kwargs):
     A, p = LU_decomp(A)
     cols = []
     # calculate unit vectors and solve corresponding system to get columns
-    for i in xrange(1, n + 1):
+    for i in range(1, n + 1):
         e = unitvector(n, i)
         y = L_solve(A, e, p)
         cols.append(U_solve(A, y))
     # convert columns to matrix
     inv = []
-    for i in xrange(n):
+    for i in range(n):
         row = []
-        for j in xrange(n):
+        for j in range(n):
             row.append(cols[j][i])
         inv.append(row)
     return matrix(inv, **kwargs)
@@ -314,25 +314,25 @@ def householder(A):
     assert m >= n - 1
     # calculate Householder matrix
     p = []
-    for j in xrange(0, n - 1):
-        s = fsum((A[i,j])**2 for i in xrange(j, m))
+    for j in range(0, n - 1):
+        s = fsum((A[i,j])**2 for i in range(j, m))
         if not abs(s) > eps:
             raise ValueError('matrix is numerically singular')
         p.append(-sign(A[j,j]) * sqrt(s))
         kappa = s - p[j] * A[j,j]
         A[j,j] -= p[j]
-        for k in xrange(j+1, n):
-            y = fsum(A[i,j] * A[i,k] for i in xrange(j, m)) /  kappa
-            for i in xrange(j, m):
+        for k in range(j+1, n):
+            y = fsum(A[i,j] * A[i,k] for i in range(j, m)) /  kappa
+            for i in range(j, m):
                 A[i,k] -= A[i,j] * y
     # solve Rx = c1
-    x = [A[i,n - 1] for i in xrange(n - 1)]
-    for i in xrange(n - 2, -1, -1):
-        x[i] -= fsum(A[i,j] * x[j] for j in xrange(i + 1, n - 1))
+    x = [A[i,n - 1] for i in range(n - 1)]
+    for i in range(n - 2, -1, -1):
+        x[i] -= fsum(A[i,j] * x[j] for j in range(i + 1, n - 1))
         x[i] /= p[i]
     # calculate residual
     if not m == n - 1:
-        r = [A[m-1-i, n-1] for i in xrange(m - n + 1)]
+        r = [A[m-1-i, n-1] for i in range(m - n + 1)]
     else:
         # determined system, residual should be 0
         r = [0]*m # maybe a bad idea, changing r[i] will change all elements
@@ -401,13 +401,13 @@ def cholesky(A):
         raise ValueError('need n*n matrix')
     n = A.rows
     L = matrix(n)
-    for j in xrange(n):
-        s = A[j,j] - fsum(L[j,k]**2 for k in xrange(j))
+    for j in range(n):
+        s = A[j,j] - fsum(L[j,k]**2 for k in range(j))
         if s < eps:
             raise ValueError('matrix not positive-definite')
         L[j,j] = sqrt(s)
-        for i in xrange(j, n):
-            L[i,j] = (A[i,j] - fsum(L[i,k] * L[j,k] for k in xrange(j))) \
+        for i in range(j, n):
+            L[i,j] = (A[i,j] - fsum(L[i,k] * L[j,k] for k in range(j))) \
                      / L[j,j]
     return L
 
@@ -433,8 +433,8 @@ def cholesky_solve(A, b, **kwargs):
     # solve
     n = L.rows
     assert len(b) == n
-    for i in xrange(n):
-        b[i] -= fsum(L[i,j] * b[j] for j in xrange(i))
+    for i in range(n):
+        b[i] -= fsum(L[i,j] * b[j] for j in range(i))
         b[i] /= L[i,i]
     x = U_solve(L.T, b)
     return x
@@ -455,7 +455,7 @@ def det(A):
     for i, e in enumerate(p):
         if i != e:
             z *= -1
-    for i in xrange(A.rows):
+    for i in range(A.rows):
         z *= R[i,i]
     return z
 

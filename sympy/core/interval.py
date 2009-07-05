@@ -1,6 +1,6 @@
 
-from basic import Basic
-from sympify import _sympify
+from .basic import Basic
+from .sympify import _sympify
 
 class Interval(Basic):
 

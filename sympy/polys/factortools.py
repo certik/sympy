@@ -152,7 +152,7 @@ def kronecker_mv(f, **flags):
 
     terms, exps = {}, []
 
-    for i in xrange(0, len(symbols)):
+    for i in range(0, len(symbols)):
         exps.append(d**i)
 
     for coeff, monom in f.iter_terms():
@@ -167,14 +167,14 @@ def kronecker_mv(f, **flags):
 
     try:
         for ff, k in zzx_factor(g)[1]:
-            for i in xrange(0, k):
+            for i in range(0, k):
                 factors.append(ff)
     except OverflowError:
         raise PolynomialError("input too large for multivariate Kronecker method")
 
     const, result, tested = 1, [], []
 
-    if debug: print "KRONECKER-MV: Z[x] #factors = %i ..." % (len(factors))
+    if debug: print("KRONECKER-MV: Z[x] #factors = %i ..." % (len(factors)))
 
     for k in range(1, len(factors)//2 + 1):
         for h in combinations(factors, k):
@@ -194,14 +194,14 @@ def kronecker_mv(f, **flags):
                 y_deg, n = n, n-1
                 monom = [0] * N
 
-                for i in xrange(N):
+                for i in range(N):
                     v_deg =  y_deg % d
                     y_deg = (y_deg - v_deg) // d
                     monom[i] = v_deg
 
                 monom = tuple(monom)
 
-                if terms.has_key(monom):
+                if monom in terms:
                     terms[monom] += coeff
                 else:
                     terms[monom] = coeff
@@ -217,7 +217,7 @@ def kronecker_mv(f, **flags):
             q, r = mv_int_div(f, cand)
 
             if r.is_zero:
-                if debug: print "KRONECKER-MV: Z[X] factor found %s" % cand
+                if debug: print("KRONECKER-MV: Z[X] factor found %s" % cand)
                 result.append(cand)
                 f = q
             else:
@@ -231,13 +231,13 @@ def kronecker_mv(f, **flags):
             break
 
     if not f.is_one:
-        if debug: print "KRONECKER-MV: Z[X] factor found %s" % f
+        if debug: print("KRONECKER-MV: Z[X] factor found %s" % f)
         result.append(f)
 
     factors = {}
 
     for ff in result:
-        if factors.has_key(ff):
+        if ff in factors:
             factors[ff] += 1
         else:
             factors[ff] = 1

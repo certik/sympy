@@ -135,7 +135,7 @@ import weakref
 
 from ctypes import *
 from math import ceil
-from StringIO import StringIO
+from io import StringIO
 
 from pyglet.gl import *
 from pyglet.gl import gl_info
@@ -178,7 +178,7 @@ def load(filename, file=None, decoder=None):
             try:
                 image = decoder.decode(file, filename)
                 return image
-            except codecs.ImageDecodeException, e:
+            except codecs.ImageDecodeException as e:
                 first_exception = first_exception or e
                 file.seek(0)
 
@@ -369,7 +369,7 @@ class AbstractImage(object):
                 try:
                     encoder.encode(self, file, filename)
                     return
-                except codecs.ImageDecodeException, e:
+                except codecs.ImageDecodeException as e:
                     first_exception = first_exception or e
                     file.seek(0)
 
@@ -1529,7 +1529,7 @@ class BufferManager(object):
 
         stencil_bits = GLint()
         glGetIntegerv(GL_STENCIL_BITS, byref(stencil_bits))
-        self.free_stencil_bits = range(stencil_bits.value)
+        self.free_stencil_bits = list(range(stencil_bits.value))
 
         self.refs = []
 

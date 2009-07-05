@@ -12,13 +12,13 @@ see libmpc and libmpi.
 import math
 from bisect import bisect
 
-from settings import (
+from .settings import (
     MP_BASE, MP_ZERO, MP_ONE, MP_TWO, MP_FIVE, MODE,
     round_floor, round_ceiling, round_down, round_up,
     round_nearest, round_fast,
 )
 
-from libmpf import (
+from .libmpf import (
     ComplexResult,
     bitcount, bctable, lshift, rshift, giant_steps, sqrt_fixed,
     from_int, to_int, from_man_exp, to_fixed, to_float, from_float,
@@ -31,7 +31,7 @@ from libmpf import (
     isqrt_fast
 )
 
-from libintmath import ifib
+from .libintmath import ifib
 
 
 #----------------------------------------------------------------------------#
@@ -179,7 +179,7 @@ def bs_chudnovsky(a, b, level, verbose):
         q = (-1)**b * g * (CHUD_A+CHUD_B*b)
     else:
         if verbose and level < 4:
-            print "  binary splitting", a, b
+            print("  binary splitting", a, b)
         mid = (a+b)//2
         g1, p1, q1 = bs_chudnovsky(a, mid, level+1, verbose)
         g2, p2, q2 = bs_chudnovsky(mid, b, level+1, verbose)
@@ -199,7 +199,7 @@ def pi_fixed(prec, verbose=False, verbose_base=None):
     # The Chudnovsky series gives 14.18 digits per term
     N = int(prec/3.3219280948/14.181647462 + 2)
     if verbose:
-        print "binary splitting with N =", N
+        print("binary splitting with N =", N)
     g, p, q = bs_chudnovsky(0, N, 0, verbose)
     sqrtC = isqrt_fast(CHUD_C<<(2*prec))
     v = p*CHUD_C*sqrtC//((q+CHUD_A*p)*CHUD_D)
@@ -473,7 +473,7 @@ def log_int_fixed(n, prec):
         cache = log_int_cache[prec] = {}
         L = cache[2] = ln2_fixed(prec)
     one = MP_ONE << prec
-    for p in xrange(max(cache)+1, n+1):
+    for p in range(max(cache)+1, n+1):
         s = 0
         u = one
         k = 1
@@ -499,7 +499,7 @@ log_taylor_cache = {}
 
 # ~= next power of two + 20
 cache_prec_steps = [22,22]
-for k in xrange(1, bitcount(LOG_TAYLOR_PREC)+1):
+for k in range(1, bitcount(LOG_TAYLOR_PREC)+1):
     cache_prec_steps += [min(2**k,LOG_TAYLOR_PREC)+20] * 2**(k-1)
 
 def agm_fixed(a, b, prec):
@@ -573,7 +573,7 @@ def log_taylor(x, prec, r=0):
 
     The caller must provide sufficient guard bits.
     """
-    for i in xrange(r):
+    for i in range(r):
         x = isqrt_fast(x<<prec)
     one = MP_ONE << prec
     v = ((x-one)<<prec)//(x+one)

@@ -30,7 +30,7 @@ def check(a):
     """ Check that pickling and copying round-trips.
     """
     for protocol in [0, 1, 2, copy.copy, copy.deepcopy]:
-        if callable(protocol):
+        if hasattr(protocol, '__call__'):
             if isinstance(a, BasicType):
                 # Classes can't be copied, but that's okay.
                 return

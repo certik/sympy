@@ -13,6 +13,7 @@ from sympy.simplify.cse_main import cse
 from sympy.polys import Poly
 
 import sympy.mpmath as mpmath
+from functools import reduce
 
 def fraction(expr, exact=False):
     """Returns a pair with expression's numerator and denominator.
@@ -287,7 +288,7 @@ def together(expr, deep=False):
 
             numerator, denominator = [], []
 
-            for (term, (total, maxi)) in basis.iteritems():
+            for (term, (total, maxi)) in list(basis.items()):
                 basis[term] = (total, total-maxi)
 
                 if term.func is C.exp:
@@ -310,7 +311,7 @@ def together(expr, deep=False):
 
                 expr, coeff = [], product / (coeff*common)
 
-                for term in basis.iterkeys():
+                for term in list(basis.keys()):
                     total, sub = basis[term]
 
                     if term in denom:
@@ -633,12 +634,12 @@ def collect(expr, syms, evaluate=True, exact=False):
 
         for symbol in syms:
             if SYMPY_DEBUG:
-                print "DEBUG: parsing of expression %s with symbol %s " % (str(terms), str(symbol))
+                print("DEBUG: parsing of expression %s with symbol %s " % (str(terms), str(symbol)))
 
             result = parse_expression(terms, symbol)
 
             if SYMPY_DEBUG:
-                print "DEBUG: returned %s" %  str(result)
+                print("DEBUG: returned %s" %  str(result))
 
             if result is not None:
                 terms, elems, common_expo, has_deriv = result
@@ -657,7 +658,7 @@ def collect(expr, syms, evaluate=True, exact=False):
                 terms = separate(make_expression(terms))
                 index = separate(index)
 
-                if index in collected.keys():
+                if index in list(collected.keys()):
                     collected[index] += terms
                 else:
                     collected[index] = terms
@@ -671,7 +672,7 @@ def collect(expr, syms, evaluate=True, exact=False):
         collected[S.One] = disliked
 
     if evaluate:
-        return Add(*[ a*b for a, b in collected.iteritems() ])
+        return Add(*[ a*b for a, b in collected.items() ])
     else:
         return collected
 
@@ -711,7 +712,7 @@ def ratsimp(expr):
 
     def get_num_denum(x):
         """Matches x = a/b and returns a/b."""
-        a,b = map(Wild, 'ab')
+        a,b = list(map(Wild, 'ab'))
         r = x.match(a/b)
         if r is not None and len(r) == 2:
             return r[a],r[b]
@@ -772,7 +773,7 @@ def trigsimp(expr, deep=False, recursive=False):
         result = trigsimp_nonrecursive(expr, deep)
 
     # do some final simplifications like sin/cos -> tan:
-    a,b,c = map(Wild, 'abc')
+    a,b,c = list(map(Wild, 'abc'))
     matchers = (
             (a*sin(b)**c/cos(b)**c, a*tan(b)**c),
     )
@@ -839,7 +840,7 @@ def trigsimp_nonrecursive(expr, deep=False):
         # TODO this needs to be faster
 
         # The types of trig functions we are looking for
-        a,b,c = map(Wild, 'abc')
+        a,b,c = list(map(Wild, 'abc'))
         matchers = (
             (a*sin(b)**2, a - a*cos(b)**2),
             (a*tan(b)**2, a*(1/cos(b))**2 - a),
@@ -903,7 +904,7 @@ def radsimp(expr):
         x*2**(1/2) + y*2**(1/2)
     """
     n,d = fraction(expr)
-    a,b,c = map(Wild, 'abc')
+    a,b,c = list(map(Wild, 'abc'))
     r = d.match(a+b*sqrt(c))
     if r is not None:
         a = r[a]
@@ -969,7 +970,7 @@ def powsimp(expr, deep=False, combine='all'):
         (n*x)**(y + z)
     """
     if combine not in ['all', 'exp', 'base']:
-            raise ValueError, "combine must be one of ('all', 'exp', 'base')."
+            raise ValueError("combine must be one of ('all', 'exp', 'base').")
     if combine in ('all', 'base'):
         expr = separate(expr, deep)
     y = Symbol('y', dummy=True)
@@ -1012,7 +1013,7 @@ def powsimp(expr, deep=False, combine='all'):
                         c_powers[b] = c_powers.get(b, 0) + e
                     else:
                         nc_part.append(term)
-            newexpr = Mul(newexpr, Mul(*(Pow(b,e) for b, e in c_powers.items())))
+            newexpr = Mul(newexpr, Mul(*(Pow(b,e) for b, e in list(c_powers.items()))))
             if combine is 'exp':
                 return Mul(newexpr, Mul(*nc_part))
             else:
@@ -1046,7 +1047,7 @@ def powsimp(expr, deep=False, combine='all'):
 
             # Pull out numerical coefficients from exponent
             # e.g., 2**(2*x) => 4**x
-            for i in xrange(len(c_powers)):
+            for i in range(len(c_powers)):
                 b, e = c_powers[i]
                 exp_c, exp_t = e.as_coeff_terms()
                 if not (exp_c is S.One) and exp_t:
@@ -1082,7 +1083,7 @@ def powsimp(expr, deep=False, combine='all'):
                         c_powers.remove([b,e])
                     new_base = Mul(*bases)
                     in_c_powers = False
-                    for i in xrange(len(c_powers)):
+                    for i in range(len(c_powers)):
                         if c_powers[i][0] == new_base:
                             if combine == 'all':
                                 c_powers[i][1] += simpe
@@ -1146,7 +1147,7 @@ def hypersimilar(f, g, k):
        For more information see hypersimp().
 
     """
-    f, g = map(sympify, (f, g))
+    f, g = list(map(sympify, (f, g)))
 
     h = (f/g).rewrite(gamma)
     h = h.expand(func=True, basic=False)

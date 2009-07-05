@@ -1,10 +1,10 @@
-from basic import Basic, S
-from operations import AssocOp
-from cache import cacheit
+from .basic import Basic, S
+from .operations import AssocOp
+from .cache import cacheit
 
-from logic import fuzzy_not
+from .logic import fuzzy_not
 
-from symbol import Symbol, Wild
+from .symbol import Symbol, Wild
 # from function import FunctionClass, WildFunction /cyclic/
 # from numbers import Number, Integer, Real /cyclic/
 # from add   import Add /cyclic/
@@ -116,12 +116,12 @@ class Mul(AssocOp):
                         if c is not S.NegativeOne:
                             # make c positive (probably never occurs)
                             coeff *= (-c) ** e
-                            assert len(t)==1,`t`
+                            assert len(t)==1,repr(t)
                             b = -t[0]
                         #else: ignoring sign from NegativeOne: nothing to do!
                     elif c is not S.One:
                         coeff *= c ** e
-                        assert len(t)==1,`t`
+                        assert len(t)==1,repr(t)
                         b = t[0]
                     #else: c is One, so pass
 
@@ -184,8 +184,8 @@ class Mul(AssocOp):
             else:
                 common_b[b] = {co[1]:co[0]}
 
-        for b,e, in common_b.items():
-            for t, c in e.items():
+        for b,e, in list(common_b.items()):
+            for t, c in list(e.items()):
                 new_c_powers.append((b,c*Mul(*t)))
         c_powers = new_c_powers
 
@@ -202,8 +202,8 @@ class Mul(AssocOp):
             else:
                 common_b[b] = {co[1]:co[0]}
 
-        for b,e, in common_b.items():
-            for t, c in e.items():
+        for b,e, in list(common_b.items()):
+            for t, c in list(e.items()):
                 new_num_exp.append((b,c*Mul(*t)))
         num_exp = new_num_exp
 
@@ -246,7 +246,7 @@ class Mul(AssocOp):
             else:
                 inv_exp_dict[e] = b
 
-        for e,b in inv_exp_dict.items():
+        for e,b in list(inv_exp_dict.items()):
             if e is S.Zero:
                 continue
 
@@ -531,7 +531,7 @@ class Mul(AssocOp):
     def _eval_derivative(self, s):
         terms = list(self.args)
         factors = []
-        for i in xrange(len(terms)):
+        for i in range(len(terms)):
             t = terms[i].diff(s)
             if t is S.Zero:
                 continue
@@ -792,8 +792,8 @@ class Mul(AssocOp):
 #import operations as _
 #_.Mul       = Mul
 #del _
-from power import Pow
-from numbers import Real
-from function import FunctionClass
-from sympify import sympify
-from add import Add
+from .power import Pow
+from .numbers import Real
+from .function import FunctionClass
+from .sympify import sympify
+from .add import Add

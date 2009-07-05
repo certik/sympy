@@ -1,9 +1,9 @@
 from sympy.core import S, C, Basic
 from sympy.printing.printer import Printer
 from sympy.printing.str import sstr
-from stringpict import prettyForm, stringPict
+from .stringpict import prettyForm, stringPict
 
-from pretty_symbology import xstr, hobj, vobj, xobj, xsym, pretty_symbol,\
+from .pretty_symbology import xstr, hobj, vobj, xobj, xsym, pretty_symbol,\
         pretty_atom, pretty_use_unicode, pretty_try_use_unicode, greek
 
 # rename for usage from outside
@@ -327,16 +327,16 @@ class PrettyPrinter(Printer):
         len_args = len(pexpr.args)
 
         # max widths
-        maxw = [max([P[i,j].width() for i in xrange(len_args)]) \
-                    for j in xrange(2)]
+        maxw = [max([P[i,j].width() for i in range(len_args)]) \
+                    for j in range(2)]
 
         # FIXME: Refactor this code and matrix into some tabular environment.
         # drawing result
         D = None
 
-        for i in xrange(len_args):
+        for i in range(len_args):
             D_row = None
-            for j in xrange(2):
+            for j in range(2):
                 p = P[i,j]
                 assert p.width() <= maxw[j]
 
@@ -449,13 +449,13 @@ class PrettyPrinter(Printer):
 
         # Convert to pretty forms. Add parens to Add instances if there
         # is more than one term in the numer/denom
-        for i in xrange(0, len(a)):
+        for i in range(0, len(a)):
             if a[i].is_Add and len(a) > 1:
                 a[i] = prettyForm(*self._print(a[i]).parens())
             else:
                 a[i] = self._print(a[i])
 
-        for i in xrange(0, len(b)):
+        for i in range(0, len(b)):
             if b[i].is_Add and len(b) > 1:
                 b[i] = prettyForm(*self._print(b[i]).parens())
             else:
@@ -566,7 +566,7 @@ class PrettyPrinter(Printer):
     def _print_dict(self, d):
         items = []
 
-        keys = d.keys()
+        keys = list(d.keys())
         keys.sort( Basic.compare_pretty )
 
         for k in keys:
@@ -619,6 +619,6 @@ def pretty_print(expr, use_unicode=None):
 
     pprint is just a shortcut for this function
     """
-    print pretty(expr, use_unicode)
+    print(pretty(expr, use_unicode))
 
 pprint = pretty_print

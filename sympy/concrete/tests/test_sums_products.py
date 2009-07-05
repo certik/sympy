@@ -3,7 +3,7 @@ from sympy import (Symbol, Sum, oo, Real, Rational, sum, pi, cos, zeta,
 from sympy.concrete.summations import getab
 from sympy.utilities.pytest import XFAIL
 
-a, b, c, d, m, k = map(Symbol, 'abcdmk')
+a, b, c, d, m, k = list(map(Symbol, 'abcdmk'))
 n = Symbol('n', integer=True)
 
 def test_arithmetic_sums():

@@ -152,53 +152,53 @@ def eq1():
     r = Symbol("r")
     e = Rmn.dd(0,0)
     e = e.subs(nu(r), -lam(r))
-    print dsolve(e, [lam(r)])
+    print(dsolve(e, [lam(r)]))
 
 def eq2():
     r = Symbol("r")
     e = Rmn.dd(1,1)
     C = Symbol("CC")
     e = e.subs(nu(r), -lam(r))
-    print dsolve(e, [lam(r)])
+    print(dsolve(e, [lam(r)]))
 
 def eq3():
     r = Symbol("r")
     e = Rmn.dd(2,2)
     e = e.subs(nu(r), -lam(r))
-    print dsolve(e, [lam(r)])
+    print(dsolve(e, [lam(r)]))
 
 def eq4():
     r = Symbol("r")
     e = Rmn.dd(3,3)
     e = e.subs(nu(r), -lam(r))
-    print dsolve(e, [lam(r)])
+    print(dsolve(e, [lam(r)]))
 
 
 
 def main():
 
-    print "Initial metric:"
+    print("Initial metric:")
     pprint(gdd)
-    print "-"*40
-    print "Christoffel symbols:"
+    print("-"*40)
+    print("Christoffel symbols:")
     pprint_Gamma_udd(0,1,0)
     pprint_Gamma_udd(0,0,1)
-    print
+    print()
     pprint_Gamma_udd(1,0,0)
     pprint_Gamma_udd(1,1,1)
     pprint_Gamma_udd(1,2,2)
     pprint_Gamma_udd(1,3,3)
-    print
+    print()
     pprint_Gamma_udd(2,2,1)
     pprint_Gamma_udd(2,1,2)
     pprint_Gamma_udd(2,3,3)
-    print
+    print()
     pprint_Gamma_udd(3,2,3)
     pprint_Gamma_udd(3,3,2)
     pprint_Gamma_udd(3,1,3)
     pprint_Gamma_udd(3,3,1)
-    print"-"*40
-    print"Ricci tensor:"
+    print("-"*40)
+    print("Ricci tensor:")
     pprint_Rmn_dd(0,0)
     e =  Rmn.dd(1,1)
     pprint_Rmn_dd(1,1)
@@ -207,13 +207,13 @@ def main():
     #print
     #print "scalar curvature:"
     #print curvature(Rmn)
-    print "-"*40
-    print "solve the Einstein's equations:"
+    print("-"*40)
+    print("solve the Einstein's equations:")
     e = e.subs(nu(r), -lam(r))
     l =  dsolve(e, [lam(r)])
     pprint( Eq(lam(r), l) )
     metric = gdd.subs(lam(r), l).subs(nu(r),-l)#.combine()
-    print "metric:"
+    print("metric:")
     pprint( metric )
 
 if __name__ == "__main__":

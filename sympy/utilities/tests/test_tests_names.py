@@ -17,5 +17,5 @@ def test_no_duplicate_names():
                 tests[tname] = [fname]
     for fname in tests:
         if len(tests[fname]) > 1:
-            print tests[fname]
+            print(tests[fname])
             assert False, message % (fname)

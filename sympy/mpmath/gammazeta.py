@@ -15,15 +15,15 @@ This module implements gamma- and zeta-related functions:
 
 import math
 
-from settings import (\
+from .settings import (\
     MP_BASE, MP_ZERO, MP_ONE, MP_THREE, MODE, gmpy,
     round_floor, round_ceiling, round_down, round_up,
     round_nearest, round_fast
 )
 
-from libintmath import list_primes, int_fac, moebius
+from .libintmath import list_primes, int_fac, moebius
 
-from libmpf import (\
+from .libmpf import (\
     lshift, sqrt_fixed,
     fzero, fone, fnone, fhalf, ftwo, finf, fninf, fnan,
     from_int, to_int, to_fixed, from_man_exp, from_rational,
@@ -34,7 +34,7 @@ from libmpf import (\
     negative_rnd, reciprocal_rnd,
 )
 
-from libelefun import (\
+from .libelefun import (\
     constant_memo,
     def_mpf_constant,
     mpf_pi, pi_fixed, ln2_fixed, log_int_fixed, mpf_ln2,
@@ -42,7 +42,7 @@ from libelefun import (\
     cos_sin, cosh_sinh, mpf_cos_sin_pi, mpf_cos_pi, mpf_sin_pi,
 )
 
-from libmpc import (\
+from .libmpc import (\
     mpc_zero, mpc_one, mpc_half, mpc_two,
     mpc_abs, mpc_shift, mpc_pos,
     mpc_add, mpc_sub, mpc_mul, mpc_div,
@@ -309,7 +309,7 @@ def mertens_fixed(prec):
 @constant_memo
 def twinprime_fixed(prec):
     def I(n):
-        return sum(moebius(d)<<(n//d) for d in xrange(1,n+1) if not n%d)//n
+        return sum(moebius(d)<<(n//d) for d in range(1,n+1) if not n%d)//n
     wp = 2*prec + 30
     res = fone
     primes = [from_rational(1,p,wp) for p in [2,3,5,7]]
@@ -445,7 +445,7 @@ def mpf_bernoulli(n, prec, rnd=None):
             a = MP_ZERO
         else:
             a = bin1
-        for j in xrange(1, m//6+1):
+        for j in range(1, m//6+1):
             usign, uman, uexp, ubc = u = numbers[m-6*j]
             if usign:
                 uman = -uman
@@ -611,7 +611,7 @@ def calc_spouge_coefficients(a, prec):
     # sqrt(2*pi)
     sq2pi = mpf_sqrt(mpf_shift(mpf_pi(wp), 1), wp)
     c[0] = to_fixed(sq2pi, prec)
-    for k in xrange(1, a):
+    for k in range(1, a):
         # c[k] = ((-1)**(k-1) * (a-k)**k) * b / sqrt(a-k)
         term = mpf_mul_int(b, ((-1)**(k-1) * (a-k)**k), wp)
         term = mpf_div(term, mpf_sqrt(from_int(a-k), wp), wp)
@@ -638,14 +638,14 @@ def get_spouge_coefficients(prec):
 def spouge_sum_real(x, prec, a, c):
     x = to_fixed(x, prec)
     s = c[0]
-    for k in xrange(1, a):
+    for k in range(1, a):
         s += (c[k] << prec) // (x + (k << prec))
     return from_man_exp(s, -prec, prec, round_floor)
 
 # Unused: for fast computation of gamma(p/q)
 def spouge_sum_rational(p, q, prec, a, c):
     s = c[0]
-    for k in xrange(1, a):
+    for k in range(1, a):
         s += c[k] * q // (p+q*k)
     return from_man_exp(s, -prec, prec, round_floor)
 
@@ -663,7 +663,7 @@ def spouge_sum_complex(re, im, prec, a, c):
     im = to_fixed(im, prec)
     sre, sim = c[0], 0
     mag = ((re**2)>>prec) + ((im**2)>>prec)
-    for k in xrange(1, a):
+    for k in range(1, a):
         M = mag + re*(2*k) + ((k**2) << prec)
         sre += (c[k] * (re + (k << prec))) // M
         sim -= (c[k] * im) // M
@@ -890,7 +890,7 @@ def mpf_psi0(x, prec, rnd=round_fast):
     x = to_fixed(x, wp)
     one = MP_ONE << wp
     if m < n:
-        for k in xrange(m, n):
+        for k in range(m, n):
             s -= (one << wp) // x
             x += one
     x -= one
@@ -943,7 +943,7 @@ def mpc_psi0(z, prec, rnd=round_fast):
     n = int(0.11*wp) + 2
     s = mpc_zero
     if w < n:
-        for k in xrange(w, n):
+        for k in range(w, n):
             s = mpc_sub(s, mpc_reciprocal(z, wp), wp)
             z = mpc_add_mpf(z, fone, wp)
     z = mpc_sub(z, mpc_one, wp)
@@ -998,7 +998,7 @@ def mpc_psi(m, z, prec, rnd=round_fast):
     n = int(0.4*wp + 4*m)
     s = mpc_zero
     if w < n:
-        for k in xrange(w, n):
+        for k in range(w, n):
             t = mpc_pow_int(z, -m-1, wp)
             s = mpc_add(s, t, wp)
             z = mpc_add_mpf(z, fone, wp)
@@ -1147,7 +1147,7 @@ def mpf_zeta_int(s, prec, rnd=round_fast):
     d = borwein_coefficients(n)
     t = MP_ZERO
     s = MP_BASE(s)
-    for k in xrange(n):
+    for k in range(n):
         t += (((-1)**k * (d[k] - d[n])) << wp) // (k+1)**s
     t = (t << wp) // (-d[n])
     t = (t << wp) // ((1 << wp) - (1 << (wp+1-s)))
@@ -1203,7 +1203,7 @@ def mpf_zeta(s, prec, rnd=round_fast, alt=0):
     d = borwein_coefficients(n)
     t = MP_ZERO
     sf = to_fixed(s, wp)
-    for k in xrange(n):
+    for k in range(n):
         u = from_man_exp(-sf*log_int_fixed(k+1, wp), -2*wp, wp)
         esign, eman, eexp, ebc = mpf_exp(u, wp)
         offset = eexp + wp
@@ -1260,7 +1260,7 @@ def mpc_zeta(s, prec, rnd=round_fast, alt=0):
     one = MP_ONE << wp
     one_2wp = MP_ONE << (2*wp)
     critical_line = re == fhalf
-    for k in xrange(n):
+    for k in range(n):
         log = log_int_fixed(k+1, wp)
         # A square root is much cheaper than an exp
         if critical_line:

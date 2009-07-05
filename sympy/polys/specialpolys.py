@@ -8,7 +8,7 @@ from sympy.polys.integerpolys import (
 
 def fateman_poly_F_1(n):
     """Fateman's GCD benchmark: trivial GCD """
-    Y = [ Symbol('y_' + str(i)) for i in xrange(0, n+1) ]
+    Y = [ Symbol('y_' + str(i)) for i in range(0, n+1) ]
 
     y_0, y_1 = Y[0], Y[1]
 
@@ -26,12 +26,12 @@ def zzX_fateman_poly_F_1(n):
     """Fateman's GCD benchmark: trivial GCD """
     u = [1, 0]
 
-    for i in xrange(1, n+1):
+    for i in range(1, n+1):
         u = [zzX_const(i, 1), u]
 
     v = [1, 0, 0]
 
-    for i in xrange(1, n+1):
+    for i in range(1, n+1):
         v = [zzX_const(i, 1), zzX_zero(i), v]
 
     U = zzX_add_term(u, zzX_const(n, 1))
@@ -49,7 +49,7 @@ def zzX_fateman_poly_F_1(n):
 
 def fateman_poly_F_2(n):
     """Fateman's GCD benchmark: linearly dense quartic inputs """
-    Y = [ Symbol('y_' + str(i)) for i in xrange(0, n+1) ]
+    Y = [ Symbol('y_' + str(i)) for i in range(0, n+1) ]
 
     y_0 = Y[0]
 
@@ -66,7 +66,7 @@ def zzX_fateman_poly_F_2(n):
     """Fateman's GCD benchmark: linearly dense quartic inputs """
     u = [1, 0]
 
-    for i in xrange(1, n):
+    for i in range(1, n):
         u = [zzX_const(i, 1), u]
 
     v = zzX_add_term(u, zzX_const(n-1, 2))
@@ -82,7 +82,7 @@ def zzX_fateman_poly_F_2(n):
 
 def fateman_poly_F_3(n):
     """Fateman's GCD benchmark: sparse inputs (deg f ~ vars f) """
-    Y = [ Symbol('y_' + str(i)) for i in xrange(0, n+1) ]
+    Y = [ Symbol('y_' + str(i)) for i in range(0, n+1) ]
 
     y_0 = Y[0]
 
@@ -99,7 +99,7 @@ def zzX_fateman_poly_F_3(n):
     """Fateman's GCD benchmark: sparse inputs (deg f ~ vars f) """
     u = zzx_from_dict({n+1:1})
 
-    for i in xrange(1, n):
+    for i in range(1, n):
         u = zzX_add_term([u], zzX_const(i, 1), n+1)
 
     v = zzX_add_term(u, zzX_const(n-1, 2))

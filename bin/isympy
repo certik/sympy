@@ -146,7 +146,7 @@ def main():
         try:
             init_session('ipython', **args)
         except ImportError:
-            print no_ipython
+            print(no_ipython)
             init_session('python', **args)
 
 if __name__ == "__main__":

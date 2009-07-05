@@ -13,9 +13,9 @@ def print_cache():
         item = str(item)
         head = '='*len(item)
 
-        print head
-        print item
-        print head
+        print(head)
+        print(item)
+        print(head)
 
         if not isinstance(cache, tuple):
             cache = (cache,)
@@ -25,10 +25,10 @@ def print_cache():
 
         for i, kv in enumerate(cache):
             if shown:
-                print '\n*** %i ***\n' % i
+                print('\n*** %i ***\n' % i)
 
-            for k, v in kv.iteritems():
-                print '  %s :\t%s' % (k, v)
+            for k, v in kv.items():
+                print('  %s :\t%s' % (k, v))
 
 def clear_cache():
     """clear cache content"""
@@ -72,7 +72,7 @@ def __cacheit(func):
 
     def wrapper(*args, **kw_args):
         if kw_args:
-            keys = kw_args.keys()
+            keys = list(kw_args.keys())
             keys.sort()
             items = [(k+'=',kw_args[k]) for k in keys]
             k = args + tuple(items)
@@ -132,7 +132,7 @@ def __cacheit_nondummy(func):
                 dummy = None
             if dummy:
                 return func(*args, **kw_args)
-            keys = kw_args.keys()
+            keys = list(kw_args.keys())
             keys.sort()
             items = [(k+'=',kw_args[k]) for k in keys]
             k = args + tuple(items)
@@ -160,7 +160,7 @@ class MemoizerArg:
         self.name = name
 
     def fix_allowed_types(self, have_been_here={}):
-        from basic import C
+        from .basic import C
         i = id(self)
         if have_been_here.get(i): return
         allowed_types = self._allowed_types
@@ -183,14 +183,14 @@ class MemoizerArg:
             if self.converter is not None:
                 obj = self.converter(obj)
             return obj
-        func_src = '%s:%s:function %s' % (func.func_code.co_filename, func.func_code.co_firstlineno, func.func_name)
+        func_src = '%s:%s:function %s' % (func.__code__.co_filename, func.__code__.co_firstlineno, func.__name__)
         if index is None:
             raise ValueError('%s return value must be of type %r but got %r' % (func_src, self.allowed_types, obj))
-        if isinstance(index, (int,long)):
+        if isinstance(index, int):
             raise ValueError('%s %s-th argument must be of type %r but got %r' % (func_src, index, self.allowed_types, obj))
         if isinstance(index, str):
             raise ValueError('%s %r keyword argument must be of type %r but got %r' % (func_src, index, self.allowed_types, obj))
-        raise NotImplementedError(`index,type(index)`)
+        raise NotImplementedError(repr((index,type(index))))
 
 class Memoizer:
     """ Memoizer function decorator generator.
@@ -249,7 +249,7 @@ class Memoizer:
         if have_been_here.get(i): return
         for t in self.arg_templates:
             t.fix_allowed_types()
-        for k,t in self.kw_arg_templates.items():
+        for k,t in list(self.kw_arg_templates.items()):
             t.fix_allowed_types()
         have_been_here[i] = True
 
@@ -265,7 +265,7 @@ class Memoizer:
             except KeyError:
                 pass
             self.fix_allowed_types()
-            new_args = tuple([template.process(a,func,i) for (a, template, i) in zip(args, self.arg_templates, range(len(args)))])
+            new_args = tuple([template.process(a,func,i) for (a, template, i) in zip(args, self.arg_templates, list(range(len(args))))])
             assert len(args)==len(new_args)
             new_kw_args = {}
             for k, v in kw_items:
@@ -297,7 +297,7 @@ class Memoizer_nocache(Memoizer):
         def wrapper(*args, **kw_args):
             kw_items = tuple(kw_args.items())
             self.fix_allowed_types()
-            new_args = tuple([template.process(a,func,i) for (a, template, i) in zip(args, self.arg_templates, range(len(args)))])
+            new_args = tuple([template.process(a,func,i) for (a, template, i) in zip(args, self.arg_templates, list(range(len(args))))])
             assert len(args)==len(new_args)
             new_kw_args = {}
             for k, v in kw_items:

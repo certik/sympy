@@ -102,8 +102,8 @@ class DiracDelta(Function):
                     break
             if valid:
                 return result
-        except Exception,e :
-            print e
+        except Exception as e :
+            print(e)
             raise
             pass
         return self

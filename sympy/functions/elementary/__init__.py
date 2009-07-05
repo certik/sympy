@@ -1,7 +1,7 @@
 
-import complexes
-import exponential
-import hyperbolic
-import integers
-import trigonometric
-import miscellaneous
+from . import complexes
+from . import exponential
+from . import hyperbolic
+from . import integers
+from . import trigonometric
+from . import miscellaneous

@@ -26,7 +26,7 @@ class LibraryLoader(object):
             return self.load_framework(kwargs['framework'])
         
         platform_names = kwargs.get(self.platform, [])
-        if type(platform_names) in (str, unicode):
+        if type(platform_names) in (str, str):
             platform_names = [platform_names]
         elif type(platform_names) is tuple:
             platform_names = list(platform_names)

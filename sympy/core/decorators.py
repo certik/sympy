@@ -26,14 +26,14 @@ def __sympifyit(func, arg, retval=None):
     """
 
     # we support f(a,b) only
-    assert func.func_code.co_argcount
+    assert func.__code__.co_argcount
     # only b is _sympified
-    assert func.func_code.co_varnames[1] == arg
+    assert func.__code__.co_varnames[1] == arg
 
     def __sympifyit_wrapper(a, b):
         # XXX: check if these imports don't slow things down:
-        from numbers import Integer
-        from sympify import SympifyError, _sympify
+        from .numbers import Integer
+        from .sympify import SympifyError, _sympify
         # our task is to call `func` with `b` _sympified.
         #
         # if we _sympify from the beginning, we'll get unneccesary overhead,
@@ -72,7 +72,7 @@ def __sympifyit(func, arg, retval=None):
             # fast-path: let's hope b is already SymPy object
             return func(a, b)
 
-        except Exception, e:
+        except Exception as e:
 
             # we've got an exception.
             # maybe it's from nested __sympifyit? then we have to quit.

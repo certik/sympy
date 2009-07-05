@@ -35,5 +35,5 @@ from special.delta_functions import DiracDelta, Heaviside
 
 ln = log
 
-for _n, _cls in Basic.singleton.items():
-    exec '%s = _cls()' % (_n)
+for _n, _cls in list(Basic.singleton.items()):
+    exec('%s = _cls()' % (_n))

@@ -174,12 +174,12 @@ def maketree(f,*args,**kw):
     r = f(*args,**kw)
 
     iter-=1
-    s = "%s%s = %s\n" % (f.func_name,args,r)
+    s = "%s%s = %s\n" % (f.__name__,args,r)
     if tmp!=[]: s += tree(tmp)
     tmp=oldtmp
     tmp.append(s)
     if iter == 0:
-        print tmp[0]
+        print(tmp[0])
         tmp=[]
     return r
 

@@ -26,16 +26,16 @@ def test_pretty_str():
     assert pretty( "xxx\nxxx\'xxx" ) == '"xxx\\nxxx\'xxx"'
 
 def test_pretty_unicode():
-    assert pretty( u'xxx' ) == "u'xxx'"
-    assert pretty( u"xxx" ) == "u'xxx'"
-    assert pretty( u'xxx\'xxx' ) == 'u"xxx\'xxx"'
-    assert pretty( u'xxx"xxx' ) == "u'xxx\"xxx'"
-    assert pretty( u'xxx\"xxx' ) == "u'xxx\"xxx'"
-    assert pretty( u"xxx'xxx" ) == 'u"xxx\'xxx"'
-    assert pretty( u"xxx\'xxx" ) == 'u"xxx\'xxx"'
-    assert pretty( u"xxx\"xxx" ) == "u'xxx\"xxx'"
-    assert pretty( u"xxx\"xxx\'xxx" ) == 'u\'xxx"xxx\\\'xxx\''
-    assert pretty( u"xxx\nxxx\'xxx" ) == 'u"xxx\\nxxx\'xxx"'
+    assert pretty( 'xxx' ) == "u'xxx'"
+    assert pretty( "xxx" ) == "u'xxx'"
+    assert pretty( 'xxx\'xxx' ) == 'u"xxx\'xxx"'
+    assert pretty( 'xxx"xxx' ) == "u'xxx\"xxx'"
+    assert pretty( 'xxx\"xxx' ) == "u'xxx\"xxx'"
+    assert pretty( "xxx'xxx" ) == 'u"xxx\'xxx"'
+    assert pretty( "xxx\'xxx" ) == 'u"xxx\'xxx"'
+    assert pretty( "xxx\"xxx" ) == "u'xxx\"xxx'"
+    assert pretty( "xxx\"xxx\'xxx" ) == 'u\'xxx"xxx\\\'xxx\''
+    assert pretty( "xxx\nxxx\'xxx" ) == 'u"xxx\\nxxx\'xxx"'
 
 def test_pretty_basic():
     # Simple numbers/symbols
@@ -129,7 +129,7 @@ def test_pretty_functions():
     assert pretty( sin(x)**2 ) == '   2   \nsin (x)'
 
     # Conjugates
-    a,b = map(Symbol, 'ab')
+    a,b = list(map(Symbol, 'ab'))
     #assert pretty( conjugate(a+b*I) ) == '_     _\na - I*b'
     #assert pretty( conjugate(exp(a+b*I)) ) == ' _     _\n a - I*b\ne       '
 

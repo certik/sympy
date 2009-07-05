@@ -91,7 +91,7 @@ def pl_true(expr, model={}):
             return None
         return pt == qt
     else:
-        raise ValueError, "Illegal operator in logic expression" + str(expr)
+        raise ValueError("Illegal operator in logic expression" + str(expr))
 
 
 class KB(object):

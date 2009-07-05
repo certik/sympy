@@ -2,20 +2,20 @@
 """
 import sys
 
-from iterables import make_list, flatten, subsets
+from .iterables import make_list, flatten, subsets
 
 if sys.version_info[1] < 5:
-    from iterables import any, all
+    from .iterables import any, all
 else:
     any = any
     all = all
 
-from lambdify import lambdify
-from source import source
+from .lambdify import lambdify
+from .source import source
 
-from decorator import threaded
+from .decorator import threaded
 
-from runtests import test, doctest
+from .runtests import test, doctest
 
-from pytest import raises
+from .pytest import raises
 

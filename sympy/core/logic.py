@@ -41,7 +41,6 @@ def name_not(k):
 class Logic(object):
     """Logical expression"""
 
-    __slots__ = ['args']
 
     # {} 'op' -> LogicClass
     op_2class = {}
@@ -161,7 +160,6 @@ class Logic(object):
 # XXX better name?
 class AndOr_Base(Logic):
 
-    __slots__ = []
 
     def __new__(cls, *args):
         if len(args) == 0:
@@ -259,7 +257,6 @@ class And(AndOr_Base):
     op = '&'
     op_x_notx = False
 
-    __slots__ = []
 
     def _eval_propagate_not(self):
         # !(a&b&c ...) == !a | !b | !c ...
@@ -304,7 +301,6 @@ class Or(AndOr_Base):
     op = '|'
     op_x_notx = True
 
-    __slots__ = []
 
     def _eval_propagate_not(self):
         # !(a|b|c ...) == !a & !b & !c ...
@@ -313,7 +309,6 @@ class Or(AndOr_Base):
 class Not(Logic):
     op = '!'
 
-    __slots__ = []
 
     def __new__(cls, arg):
         if isinstance(arg, str):

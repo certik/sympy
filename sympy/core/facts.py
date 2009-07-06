@@ -411,11 +411,6 @@ class Prover(object):
        *several* facts are true at the same time.
     """
 
-    __slots__ = ['proved_rules',    # [] of a,b     (a -> b  rule)
-                 '_rules_seen',     # setof all seen rules
-                ]
-
-
     def __init__(self):
         self.proved_rules = []
         self._rules_seen  = set()

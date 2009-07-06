@@ -104,7 +104,6 @@ def Ge(a, b):
 
 class Relational(Basic):
 
-    __slots__ = []
 
     @staticmethod
     def get_relational_class(rop):
@@ -142,7 +141,6 @@ class Equality(Relational):
 
     rel_op = '=='
 
-    __slots__ = []
 
     def __bool__(self):
         return self.lhs.compare(self.rhs)==0
@@ -151,7 +149,6 @@ class Unequality(Relational):
 
     rel_op = '!='
 
-    __slots__ = []
 
     def __bool__(self):
         return self.lhs.compare(self.rhs)!=0
@@ -160,7 +157,6 @@ class StrictInequality(Relational):
 
     rel_op = '<'
 
-    __slots__ = []
 
     def __bool__(self):
         if self.lhs.is_comparable and self.rhs.is_comparable:
@@ -173,7 +169,6 @@ class Inequality(Relational):
 
     rel_op = '<='
 
-    __slots__ = []
 
     def __bool__(self):
         if self.lhs.is_comparable and self.rhs.is_comparable:

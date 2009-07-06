@@ -154,7 +154,6 @@ class Number(Atom):
     is_bounded = True
     is_finite = True
 
-    __slots__ = []
 
     # Used to make max(x._prec, y._prec) return x._prec when only x is a float
     _prec = -1
@@ -235,7 +234,6 @@ class Real(Number):
     is_irrational = False
     is_integer = False
 
-    __slots__ = ['_mpf_', '_prec']
 
     # mpz can't be pickled
     def __getnewargs__(self):
@@ -488,7 +486,6 @@ class Rational(Number):
     is_integer = False
     is_rational = True
 
-    __slots__ = ['p', 'q']
 
     is_Rational = True
 
@@ -757,7 +754,6 @@ class Integer(Rational):
 
     is_Integer = True
 
-    __slots__ = ['p']
 
     def _as_mpf_val(self, prec):
         return mlib.from_int(self.p)
@@ -998,7 +994,6 @@ class Zero(Integer, metaclass=SingletonMeta):
     is_prime = False
     is_composite = False
 
-    __slots__ = []
 
     @staticmethod
     def __abs__():
@@ -1034,7 +1029,6 @@ class One(Integer, metaclass=SingletonMeta):
 
     is_prime = True
 
-    __slots__ = []
 
     def _eval_evalf(self, prec):
         return self
@@ -1058,7 +1052,6 @@ class NegativeOne(Integer, metaclass=SingletonMeta):
     p = -1
     q = 1
 
-    __slots__ = []
 
     def _eval_evalf(self, prec):
         return self
@@ -1096,7 +1089,6 @@ class Half(Rational, metaclass=SingletonMeta):
     p = 1
     q = 2
 
-    __slots__ = []
 
     @staticmethod
     def __abs__():
@@ -1107,7 +1099,6 @@ class Infinity(Rational, metaclass=SingletonMeta):
     p = 1
     q = 0
 
-    __slots__ = []
 
     is_commutative = True
     is_positive = True
@@ -1173,7 +1164,6 @@ class NegativeInfinity(Rational, metaclass=SingletonMeta):
     p = -1
     q = 0
 
-    __slots__ = []
 
     is_commutative = True
     is_real = True
@@ -1250,7 +1240,6 @@ class NaN(Rational, metaclass=SingletonMeta):
     is_prime    = None
     is_positive = None
 
-    __slots__ = []
 
     def _as_mpf_val(self, prec):
         return mlib.fnan
@@ -1270,7 +1259,6 @@ class ComplexInfinity(Atom, metaclass=SingletonMeta):
     is_bounded = False
     is_real = None
 
-    __slots__ = []
 
     @staticmethod
     def __abs__():
@@ -1299,7 +1287,6 @@ class NumberSymbol(Atom, metaclass=SingletonMeta):
     is_bounded = True
     is_finite = True
 
-    __slots__ = []
 
     is_NumberSymbol = True
 
@@ -1375,7 +1362,6 @@ class Exp1(NumberSymbol):
     is_negative = False # XXX Forces is_negative/is_nonnegative
     is_irrational = True
 
-    __slots__ = []
 
     @staticmethod
     def __abs__():
@@ -1404,7 +1390,6 @@ class Pi(NumberSymbol):
     is_negative = False
     is_irrational = True
 
-    __slots__ = []
 
     @staticmethod
     def __abs__():
@@ -1430,7 +1415,6 @@ class GoldenRatio(NumberSymbol):
     is_negative = False
     is_irrational = True
 
-    __slots__ = []
 
     def _as_mpf_val(self, prec):
         return mlib.from_man_exp(phi_fixed(prec+10), -prec-10)
@@ -1455,7 +1439,6 @@ class EulerGamma(NumberSymbol):
     is_negative = False
     is_irrational = None
 
-    __slots__ = []
 
     def _as_mpf_val(self, prec):
         return mlib.from_man_exp(mpmath.gammazeta.euler_fixed(prec+10), -prec-10)
@@ -1477,7 +1460,6 @@ class Catalan(NumberSymbol):
     is_negative = False
     is_irrational = None
 
-    __slots__ = []
 
     def _as_mpf_val(self, prec):
         return mlib.from_man_exp(mpmath.gammazeta.catalan_fixed(prec+10), -prec-10)
@@ -1498,7 +1480,6 @@ class ImaginaryUnit(Atom, metaclass=SingletonMeta):
     is_bounded = True
     is_finite = True
 
-    __slots__ = []
 
     @staticmethod
     def __abs__():

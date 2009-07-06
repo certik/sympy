@@ -24,7 +24,6 @@ class NC_Marker:
 
 class Mul(AssocOp):
 
-    __slots__ = []
 
     is_Mul = True
 

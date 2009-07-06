@@ -275,11 +275,6 @@ class Basic(AssumeMeths, metaclass=BasicMeta):
 
     """
 
-    __slots__ = ['_mhash',              # hash value
-                 '_args',               # arguments
-                 '_assume_type_keys',   # assumptions typeinfo keys
-                ]
-
     # To be overridden with True in the appropriate subclasses
     is_Atom = False
     is_Symbol = False
@@ -2224,7 +2219,6 @@ class Atom(Basic):
 
     is_Atom = True
 
-    __slots__ = []
 
     def _eval_derivative(self, s):
         if self==s: return S.One

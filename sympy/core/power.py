@@ -70,7 +70,6 @@ class Pow(Basic):
 
     is_Pow = True
 
-    __slots__ = ['is_commutative']
 
     @cacheit
     def __new__(cls, a, b, **assumptions):

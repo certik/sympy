@@ -9,7 +9,6 @@ from .symbol import Symbol, Wild, Temporary
 
 class Add(AssocOp):
 
-    __slots__ = []
 
     is_Add = True
 

@@ -70,11 +70,6 @@ class AssumeMeths(object):
         - None (if you don't know if the property is True or false)
     """
 
-    __slots__ = ['_assumptions',    # assumptions
-                 '_a_inprogress',   # already-seen requests (when deducing
-                                    # through prerequisites -- see CycleDetected)
-                ]
-
 
     # This are the rules under which our assumptions function
     #
@@ -169,10 +164,7 @@ class AssumeMeths(object):
                 d.update(c.__getstate__(self, c))
 
         # Get all information that should be stored from cls and return the dic
-        for name in cls.__slots__:
-            if hasattr(self, name):
-                d[name] = getattr(self, name)
-        return d
+        stop
 
     def __setstate__(self, d):
         # All values that were pickled are now assigned to a fresh instance

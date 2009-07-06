@@ -197,14 +197,14 @@ class Number(Atom):
         # Order(5, x, y) -> Order(1,x,y)
         return C.Order(S.One, *symbols)
 
-    def __eq__(self, other):
-        raise NotImplementedError('%s needs .__eq__() method' % (self.__class__.__name__))
-    def __ne__(self, other):
-        raise NotImplementedError('%s needs .__ne__() method' % (self.__class__.__name__))
-    def __lt__(self, other):
-        raise NotImplementedError('%s needs .__lt__() method' % (self.__class__.__name__))
-    def __le__(self, other):
-        raise NotImplementedError('%s needs .__le__() method' % (self.__class__.__name__))
+    #def __eq__(self, other):
+    #    raise NotImplementedError('%s needs .__eq__() method' % (self.__class__.__name__))
+    #def __ne__(self, other):
+    #    raise NotImplementedError('%s needs .__ne__() method' % (self.__class__.__name__))
+    #def __lt__(self, other):
+    #    raise NotImplementedError('%s needs .__lt__() method' % (self.__class__.__name__))
+    #def __le__(self, other):
+    #    raise NotImplementedError('%s needs .__le__() method' % (self.__class__.__name__))
 
     def __gt__(self, other):
         return _sympify(other).__lt__(self)
@@ -354,6 +354,8 @@ class Real(Number):
 
     def __int__(self):
         return int(mlib.to_int(self._mpf_))
+
+    __hash__ = Number.__hash__
 
     def __eq__(self, other):
         try:
@@ -608,6 +610,8 @@ class Rational(Number):
     def __int__(self):
         return int(self.p//self.q)
 
+    __hash__ = Number.__hash__
+
     def __eq__(self, other):
         try:
             other = _sympify(other)
@@ -849,6 +853,8 @@ class Integer(Rational):
 
     # XXX do we need to define __cmp__ ?
 #   def __cmp__(a, b):
+
+    __hash__ = Rational.__hash__
 
     def __eq__(a, b):
         if type(b) is int:

@@ -48,7 +48,10 @@ class Symbol(Atom):
     def __new_stage2__(cls, name, commutative=True, **assumptions):
         assert isinstance(name, str),repr(type(name))
         obj = Basic.__new__(cls, **assumptions)
-        obj.is_commutative = commutative
+        #import pdb
+        #pdb.set_trace()
+        #del obj.is_commutative
+        #obj.is_commutative = commutative
         obj.name = name
         return obj
 

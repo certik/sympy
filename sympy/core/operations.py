@@ -35,7 +35,7 @@ class AssocOp(Basic):
             else: obj = cls.identity()
         else:
             obj = Basic.__new__(cls, *(c_part + nc_part), **assumptions)
-            obj.is_commutative = not nc_part
+            #obj.is_commutative = not nc_part
 
         if order_symbols is not None:
             obj = C.Order(obj, *order_symbols)

@@ -83,8 +83,9 @@ class Pow(Basic):
             return a
         obj = a._eval_power(b)
         if obj is None:
+            assumptions.update({"commutative": (a.is_commutative and \
+                        b.is_commutative)})
             obj = Basic.__new__(cls, a, b, **assumptions)
-            obj.is_commutative = (a.is_commutative and b.is_commutative)
         return obj
 
     @property

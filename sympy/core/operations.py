@@ -58,8 +58,8 @@ class AssocOp(Basic):
            x*y
 
         """
-        obj = Basic.__new__(type(self), *args)  # NB no assumptions for Add/Mul
-        obj.is_commutative = self.is_commutative
+        obj = Basic.__new__(type(self), *args,
+                **{"commutative": self.is_commutative})  # NB no assumptions for Add/Mul
 
         return obj
 

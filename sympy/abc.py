@@ -1,4 +1,4 @@
-from core import Symbol
+from .core import Symbol
 
 _latin = list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 _greek = 'alpha beta gamma delta epsilon zeta eta theta iota kappa '\

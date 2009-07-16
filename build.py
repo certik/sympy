@@ -22,5 +22,12 @@ for module in compiled_modules:
             Extension(module, sources = [result.c_file])
             )
 
-ext_modules = extensions
-cmdclass = {"build_ext": build_ext}
+setup(
+    name="SymPy",
+    packages=[
+        "sympy",
+        "sympy.ntheory"
+        ],
+    ext_modules=extensions,
+    cmdclass = {"build_ext": build_ext}
+    )

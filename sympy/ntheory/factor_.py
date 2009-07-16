@@ -12,6 +12,8 @@ from generate import sieve, prime, primerange
 small_trailing = [i and max(int(not i % 2**j) and j for j in range(1,8)) \
     for i in range(256)]
 
+from divisors import divisors
+
 def trailing(n):
     """Count the number of trailing zero digits in the binary
     representation of n, i.e. determine the largest power of 2
@@ -429,22 +431,6 @@ def primefactors(n, limit=None, verbose=False):
 
 
 # TODO: speed up by using prime factorization
-
-def divisors(n):
-    """
-    Return a list of all positive integer divisors of n.
-
-    >>> divisors(24)
-    [1, 2, 3, 4, 6, 8, 12, 24]
-    """
-    n = abs(n)
-    if isprime(n):
-        return [1, n]
-    s = []
-    for i in xrange(1, n+1):
-        if n % i == 0:
-            s += [i]
-    return s
 
 
 def totient(n):

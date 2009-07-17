@@ -150,7 +150,9 @@ def run_test_function(f):
     f is a Python test function to be run
     """
     try:
+        print "running:", f
         f()
+        print "  done running:", f
     except:
         e, val, tb = sys.exc_info()
         if e is AssertionError:
@@ -173,7 +175,8 @@ def run_test_function(f):
 
         return result, e
     else:
-        return "pass", None
+        e = "%s %s" % (f.__name, f.__module__)
+        return "pass", e
 
 class SymPyTests(object):
 

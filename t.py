@@ -73,7 +73,8 @@ for proc, r in results:
     infos = []
     for res, info in result:
         if res == ".":
-            print ".",
+            #print ".",
+            print "OK:", info
         else:
             print "F",
             infos.append(info)

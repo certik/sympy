@@ -20,7 +20,7 @@ def get_tests():
 
 tests = get_tests()
 
-#@tc.parallel()
+@tc.parallel()
 def run_test(num):
     r, info = run_test_function(tests[num])
     if r in ["pass", "xpass"]:

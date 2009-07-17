@@ -183,7 +183,7 @@ from sympy.geometry.ellipse import Circle, Ellipse
 from sympy.geometry.line import Line, LinearEntity, Ray, Segment
 from sympy.geometry.polygon import Polygon, RegularPolygon, Triangle
 
-def test_geometry():
+def _test_geometry():
     p1 = Point(1,2)
     p2 = Point(2,3)
     p3 = Point(0,0)

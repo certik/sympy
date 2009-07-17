@@ -48,6 +48,7 @@ for n in ntests:
 ntests = ntests[0]
 print "number of tests:", ntests
 mec.execute("from sympy.utilities.runtests import run_test_function")
+mec.execute("from timeit import default_timer as clock")
 i = 0
 #tasks = {}
 #ntests = 20
@@ -65,20 +66,30 @@ results = []
 
 @tc.parallel()
 def run_test(num):
+    t = clock()
     r, info = run_test_function(tests[num])
+    n = tests[num].func_name
+    t = clock() - t
     if r in ["pass", "xpass"]:
-        result = (".",  None)
+        result = (".",  None, t, n)
     elif r == "skipped":
-        result = ("", None)
+        result = ("", None, t, n)
     elif r == "xfail":
-        result = ("X", None)
+        result = ("X", None, t, n)
     else:
-        result = ("F",  info)
+        result = ("F",  info, t, n)
     return result
 
 
+from timeit import default_timer as clock
 print "running run_test"
-print run_test(range(100))
+t = clock()
+r = run_test(range(1570))
+t = clock() - t
+#r = run_test(range(100))
+r.sort(key=lambda x: x[2])
+print r
+print "run all tests in:", t
 
 
 #print run_test(tests[0])

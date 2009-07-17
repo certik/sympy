@@ -171,7 +171,7 @@ def multiproduct(seq=(), start=1):
             multi.append((base, exp//2))
     return units * multiproduct(multi)**2
 
-def test_factorint():
+def _test_factorint():
     assert sorted(factorint(123456).items()) == [(2, 6), (3, 1), (643, 1)]
     assert primefactors(123456) == [2, 3, 643]
     assert factorint(-16) == {-1:1, 2:4}

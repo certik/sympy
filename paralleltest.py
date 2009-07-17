@@ -38,5 +38,5 @@ def run_test(num):
 #for i in tests[:10]:
  #   t = run_test(i)
   #  print i.func_name, t[0], t[1]
-#print run_test(range(100))
-print tc.map(run_test_function, tests[:100])
+print run_test(range(100))
+#print map(run_test_function, tests[:100])

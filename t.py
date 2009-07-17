@@ -84,7 +84,7 @@ def run_test(num):
 from timeit import default_timer as clock
 print "running run_test"
 t = clock()
-r = run_test(range(1575))
+r = run_test(range(1570))
 t = clock() - t
 #r = run_test(range(100))
 r.sort(key=lambda x: x[2])

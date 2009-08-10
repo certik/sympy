@@ -120,6 +120,7 @@ def doctest(*paths, **kwargs):
     blacklist.extend([
         "sympy/thirdparty/pyglet", # segfaults
         "sympy/mpmath", # needs to be fixed upstream
+        "sympy/parsing/maxima_wrapper.py", # needs Maxima
         "sympy/plotting", # generates live plots
         "sympy/utilities/compilef.py", # needs tcc
         "sympy/galgebra/GA.py", # needs numpy

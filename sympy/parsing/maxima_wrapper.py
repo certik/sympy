@@ -127,3 +127,39 @@ class Maxima(object):
             input = "integrate(%s, %s, %s, %s);" % (s, x, a, b)
         r = self.run_command(input)
         return parse_maxima(r)
+
+    def trigsimp(self, e):
+        """
+        Uses Maxima's trigsimp to simplify a sympy trigonometric expression.
+
+        Example:
+
+        >>> from sympy.parsing.maxima_wrapper import Maxima
+        >>> m = Maxima()
+        >>> m.trigsimp(sin(x)**2 + cos(x)**2)
+        1
+
+        """
+        s = str(e).replace("**", "^")
+        input = "trigsimp(%s);" % s
+        r = self.run_command(input)
+        return parse_maxima(r)
+
+    def trigreduce(self, e):
+        """
+        Uses Maxima's trigreduce to simplify a sympy trigonometric expression.
+
+        Examples:
+
+        >>> from sympy.parsing.maxima_wrapper import Maxima
+        >>> m = Maxima()
+        >>> m.trigreduce(sin(x)**2 + cos(x)**2)
+        1
+        >>> m.trigreduce(sin(x)**2 + 2*cos(x)**2)
+        3/2 + cos(2*x)/2
+
+        """
+        s = str(e).replace("**", "^")
+        input = "trigreduce(%s);" % s
+        r = self.run_command(input)
+        return parse_maxima(r)

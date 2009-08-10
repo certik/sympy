@@ -1,4 +1,4 @@
-from sympy import symbols, factor, sin, cos
+from sympy import symbols, factor, sin, cos, S
 
 from sympy.parsing.maxima_wrapper import Maxima, MaximaError, maxima_present
 
@@ -57,3 +57,14 @@ def test_integrate():
     assert m.run_command("integrate(sin(x)^3, x, 0, %pi);").strip() == "4/3"
     assert m.integrate(x**2, x) == x**3/3
     assert m.integrate(sin(x), x, 0, 1) == 1 - cos(1)
+
+def test_trigsimp():
+    m = Maxima()
+    x = symbols("x")
+    assert m.trigsimp(sin(x)**2 + cos(x)**2) == 1
+
+def test_trigreduce():
+    m = Maxima()
+    x = symbols("x")
+    assert m.trigreduce(sin(x)**2 + cos(x)**2) == 1
+    assert m.trigreduce(sin(x)**2 + 2*cos(x)**2) == S(3)/2 + cos(2*x)/2

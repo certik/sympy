@@ -2,6 +2,7 @@ from primetest import isprime
 
 import cython
 
+@cython.locals(i=cython.int, n=cython.int)
 def divisors(n):
     """
     Return a list of all positive integer divisors of n.

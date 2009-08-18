@@ -1,5 +1,7 @@
 from primetest import isprime
 
+import cython
+
 def divisors(n):
     """
     Return a list of all positive integer divisors of n.
@@ -7,6 +9,7 @@ def divisors(n):
     >>> divisors(24)
     [1, 2, 3, 4, 6, 8, 12, 24]
     """
+    print "Compiled: %s" % cython.compiled
     n = abs(n)
     if isprime(n):
         return [1, n]

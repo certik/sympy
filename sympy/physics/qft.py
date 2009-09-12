@@ -3,6 +3,14 @@ This module contains utilities for doing calculations in the Quantum Field
 Theory.
 """
 
+from sympy import factorial
+
+def double_factorial(n):
+    if n in [1, 2, 3]:
+        return n
+    else:
+        return n*double_factorial(n-2)
+
 def wick(fields):
     """
     fields is a dict of (i -> n) pairs,
@@ -14,7 +22,7 @@ def wick(fields):
         if n % 2 == 1:
             return {}
         else:
-            return {frozenset((1, 1)): n // 2}
+            return {frozenset((1, 1)): factorial(n-1)}
     elif len(fields) == 2:
         i, j = fields.keys()
         if (fields[i] + fields[j]) % 2 == 1:

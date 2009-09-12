@@ -24,9 +24,15 @@ def wick(fields):
                 return {frozenset((i, j)): 1}
             else:
                 if fields[i] == 1:
-                    return {frozenset(((i, j), (j, j))): 3}
+                    if fields[j] == 3:
+                        return {frozenset(((i, j), (j, j))): 3}
+                    else:
+                        return {frozenset(((i, j), (j, j))): 15}
                 elif fields[j] == 1:
-                    return {frozenset(((i, j), (i, i))): 3}
+                    if fields[i] == 3:
+                        return {frozenset(((i, j), (i, i))): 3}
+                    else:
+                        return {frozenset(((i, j), (i, i))): 15}
                 elif fields[i] == fields[j] == 2:
                     return {
                         frozenset(((i, i), (j, j))): 1,

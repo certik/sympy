@@ -27,8 +27,8 @@ def wick(fields):
                     return {frozenset(((i, j), (j, j))): 3}
                 elif fields[j] == 1:
                     return {frozenset(((i, j), (i, i))): 3}
-                else:
+                elif fields[i] == fields[j] == 2:
                     return {
-                        frozenset(((1, 1), (2, 2))): 1,
-                        frozenset((1, 2)): 2,
+                        frozenset(((i, i), (j, j))): 1,
+                        frozenset((i, j)): 2,
                         }

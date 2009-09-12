@@ -16,7 +16,7 @@ assert wick({1: 4}) == {frozenset(((1, 1),)): 3}
 assert wick({1: 5}) == {}
 assert wick({1: 6}) == {frozenset(((1, 1),)): 15}
 
-assert wick({1: 1, 2: 1}) == {frozenset((1, 2)): 1}
+assert wick({1: 1, 2: 1}) == {frozenset(((1, 2),)): 1}
 assert wick({1: 2, 2: 1}) == {}
 assert wick({1: 1, 2: 2}) == {}
 assert wick({1: 1, 2: 3}) == {

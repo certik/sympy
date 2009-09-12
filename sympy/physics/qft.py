@@ -35,7 +35,7 @@ def wick(fields):
             return {}
         else:
             if fields[i] == fields[j] == 1:
-                return {frozenset((i, j)): 1}
+                return {frozenset(((i, j),)): 1}
             else:
                 import copy
                 d = copy.deepcopy(fields)
@@ -54,6 +54,7 @@ def wick(fields):
                     k2 = frozenset(k2)
                     result[k2] = r[k]*n
                 if fields[i] == fields[j] == 2:
+                    print result
                     return {
                         frozenset(((i, i), (j, j))): 1,
                         frozenset((i, j)): 2,

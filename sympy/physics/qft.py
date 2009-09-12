@@ -53,16 +53,10 @@ def wick(fields):
                     k2.add((i, j),)
                     k2 = frozenset(k2)
                     result[k2] = r[k]*n
-                if fields[i] == 1:
-                    return result
-                elif fields[j] == 1:
-                    return result
-                    if fields[i] == 3:
-                        return {frozenset(((i, j), (i, i))): 3}
-                    else:
-                        return {frozenset(((i, j), (i, i))): 15}
-                elif fields[i] == fields[j] == 2:
+                if fields[i] == fields[j] == 2:
                     return {
                         frozenset(((i, i), (j, j))): 1,
                         frozenset((i, j)): 2,
                         }
+                else:
+                    return result

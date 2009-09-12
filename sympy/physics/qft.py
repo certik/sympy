@@ -22,7 +22,7 @@ def wick(fields):
         if n % 2 == 1:
             return {}
         else:
-            return {frozenset((1, 1)): factorial(n-1)}
+            return {frozenset((1, 1)): double_factorial(n-1)}
     elif len(fields) == 2:
         i, j = fields.keys()
         if (fields[i] + fields[j]) % 2 == 1:

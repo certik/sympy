@@ -22,7 +22,7 @@ def wick(fields):
         if n % 2 == 1:
             return {}
         else:
-            return {frozenset((1, 1)): double_factorial(n-1)}
+            return {frozenset(((i, i),)): double_factorial(n-1)}
     elif len(fields) == 2:
         i, j = fields.keys()
         if (fields[i] + fields[j]) % 2 == 1:
@@ -31,11 +31,20 @@ def wick(fields):
             if fields[i] == fields[j] == 1:
                 return {frozenset((i, j)): 1}
             else:
+                import copy
+                d = copy.deepcopy(fields)
                 if fields[i] == 1:
-                    if fields[j] == 3:
-                        return {frozenset(((i, j), (j, j))): 3}
-                    else:
-                        return {frozenset(((i, j), (j, j))): 15}
+                    n = d[j]
+                    d[j] -= 1
+                    del d[i]
+                    r = wick(d)
+                    result = {}
+                    for k in r:
+                        k2 = set(k)
+                        k2.add((i, j),)
+                        k2 = frozenset(k2)
+                        result[k2] = r[k]*n
+                    return result
                 elif fields[j] == 1:
                     if fields[i] == 3:
                         return {frozenset(((i, j), (i, i))): 3}

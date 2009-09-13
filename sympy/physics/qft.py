@@ -24,40 +24,35 @@ def wick(fields):
         i = fields.keys()[0]
         n = fields[i]
         if n % 2 == 1:
-            return {}
+            return []
         elif n == 0:
             raise ValueError("power should not be 0")
         else:
-            return {frozenset(((i, i),)): double_factorial(n-1)}
+            return [{(i, i): n // 2}]
     elif len(fields) == 2:
         i, j = fields.keys()
         if (fields[i] + fields[j]) % 2 == 1:
-            return {}
+            return []
         else:
             if fields[i] == fields[j] == 1:
-                return {frozenset(((i, j),)): 1}
+                return [{(i, j): 1}]
             else:
-                import copy
-                d = copy.deepcopy(fields)
-                n = d[i]*d[j]
-                d[i] -= 1
-                d[j] -= 1
-                if d[i] == 0:
-                    del d[i]
-                if d[j] == 0:
-                    del d[j]
-                r = wick(d)
-                result = {}
-                for k in r:
-                    k2 = set(k)
-                    k2.add((i, j),)
-                    k2 = frozenset(k2)
-                    result[k2] = r[k]*n
-                if fields[i] == fields[j] == 2:
-                    print result
-                    return {
-                        frozenset(((i, i), (j, j))): 1,
-                        frozenset((i, j)): 2,
-                        }
-                else:
-                    return result
+                result = []
+                for j in fields.keys():
+                    import copy
+                    d = copy.deepcopy(fields)
+                    d[i] -= 1
+                    if d[j] == 0:
+                        continue
+                    d[j] -= 1
+                    if d[i] == 0:
+                        del d[i]
+                    if j != i and d[j] == 0:
+                        del d[j]
+                    r = wick(d)
+                    for graph in r:
+                        graph[(i, j)] = graph.get((i, j), 0) + 1
+                        if not graph in result:
+                            result.append(graph)
+                print result
+                return result

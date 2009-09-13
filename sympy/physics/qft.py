@@ -36,23 +36,24 @@ def wick(fields):
         else:
             if fields[i] == fields[j] == 1:
                 return [{(i, j): 1}]
-            else:
-                result = []
-                for j in fields.keys():
-                    import copy
-                    d = copy.deepcopy(fields)
-                    d[i] -= 1
-                    if d[j] == 0:
-                        continue
-                    d[j] -= 1
-                    if d[i] == 0:
-                        del d[i]
-                    if j != i and d[j] == 0:
-                        del d[j]
-                    r = wick(d)
-                    for graph in r:
-                        graph[(i, j)] = graph.get((i, j), 0) + 1
-                        if not graph in result:
-                            result.append(graph)
-                print result
-                return result
+
+    i = fields.keys()[0]
+    result = []
+    for j in fields.keys():
+        import copy
+        d = copy.deepcopy(fields)
+        d[i] -= 1
+        if d[j] == 0:
+            continue
+        d[j] -= 1
+        if d[i] == 0:
+            del d[i]
+        if j != i and d[j] == 0:
+            del d[j]
+        r = wick(d)
+        for graph in r:
+            graph[(i, j)] = graph.get((i, j), 0) + 1
+            if not graph in result:
+                result.append(graph)
+    print result
+    return result

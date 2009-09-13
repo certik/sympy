@@ -20,8 +20,6 @@ def wick(fields):
     fields is a dict of (i -> n) pairs,
     whose meaning is phi(i)^n
     """
-    if len(fields) == 0:
-        return []
     if len(fields) == 1:
         i = fields.keys()[0]
         n = fields[i]

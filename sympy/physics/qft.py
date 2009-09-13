@@ -68,3 +68,10 @@ def is_connected(graph):
 
 def filter_connected(graphs):
     return [g for g in graphs if is_connected(g)]
+
+def graph_plot(graph):
+    from matplotlib import pyplot
+    fig = pyplot.figure()
+    ax = fig.gca()
+    ax.plot([1, 3, 1])
+    return fig

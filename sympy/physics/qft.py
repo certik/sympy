@@ -75,3 +75,10 @@ def graph_plot(graph):
     ax = fig.gca()
     ax.plot([1, 3, 1])
     return fig
+
+def graph2fields(graph):
+    fields = {}
+    for edge in graph:
+        for i in edge:
+            fields[i] = fields.get(i, 0) + graph[edge]
+    return fields

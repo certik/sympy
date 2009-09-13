@@ -1,5 +1,5 @@
 from sympy.physics.qft import (wick, double_factorial, graph2nx, is_connected,
-        filter_connected, graph_plot)
+        filter_connected, graph_plot, graph2fields)
 
 def test_double_factorial():
     assert double_factorial(1) == 1
@@ -52,3 +52,26 @@ def test_wick():
             wick({1: 1, 2: 1, 3: 1, 4: 1, 5: 3, 6:3})
     assert {(1, 3): 1, (3, 3): 1, (3, 4): 1, (2, 4): 1, (4, 5): 2, (5, 5): 1} in \
             wick({1: 1, 2: 1, 3: 4, 4: 4, 5: 4})
+
+def test_graph2fields():
+    fields = {1: 1}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 2}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 3}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 4}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 5}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 6}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+
+    fields = {1: 1, 2: 1, 3: 4}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 1, 2: 1, 3: 4, 4: 4}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 1, 2: 1, 3: 4, 4: 4, 5: 4}
+    for graph in wick(fields): assert graph2fields(graph) == fields
+    fields = {1: 1, 2: 1, 3: 1, 4: 1, 5: 2}
+    for graph in wick(fields): assert graph2fields(graph) == fields

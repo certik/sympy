@@ -20,8 +20,9 @@ def wick(fields):
     fields is a dict of (i -> n) pairs,
     whose meaning is phi(i)^n
     """
+    i = fields.keys()[0]
     if len(fields) == 1:
-        i = fields.keys()[0]
+        # special case if there is just one field:
         n = fields[i]
         if n % 2 == 1:
             return []
@@ -30,7 +31,8 @@ def wick(fields):
         else:
             return [{(i, i): n // 2}]
 
-    i = fields.keys()[0]
+    # otherwise pick one field and contract it with every other field
+    # (including itself):
     result = []
     for j in fields.keys():
         d = fields.copy()

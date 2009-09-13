@@ -40,8 +40,7 @@ def wick(fields):
     i = fields.keys()[0]
     result = []
     for j in fields.keys():
-        import copy
-        d = copy.deepcopy(fields)
+        d = fields.copy()
         d[i] -= 1
         if d[j] == 0:
             continue
@@ -55,5 +54,4 @@ def wick(fields):
             graph[(i, j)] = graph.get((i, j), 0) + 1
             if not graph in result:
                 result.append(graph)
-    print result
     return result

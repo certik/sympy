@@ -53,3 +53,18 @@ def wick(fields):
             if not graph in result:
                 result.append(graph)
     return result
+
+def graph2nx(graph):
+    import networkx as nx
+    G = nx.Graph()
+    for edge in graph:
+        G.add_edge(*edge)
+    return G
+
+def is_connected(graph):
+    import networkx as nx
+    G = graph2nx(graph)
+    return len(nx.connected_components(G)) == 1
+
+def filter_connected(graphs):
+    return [g for g in graphs if is_connected(g)]

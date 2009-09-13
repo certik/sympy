@@ -20,6 +20,8 @@ def wick(fields):
     fields is a dict of (i -> n) pairs,
     whose meaning is phi(i)^n
     """
+    if len(fields) == 0:
+        return []
     if len(fields) == 1:
         i = fields.keys()[0]
         n = fields[i]
@@ -29,13 +31,6 @@ def wick(fields):
             raise ValueError("power should not be 0")
         else:
             return [{(i, i): n // 2}]
-    elif len(fields) == 2:
-        i, j = fields.keys()
-        if (fields[i] + fields[j]) % 2 == 1:
-            return []
-        else:
-            if fields[i] == fields[j] == 1:
-                return [{(i, j): 1}]
 
     i = fields.keys()[0]
     result = []
@@ -49,7 +44,10 @@ def wick(fields):
             del d[i]
         if j != i and d[j] == 0:
             del d[j]
-        r = wick(d)
+        if d == {}:
+            r = [{}]
+        else:
+            r = wick(d)
         for graph in r:
             graph[(i, j)] = graph.get((i, j), 0) + 1
             if not graph in result:

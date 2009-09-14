@@ -3,6 +3,8 @@ This module contains utilities for doing calculations in the Quantum Field
 Theory.
 """
 
+from math import sin, cos, pi
+
 from sympy import factorial
 
 def double_factorial(n):
@@ -73,7 +75,21 @@ def graph_plot(graph):
     from matplotlib import pyplot
     fig = pyplot.figure()
     ax = fig.gca()
-    ax.plot([1, 3, 1])
+
+    fields = graph2fields(graph)
+    external = [i for i in fields if fields[i] == 1]
+    internal = [i for i in fields if fields[i] != 1]
+    n = len(external)
+    external_x = [cos(2*pi*i/n) for i in range(n)]
+    external_y = [sin(2*pi*i/n) for i in range(n)]
+    n = len(internal)
+    internal_x = [0.5*cos(2*pi*i/n) for i in range(n)]
+    internal_y = [0.5*sin(2*pi*i/n) for i in range(n)]
+    ax.plot(external_x, external_y, "go")
+    ax.plot(internal_x, internal_y, "bo")
+    if len(external) == 2:
+        ax.set_ylim(ax.get_xlim())
+    ax.set_aspect("equal")
     return fig
 
 def graph2fields(graph):

@@ -102,14 +102,30 @@ def graph_plot(graph):
         print "plotting", p1, p2
         n = graph[edge]
         if n == 1:
-            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], "k-")
+            if edge[0] == edge[1]:
+                m1 = p1 + [0.1, -0.1]
+                m2 = p1 + [0.2, 0.0]
+                m3 = p1 + [0.1, 0.1]
+                ax.plot([p1[0], m1[0], m2[0], m3[0], p1[0]],
+                        [p1[1], m1[1], m2[1], m3[1], p1[1]], "k-")
+            else:
+                ax.plot([p1[0], p2[0]], [p1[1], p2[1]], "k-")
         else:
-            vec = (p2-p1)
-            vec = 0.2 * array([-vec[1], vec[0]])
-            m = (p1 + p2)/2
-            for i in range(n):
-                m0 = m + (i - (n-1)/2.)*vec
-                ax.plot([p1[0], m0[0],  p2[0]], [p1[1], m0[1], p2[1]], "k-")
+            if edge[0] == edge[1]:
+                for i in range(n):
+                    c = i-n//2+0.5
+                    m1 = p1 + c*array([0.1, -0.1])
+                    m2 = p1 + c*array([0.2, 0.0])
+                    m3 = p1 + c*array([0.1, 0.1])
+                    ax.plot([p1[0], m1[0], m2[0], m3[0], p1[0]],
+                            [p1[1], m1[1], m2[1], m3[1], p1[1]], "k-")
+            else:
+                vec = (p2-p1)
+                vec = 0.2 * array([-vec[1], vec[0]])
+                m = (p1 + p2)/2
+                for i in range(n):
+                    m0 = m + (i - (n-1)/2.)*vec
+                    ax.plot([p1[0], m0[0],  p2[0]], [p1[1], m0[1], p2[1]], "k-")
 
     # plot points:
     ax.plot(external_x, external_y, "bo")

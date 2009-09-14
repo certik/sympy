@@ -100,23 +100,20 @@ def graph_plot(graph):
         p1 = get_xy(edge[0])
         p2 = get_xy(edge[1])
         print "plotting", p1, p2
-        if graph[edge] == 1:
+        n = graph[edge]
+        if n == 1:
             ax.plot([p1[0], p2[0]], [p1[1], p1[1]], "k-")
-        elif graph[edge] == 2:
+        else:
             vec = (p2-p1)
             vec = 0.2 * array([-vec[1], vec[0]])
             m = (p1 + p2)/2
-            m1 = m + vec
-            m2 = m - vec
-            ax.plot([p1[0], m1[0],  p2[0]], [p1[1], m1[1], p1[1]], "k-")
-            ax.plot([p1[0], m2[0],  p2[0]], [p1[1], m2[1], p1[1]], "k-")
-        else:
-            print graph[edge]
-            stop
+            for i in range(n):
+                m0 = m + (i - (n-1)/2.)*vec
+                ax.plot([p1[0], m0[0],  p2[0]], [p1[1], m0[1], p1[1]], "k-")
 
     # plot points:
-    ax.plot(external_x, external_y, "go")
-    ax.plot(internal_x, internal_y, "bo")
+    ax.plot(external_x, external_y, "bo")
+    ax.plot(internal_x, internal_y, "ko")
 
     if len(external) == 2:
         ax.set_ylim(ax.get_xlim())

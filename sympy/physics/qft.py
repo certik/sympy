@@ -76,6 +76,7 @@ def graph_plot(graph):
     from matplotlib import pyplot
     fig = pyplot.figure()
     ax = fig.gca()
+    ax.clear()
 
     fields = graph2fields(graph)
     external = [i for i in fields if fields[i] == 1]

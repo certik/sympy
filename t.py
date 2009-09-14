@@ -7,8 +7,9 @@ print "connected"
 connected = filter_connected(all)
 print "-"*80
 print len(all), len(connected)
-g = all[0]
-print g
-f = graph_plot(g)
-import pylab
-pylab.show()
+for i in range(len(all)):
+    g = all[i]
+    print g
+    f = graph_plot(g)
+    f.gca().set_title(str(g))
+    f.savefig("/tmp/a%04d.png" % i)

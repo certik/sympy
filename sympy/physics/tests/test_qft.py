@@ -75,3 +75,12 @@ def test_graph2fields():
     for graph in wick(fields): assert graph2fields(graph) == fields
     fields = {1: 1, 2: 1, 3: 1, 4: 1, 5: 2}
     for graph in wick(fields): assert graph2fields(graph) == fields
+
+def test_plot():
+    for graph in wick({1: 1, 2: 1, 3: 4, 4: 4}):
+        graph_plot(graph)
+
+    # test several bubbles:
+    graph_plot({(1, 2): 1, (2, 2):2, (2, 3): 1})
+    graph_plot({(1, 2): 1, (2, 2):3, (2, 3): 1})
+    graph_plot({(1, 2): 1, (2, 2):4, (2, 3): 1})

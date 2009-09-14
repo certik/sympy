@@ -72,6 +72,7 @@ def filter_connected(graphs):
     return [g for g in graphs if is_connected(g)]
 
 def graph_plot(graph):
+    from numpy import array
     from matplotlib import pyplot
     fig = pyplot.figure()
     ax = fig.gca()
@@ -85,8 +86,38 @@ def graph_plot(graph):
     n = len(internal)
     internal_x = [0.5*cos(2*pi*i/n) for i in range(n)]
     internal_y = [0.5*sin(2*pi*i/n) for i in range(n)]
+    def get_xy(i):
+        if i in external:
+            i = external.index(i)
+            return array([external_x[i], external_y[i]])
+        else:
+            assert i in internal
+            i = internal.index(i)
+            return array([internal_x[i], internal_y[i]])
+
+    # plot edges:
+    for edge in graph:
+        p1 = get_xy(edge[0])
+        p2 = get_xy(edge[1])
+        print "plotting", p1, p2
+        if graph[edge] == 1:
+            ax.plot([p1[0], p2[0]], [p1[1], p1[1]], "k-")
+        elif graph[edge] == 2:
+            vec = (p2-p1)
+            vec = 0.2 * array([-vec[1], vec[0]])
+            m = (p1 + p2)/2
+            m1 = m + vec
+            m2 = m - vec
+            ax.plot([p1[0], m1[0],  p2[0]], [p1[1], m1[1], p1[1]], "k-")
+            ax.plot([p1[0], m2[0],  p2[0]], [p1[1], m2[1], p1[1]], "k-")
+        else:
+            print graph[edge]
+            stop
+
+    # plot points:
     ax.plot(external_x, external_y, "go")
     ax.plot(internal_x, internal_y, "bo")
+
     if len(external) == 2:
         ax.set_ylim(ax.get_xlim())
     ax.set_aspect("equal")

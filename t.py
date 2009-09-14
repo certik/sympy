@@ -7,6 +7,7 @@ print "connected"
 connected = filter_connected(all)
 print "-"*80
 print len(all), len(connected)
-f = graph_plot(all[0])
+g = {(1, 2): 1, (2, 3): 2, (3, 5): 1}
+f = graph_plot(g)
 import pylab
 pylab.show()

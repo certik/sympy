@@ -102,14 +102,14 @@ def graph_plot(graph):
         print "plotting", p1, p2
         n = graph[edge]
         if n == 1:
-            ax.plot([p1[0], p2[0]], [p1[1], p1[1]], "k-")
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], "k-")
         else:
             vec = (p2-p1)
             vec = 0.2 * array([-vec[1], vec[0]])
             m = (p1 + p2)/2
             for i in range(n):
                 m0 = m + (i - (n-1)/2.)*vec
-                ax.plot([p1[0], m0[0],  p2[0]], [p1[1], m0[1], p1[1]], "k-")
+                ax.plot([p1[0], m0[0],  p2[0]], [p1[1], m0[1], p2[1]], "k-")
 
     # plot points:
     ax.plot(external_x, external_y, "bo")

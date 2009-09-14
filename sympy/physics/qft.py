@@ -84,8 +84,8 @@ def graph_plot(graph):
     external_x = [cos(2*pi*i/n) for i in range(n)]
     external_y = [sin(2*pi*i/n) for i in range(n)]
     n = len(internal)
-    internal_x = [0.5*cos(2*pi*i/n) for i in range(n)]
-    internal_y = [0.5*sin(2*pi*i/n) for i in range(n)]
+    internal_x = [0.5*cos(2*pi*i/n+pi/2) for i in range(n)]
+    internal_y = [0.5*sin(2*pi*i/n+pi/2) for i in range(n)]
     def get_xy(i):
         if i in external:
             i = external.index(i)
@@ -99,7 +99,6 @@ def graph_plot(graph):
     for edge in graph:
         p1 = get_xy(edge[0])
         p2 = get_xy(edge[1])
-        print "plotting", p1, p2
         n = graph[edge]
         if edge[0] == edge[1]:
             for i in range(n):

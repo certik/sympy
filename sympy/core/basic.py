@@ -82,111 +82,6 @@ class BasicMeta(BasicType):
         BasicMeta.classnamespace[n] = cls
         super(BasicMeta, cls).__init__(cls)
 
-        # --- assumptions ---
-
-        # initialize default_assumptions dictionary
-        default_assumptions = {}
-
-        for k,v in cls.__dict__.iteritems():
-            if not k.startswith('is_'):
-                continue
-
-            # this is not an assumption (e.g. is_Integer)
-            if k[3:] not in AssumeMeths._assume_defined:
-                continue
-
-            k = k[3:]
-            if isinstance(v,(bool,int,long,type(None))):
-                if v is not None:
-                    v = bool(v)
-                default_assumptions[k] = v
-                #print '  %r <-- %s' % (k,v)
-
-
-        # XXX maybe we should try to keep ._default_premises out of class ?
-        # XXX __slots__ in class ?
-        cls._default_premises = default_assumptions
-
-        for base in cls.__bases__:
-            try:
-                base_premises = base._default_premises
-            except AttributeError:
-                continue    # no ._default_premises is ok
-
-            for k,v in base_premises.iteritems():
-
-                # if an assumption is already present in child, we should ignore base
-                # e.g. Integer.is_integer=T, but Rational.is_integer=F (for speed)
-                if k in default_assumptions:
-                    continue
-
-                default_assumptions[k] = v
-
-
-
-        # deduce all consequences from default assumptions -- make it complete
-        xass = AssumeMeths._assume_rules.deduce_all_facts(default_assumptions)
-
-        # and store completed set into cls -- this way we'll avoid rededucing
-        # extensions of class default assumptions each time on instance
-        # creation -- we keep it prededuced already.
-        cls.default_assumptions = xass
-
-        #print '\t(%2i)  %s' % (len(default_assumptions), default_assumptions)
-        #print '\t(%2i)  %s' % (len(xass), xass)
-
-
-
-        # let's store new derived assumptions back into class.
-        # this will result in faster access to this attributes.
-        #
-        # Timings
-        # -------
-        #
-        # a = Integer(5)
-        # %timeit a.is_zero     -> 20 us (without this optimization)
-        # %timeit a.is_zero     ->  2 us (with    this optimization)
-        #
-        #
-        # BTW: it is very important to study the lessons learned here --
-        #      we could drop Basic.__getattr__ completely (!)
-        #
-        # %timeit x.is_Add      -> 2090 ns  (Basic.__getattr__  present)
-        # %timeit x.is_Add      ->  825 ns  (Basic.__getattr__  absent)
-        #
-        # so we may want to override all assumptions is_<xxx> methods and
-        # remove Basic.__getattr__
-
-
-        # first we need to collect derived premises
-        derived_premises = {}
-
-        for k,v in xass.iteritems():
-            if k not in default_assumptions:
-                derived_premises[k] = v
-
-        cls._derived_premises = derived_premises
-
-
-        for k,v in xass.iteritems():
-            assert v == cls.__dict__.get('is_'+k, v),  (cls,k,v)
-            # NOTE: this way Integer.is_even = False (inherited from Rational)
-            # NOTE: the next code blocks add 'protection-properties' to overcome this
-            setattr(cls, 'is_'+k, v)
-
-        # protection e.g. for Initeger.is_even=F <- (Rational.is_integer=F)
-        for base in cls.__bases__:
-            try:
-                base_derived_premises = base._derived_premises
-            except AttributeError:
-                continue    # no ._derived_premises is ok
-
-            for k,v in base_derived_premises.iteritems():
-                if not cls.__dict__.has_key('is_'+k):
-                    #print '%s -- overriding: %s' % (cls.__name__, k)
-                    is_k = make__get_assumption(cls.__name__, k)
-                    setattr(cls, 'is_'+k, property(is_k))
-
 
 
     def __cmp__(cls, other):
@@ -229,7 +124,7 @@ class BasicMeta(BasicType):
 
 
 
-class Basic(AssumeMeths):
+class Basic():
     """
     Base class for all objects in sympy.
 
@@ -282,11 +177,17 @@ class Basic(AssumeMeths):
     is_Real = False
     is_Rational = False
     is_Integer = False
+    is_Infinity = False
     is_NumberSymbol = False
     is_Order = False
     is_Derivative   = False
 
     def __new__(cls, *args, **assumptions):
+        if assumptions:
+            from sympy.assumptions import Assume, global_assumptions
+            for k, v in assumptions.iteritems():
+                global_assumptions.add(Assume(k, v))
+        print assumptions
         obj = object.__new__(cls)
 
         # FIXME we are slowed a *lot* by Add/Mul passing is_commutative as the
@@ -294,29 +195,6 @@ class Basic(AssumeMeths):
         #
         # .is_commutative is not an assumption -- it's like typeinfo!!!
         # we should remove it.
-
-        # initially assumptions are shared between instances and class
-        obj._assumptions  = cls.default_assumptions
-        obj._a_inprogress = []
-
-        # NOTE this could be made lazy -- probably not all instances will need
-        # fully derived assumptions?
-        if assumptions:
-            obj._learn_new_facts(assumptions)
-            #                      ^
-            # FIXME this is slow   |    another NOTE: speeding this up is *not*
-            #        |             |    important. say for %timeit x+y most of
-            # .------'             |    the time is spent elsewhere
-            # |                    |
-            # |  XXX _learn_new_facts  could be asked about what *new* facts have
-            # v  XXX been learned -- we'll need this to append to _hashable_content
-            basek = set(cls.default_assumptions.keys())
-            k2    = set(obj._assumptions.keys())
-            newk  = k2.difference(basek)
-
-            obj._assume_type_keys = frozenset(newk)
-        else:
-            obj._assume_type_keys = None
 
         obj._mhash = None # will be set by __hash__ method.
         obj._args = args  # all items in args must be Basic objects
@@ -380,7 +258,7 @@ class Basic(AssumeMeths):
         x
 
         """
-        obj = type(self) (*args, **self.assumptions0)
+        obj = type(self) (*args)
         return obj
 
 
@@ -393,9 +271,9 @@ class Basic(AssumeMeths):
     #     raise Warning('no way, *all* attribute access will be 2.5x slower')
 
     # here is what we do instead:
-    for k in AssumeMeths._assume_defined:
-        exec "is_%s  = property(make__get_assumption('Basic', '%s'))" % (k,k)
-    del k
+#    for k in AssumeMeths._assume_defined:
+#        exec "is_%s  = property(make__get_assumption('Basic', '%s'))" % (k,k)
+#    del k
 
     # NB: there is no need in protective __setattr__
 
@@ -410,19 +288,7 @@ class Basic(AssumeMeths):
         h = self._mhash
         if h is None:
             h = (type(self).__name__,) + self._hashable_content()
-
-            if self._assume_type_keys is not None:
-                a = []
-                kv= self._assumptions
-                for k in sorted(self._assume_type_keys):
-                    a.append( (k, kv[k]) )
-
-                h = hash( h + tuple(a) )
-
-            else:
-                h = hash( h )
-
-
+            h = hash( h )
             self._mhash = h
             return h
 
@@ -829,6 +695,33 @@ class Basic(AssumeMeths):
             else:
                 return False
         return result
+
+    @property
+    def is_negative(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.negative)
+
+    @property
+    def is_odd(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.odd)
+
+    @property
+    def is_even(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.even)
+
+    is_comparable = True
+
+    @property
+    def is_irrational(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.irrational)
+
+    @property
+    def is_positive(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.positive)
 
     @property
     def func(self):

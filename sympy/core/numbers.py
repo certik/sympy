@@ -562,14 +562,8 @@ class Rational(Number):
         if isinstance(other, Real):
             return other + self
         if isinstance(other, Rational):
-            if self.is_unbounded:
-                if other.is_bounded:
-                    return self
-                elif self==other:
-                    return self
-            else:
-                if other.is_unbounded:
-                    return other
+            if self.is_Infinity: return self
+            elif other.is_Infinity: return other
             return Rational(self.p * other.q + self.q * other.p, self.q * other.q)
         return Number.__add__(self, other)
 
@@ -1143,6 +1137,8 @@ class Infinity(Rational):
     q = 0
 
     __slots__ = []
+
+    is_Infinity = True
 
     is_commutative = True
     is_positive = True

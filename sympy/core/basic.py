@@ -124,7 +124,7 @@ class BasicMeta(BasicType):
 
 
 
-class Basic():
+class Basic(object):
     """
     Base class for all objects in sympy.
 
@@ -183,11 +183,6 @@ class Basic():
     is_Derivative   = False
 
     def __new__(cls, *args, **assumptions):
-        if assumptions:
-            from sympy.assumptions import Assume, global_assumptions
-            for k, v in assumptions.iteritems():
-                global_assumptions.add(Assume(k, v))
-        print assumptions
         obj = object.__new__(cls)
 
         # FIXME we are slowed a *lot* by Add/Mul passing is_commutative as the
@@ -198,6 +193,9 @@ class Basic():
 
         obj._mhash = None # will be set by __hash__ method.
         obj._args = args  # all items in args must be Basic objects
+#        from sympy.assumptions import global_assumptions, Assume
+#        for v, k in assumptions.iteritems():
+#            global_assumptions.add(Assume(obj, k, v))
         return obj
 
 
@@ -605,9 +603,11 @@ class Basic():
 
 
     def __repr__(self):
+        from sympy.printing import StrPrinter
         return StrPrinter.doprint(self)
 
     def __str__(self):
+        from sympy.printing import StrPrinter        
         return StrPrinter.doprint(self)
 
     def atoms(self, *types):

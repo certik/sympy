@@ -117,7 +117,7 @@ def eliminate_assume(expr, symbol=None):
         >>> eliminate_assume(Assume(x, Q.positive, False))
         Not(positive)
     """
-    if type(expr) == Assume:
+    if type(expr) is Assume:
         if symbol is not None:
             if not expr.expr.has(symbol): return
         if expr.value: return Symbol(expr.key)

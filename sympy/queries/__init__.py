@@ -88,6 +88,7 @@ def ask(expr, key, assumptions=True):
     assumptions = conjuncts(to_cnf(assumptions))
     # add assumptions to the knowledge base
     for assump in assumptions:
+        print assump
         conj = eliminate_assume(assump, symbol=expr)
         if conj:
             out = []

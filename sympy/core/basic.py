@@ -182,7 +182,7 @@ class Basic(object):
     is_Order = False
     is_Derivative   = False
 
-    def __new__(cls, *args, **assumptions):
+    def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
 
         # FIXME we are slowed a *lot* by Add/Mul passing is_commutative as the
@@ -193,15 +193,13 @@ class Basic(object):
 
         obj._mhash = None # will be set by __hash__ method.
         obj._args = args  # all items in args must be Basic objects
-#        from sympy.assumptions import global_assumptions, Assume
-#        for v, k in assumptions.iteritems():
-#            global_assumptions.add(Assume(obj, k, v))
         return obj
 
     def __init__(self, *args, **kwargs):
-        from sympy.assumptions import global_assumptions, Assume
-        for k, v in kwargs.iteritems():
-            global_assumptions.add(Assume(self, k, bool(v)))
+        from sympy.assumptions import Assume, global_assumptions
+#        for k, v in kwargs.iteritems():
+#            print self, k
+#            global_assumptions.add(Assume(self, k, bool(v)))
 
     # XXX better name?
     @property
@@ -230,18 +228,7 @@ class Basic(object):
         'nonzero': True, 'positive': True, 'real': True, 'zero': False}
 
         """
-
-        cls = type(self)
-        A   = self._assumptions
-
-        # assumptions shared:
-        if A is cls.default_assumptions or (self._assume_type_keys is None):
-            assumptions0 = {}
-        else:
-            assumptions0 = dict( (k, A[k]) for k in self._assume_type_keys )
-
-        return assumptions0
-
+        raise NotImplementedError
 
     def new(self, *args):
         """
@@ -607,12 +594,8 @@ class Basic(object):
 
 
     def __repr__(self):
-        from sympy.printing import StrPrinter
-        return StrPrinter.doprint(self)
-
-    def __str__(self):
-        from sympy.printing import StrPrinter        
-        return StrPrinter.doprint(self)
+        from sympy.printing import sstrrepr
+        return sstrrepr(self)
 
     def atoms(self, *types):
         """Returns the atoms that form the current object.
@@ -700,6 +683,10 @@ class Basic(object):
                 return False
         return result
 
+    @property
+    def is_integer(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.integer)
 
     @property
     def is_real(self):

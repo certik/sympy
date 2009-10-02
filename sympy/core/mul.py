@@ -452,9 +452,9 @@ class Mul(AssocOp):
             if sums:
                 terms = Mul._expandsums(sums)
                 plain = Mul(*plain)
-                return Add(*(Mul(plain, term) for term in terms), **self.assumptions0)
+                return Add(*(Mul(plain, term) for term in terms))
             else:
-                return Mul(*plain, **self.assumptions0)
+                return Mul(*plain)
 
     def _eval_expand_multinomial(self, deep=True, **hints):
         sargs, terms = self.args[:], []

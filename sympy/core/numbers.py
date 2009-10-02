@@ -1592,9 +1592,9 @@ class ImaginaryUnit(Atom):
         import sage.all as sage
         return sage.I
 
-_intcache[0] = S.Zero
-_intcache[1] = S.One
-_intcache[-1]= S.NegativeOne
+#_intcache[0] = S.Zero
+#_intcache[1] = S.One
+#_intcache[-1]= S.NegativeOne
 
 Basic.singleton['E'] = Exp1
 Basic.singleton['pi'] = Pi

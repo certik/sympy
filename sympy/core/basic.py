@@ -198,6 +198,9 @@ class Basic(object):
 #            global_assumptions.add(Assume(obj, k, v))
         return obj
 
+    def __init__(self, *args, **kwargs):
+        pass
+#        from sympy.assumptions import global_assumptions, Assume
 
     # XXX better name?
     @property
@@ -695,6 +698,12 @@ class Basic(object):
             else:
                 return False
         return result
+
+
+    @property
+    def is_commutative(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.commutative)
 
     @property
     def is_negative(self):

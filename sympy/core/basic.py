@@ -201,7 +201,6 @@ class Basic(object):
     def __init__(self, *args, **kwargs):
         from sympy.assumptions import global_assumptions, Assume
         for k, v in kwargs.iteritems():
-            print str(k), bool(v)
             global_assumptions.add(Assume(self, k, bool(v)))
 
     # XXX better name?

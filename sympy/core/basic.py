@@ -199,8 +199,10 @@ class Basic(object):
         return obj
 
     def __init__(self, *args, **kwargs):
-        pass
-#        from sympy.assumptions import global_assumptions, Assume
+        from sympy.assumptions import global_assumptions, Assume
+        for k, v in kwargs.iteritems():
+            print str(k), bool(v)
+            global_assumptions.add(Assume(self, k, bool(v)))
 
     # XXX better name?
     @property
@@ -699,6 +701,11 @@ class Basic(object):
                 return False
         return result
 
+
+    @property
+    def is_real(self):
+        from sympy.queries import Q, ask
+        return ask(self, Q.real)
 
     @property
     def is_commutative(self):

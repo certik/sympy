@@ -94,7 +94,7 @@ class Pow(Expr):
     def _eval_power(self, other):
         if other == S.NegativeOne:
             return Pow(self.base, self.exp * other)
-        if self.exp.is_integer and other.is_integer:
+        if self.exp.is_Integer and other.is_Integer:
             return Pow(self.base, self.exp * other)
         if self.base.is_nonnegative and self.exp.is_real and other.is_real:
             return Pow(self.base, self.exp * other)
@@ -230,7 +230,7 @@ class Pow(Expr):
             else:
                 newterm = term
             terms.append(newterm)
-        return self.new(*terms)
+        return self.__class__(*terms)
 
     def _eval_expand_power_exp(self, deep=True, *args, **hints):
         """a**(n+m) -> a**n*a**m"""
@@ -273,7 +273,7 @@ class Pow(Expr):
             else:
                 newterm = term
             terms.append(newterm)
-        return self.new(*terms)
+        return self.__class__(*terms)
 
     def _eval_expand_multinomial(self, deep=True, **hints):
         """(a+b+..) ** n -> a**n + n*a**(n-1)*b + .., n is nonzero integer"""
@@ -427,7 +427,7 @@ class Pow(Expr):
             else:
                 newterm = term
             terms.append(newterm)
-        return self.new(*terms)
+        return self.__class__(*terms)
 
     def _eval_expand_complex(self, deep=True, **hints):
         if self.exp.is_Integer:
@@ -479,7 +479,7 @@ class Pow(Expr):
             else:
                 newterm = term
             terms.append(newterm)
-        return self.new(*terms)
+        return self.__class__(*terms)
 
     def _eval_derivative(self, s):
         dbase = self.base.diff(s)

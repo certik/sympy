@@ -76,7 +76,7 @@ class exp(Function):
                         else:
                             log_term = None
                             break
-                    elif term.is_comparable:
+                    elif term.is_number:
                         coeffs.append(term)
                     else:
                         log_term = None

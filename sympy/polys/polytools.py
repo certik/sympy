@@ -1512,6 +1512,10 @@ class Poly(Basic):
         """Returns `True` if `f` is a multivariate polynomial. """
         return len(f.gens) != 1
 
+    @property
+    def is_commutative(f):
+        return False
+
     def __abs__(f):
         return f.abs()
 

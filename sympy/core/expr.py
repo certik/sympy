@@ -940,6 +940,10 @@ class Expr(Basic, EvalfMixin):
     def is_imaginary(self):
         return False
 
+    @property
+    def is_zero(self):
+        return False
+
 from mul import Mul
 from power import Pow
 from add import Add

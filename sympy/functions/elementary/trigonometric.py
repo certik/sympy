@@ -73,7 +73,7 @@ class sin(Function):
 
         pi_coeff = arg.as_coefficient(S.Pi)
         if pi_coeff is not None:
-            if pi_coeff.is_integer:
+            if pi_coeff.is_Integer:
                 return S.Zero
             elif pi_coeff.is_Rational:
                 cst_table_some = {
@@ -480,7 +480,7 @@ class tan(Function):
 
         pi_coeff = arg.as_coefficient(S.Pi)
         if pi_coeff is not None:
-            if pi_coeff.is_integer:
+            if pi_coeff.is_Integer:
                 return S.Zero
             elif pi_coeff.is_Rational:
                 cst_table = {

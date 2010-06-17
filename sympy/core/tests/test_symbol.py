@@ -114,5 +114,10 @@ def test_symbols():
     assert symbols('xyz') == [x, y, z]
     assert symbols('x y z') == symbols('x,y,z') == (x, y, z)
     assert symbols('xyz', each_char=False) == Symbol('xyz')
-    x, y = symbols('x y', each_char=False, real=True)
+    x, y = symbols('x y', each_char=False)
+
+    global_assumptions.add(Assume(x, Q.real, True))
+    global_assumptions.add(Assume(y, Q.real, True))
     assert x.is_real and y.is_real
+    global_assumptions.discard(Assume(x, Q.real, True))
+    global_assumptions.discard(Assume(y, Q.real, True))

@@ -42,6 +42,9 @@ class Symbol(Atom, Expr, Boolean):
 
         """
 
+        # FIXME: This should be stripped out along with any mention of the assumptions.
+        cls.assumptions0 = assumptions
+
         # XXX compatibility stuff
         if dummy==True:
             return Dummy(name, commutative=commutative, **assumptions)

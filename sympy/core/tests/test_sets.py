@@ -1,6 +1,7 @@
 from sympy import (
     Symbol, Set, Union, Interval, oo, S,
-    Inequality, max_, min_, raises, And, Or
+    Inequality, max_, min_, raises, And, Or,
+    global_assumptions, Assume, Q
 )
 from sympy.mpmath import mpi
 
@@ -22,15 +23,23 @@ def test_interval_arguments():
     raises(ValueError, "Interval(0, S.ImaginaryUnit)")
     raises(ValueError, "Interval(0, Symbol('z'))")
 
-    assert isinstance(Interval(1, Symbol('a', real=True)), Interval)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
+
+    assert isinstance(Interval(1, a), Interval)
+
+    global_assumptions.discard(Assume(a, Q.real, True))
 
 def test_interval_symbolic_end_points():
-    a = Symbol('a', real=True)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
 
     assert Union(Interval(0, a), Interval(0, 3)).sup == max_(a, 3)
     assert Union(Interval(a, 0), Interval(-3, 0)).inf == min_(-3, a)
 
     assert Interval(0, a).contains(1) == Inequality(1, a)
+
+    global_assumptions.discard(Assume(a, Q.real, True))
 
 def test_union():
     assert Union(Interval(1, 2), Interval(2, 3)) == Interval(1, 3)
@@ -111,17 +120,21 @@ def test_intersect():
            S.EmptySet
 
 def test_interval_subs():
-    a = Symbol('a', real=True)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
 
     assert Interval(0, a).subs(a, 2) == Interval(0, 2)
     assert Interval(a, 0).subs(a, 2) == S.EmptySet
+
+    global_assumptions.discard(Assume(a, Q.real, True))
 
 def test_interval_evalf():
     assert Interval(0, 1).evalf() == mpi(0, 1)
     assert Interval(0, 1, True, False).evalf() == mpi(0, 1)
 
 def test_measure():
-    a = Symbol('a', real=True)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
 
     assert Interval(1, 3).measure == 2
     assert Interval(0, a).measure == a
@@ -130,6 +143,8 @@ def test_measure():
     assert Union(Interval(1, 2), Interval(3, 4)).measure == 2
 
     assert S.EmptySet.measure == 0
+
+    global_assumptions.discard(Assume(a, Q.real, True))
 
 def test_subset():
     assert Interval(0, 2).subset(Interval(0, 1)) == True

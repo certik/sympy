@@ -914,7 +914,8 @@ class Expr(Basic, EvalfMixin):
 
     @property
     def is_real(self):
-        return False
+        from sympy import global_assumptions, Assume, Q
+        return Assume(self, Q.real, True) in global_assumptions
 
     @property
     def is_nonnegative(self):

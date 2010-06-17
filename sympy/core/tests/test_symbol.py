@@ -1,5 +1,5 @@
 from sympy import Symbol, Wild, Inequality, StrictInequality, pi, I, Rational, \
-        sympify, raises, symbols
+        sympify, raises, symbols, global_assumptions, Q, Assume
 
 
 def test_Symbol():
@@ -57,10 +57,17 @@ def test_Wild_properties():
     # these tests only include Atoms
     x   = Symbol("x")
     y   = Symbol("y")
-    p   = Symbol("p", positive=True)
-    k   = Symbol("k", integer=True)
-    r   = Symbol("r", real=True)
-    n   = Symbol("n", integer=True, positive=True)
+    p   = Symbol("p")
+    k   = Symbol("k")
+    r   = Symbol("r")
+    n   = Symbol("n")
+
+    # Set up the assumptions
+    global_assumptions.add(Assume(p, Q.positive, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
+    global_assumptions.add(Assume(r, Q.real, True))
+    global_assumptions.add(Assume(n, Q.positive, True))
+    global_assumptions.add(Assume(n, Q.integer, True))
 
     given_patterns = [ x, y, p, k, -k, n, -n, sympify(-3), sympify(3), pi, Rational(3,2), I ]
 
@@ -93,6 +100,13 @@ def test_Wild_properties():
                 assert d[A] in goodmatch[A]
             else:
                 assert d == None
+
+    # Tear down the assumptions
+    global_assumptions.discard(Assume(p, Q.positive, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
+    global_assumptions.discard(Assume(r, Q.real, True))
+    global_assumptions.discard(Assume(n, Q.positive, True))
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_symbols():
     x, y, z = Symbol('x'), Symbol('y'), Symbol('z')

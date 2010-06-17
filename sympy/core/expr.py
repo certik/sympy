@@ -906,7 +906,8 @@ class Expr(Basic, EvalfMixin):
 
     @property
     def is_positive(self):
-        return False
+        from sympy import global_assumptions, Assume, Q
+        return Assume(self, Q.positive, True) in global_assumptions
 
     @property
     def is_negative(self):

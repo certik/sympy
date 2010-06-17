@@ -12,9 +12,7 @@ def test_bug1():
     assert re(x) != x
 
 a = Symbol("a")
-# FIXME b should have a global assumption stating it is positive
-#b = Symbol("b", positive=True)
-b = Symbol("b")
+b = Symbol("b", positive=True)
 c = Symbol("c")
 
 def test_Symbol():

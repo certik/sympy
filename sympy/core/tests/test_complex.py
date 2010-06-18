@@ -1,5 +1,6 @@
 from sympy import Symbol, sqrt, I, Integer, Rational, cos, atan, sin, im, re, \
-        exp, sinh, cosh, tan, tanh, conjugate, sign, cot, coth, pi, expand_complex
+        exp, sinh, cosh, tan, tanh, conjugate, sign, cot, coth, pi, expand_complex, \
+        global_assumptions, Assume, Q
 
 
 def test_complex():
@@ -10,11 +11,15 @@ def test_complex():
     assert sqrt(I) == (-1)**Rational(1,4)
 
 def test_conjugate():
-    a = Symbol("a", real=True)
-    b = Symbol("b", real=True)
+    a = Symbol("a")
+    b = Symbol("b")
     x = Symbol('x')
     z = a + I*b
     zc = a - I*b
+
+    global_assumptions.add(Assume(a, Q.real, True))
+    global_assumptions.add(Assume(b, Q.real, True))
+
     assert conjugate(z) == zc
     assert conjugate(exp(z)) == exp(zc)
     assert conjugate(exp(I*x)) == exp(-I*conjugate(x))
@@ -29,6 +34,9 @@ def test_conjugate():
     assert conjugate(cosh(z)) == cosh(zc)
     assert conjugate(tanh(z)) == tanh(zc)
     assert conjugate(coth(z)) == coth(zc)
+
+    global_assumptions.discard(Assume(a, Q.real, True))
+    global_assumptions.discard(Assume(b, Q.real, True))
 
 def test_abs1():
     a=Symbol("a", real=True)

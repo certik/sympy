@@ -233,6 +233,10 @@ class Number(Atom, Expr):
     def is_nonpositive(self):
         return not self.is_positive
 
+    @property
+    def is_unbounded(self):
+        return not self.is_bounded
+
 class Real(Number):
     """
     Represents a floating point number. It is capable of representing
@@ -601,15 +605,14 @@ class Rational(Number):
         if isinstance(other, Real):
             return other + self
         if isinstance(other, Rational):
-            # FIXME
-            #if self.is_unbounded:
-            #    if other.is_bounded:
-            #        return self
-            #    elif self==other:
-            #        return self
-            #else:
-            #    if other.is_unbounded:
-            #        return other
+            if self.is_unbounded:
+                if other.is_bounded:
+                    return self
+                elif self==other:
+                    return self
+            else:
+                if other.is_unbounded:
+                    return other
             return Rational(self.p * other.q + self.q * other.p, self.q * other.q)
         return Number.__add__(self, other)
 

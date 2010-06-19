@@ -1,5 +1,5 @@
 from sympy import Rational, Symbol, Real, I, sqrt, oo, nan, pi, E, Integer, \
-        S, factorial, Catalan, EulerGamma, GoldenRatio, cos
+        S, factorial, Catalan, EulerGamma, GoldenRatio, cos, global_assumptions, Q, Assume
 from sympy.core.power import integer_nthroot
 
 from sympy.core.numbers import igcd, ilcm, igcdex, seterr
@@ -402,9 +402,14 @@ def test_issue324():
     assert sqrt(x-1) != I*(1-x)**Rational(1,2)
 
 def test_issue350():
-    x = Symbol("x", real=True)
+    x = Symbol("x")
+
+    global_assumptions.add(Assume(x, Q.real, True))
+
     assert sqrt(x**2) == abs(x)
     assert sqrt(x-1).subs(x,5) == 2
+
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 
 def test_Integer_factors():

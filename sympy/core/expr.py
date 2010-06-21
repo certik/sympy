@@ -960,9 +960,17 @@ class Expr(Basic, EvalfMixin):
     def is_nonnegative(self):
         if '_eval_is_nonnegative' in dir(self):
             return self._eval_is_nonnegative()
+
         is_neg = self.is_negative
+        is_pos = self.is_positive
+        is_zero = self.is_zero
+
         if is_neg in [True, False]:
             return not is_neg
+        elif is_pos:
+            return True
+        elif is_zero:
+            return True
         else:
             return is_neg
 
@@ -970,9 +978,17 @@ class Expr(Basic, EvalfMixin):
     def is_nonpositive(self):
         if '_eval_is_nonpositive' in dir(self):
             return self._eval_is_nonpositive()
+
+        is_neg = self.is_negative
         is_pos = self.is_positive
+        is_zero = self.is_zero
+
         if is_pos in [True, False]:
             return not is_pos
+        elif is_neg:
+            return True
+        elif is_zero:
+            return True
         else:
             return is_pos
 

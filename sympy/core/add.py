@@ -393,7 +393,7 @@ class Add(AssocOp):
             return None
 
         c, t = self.as_coeff_terms()
-        if c.is_negative and not other.is_Integer:
+        if c.is_negative and not other.is_integer:
             if c is not S.NegativeOne:
                 coeff = (-c) ** other
                 assert len(t) == 1, 't'

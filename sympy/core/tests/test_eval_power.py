@@ -1,5 +1,6 @@
 from sympy.core import Rational, Symbol, Basic, S, Real, Integer
 from sympy.functions.elementary.miscellaneous import sqrt
+from sympy import global_assumptions, Q, Assume
 
 def test_rational():
     a = Rational(1, 5)
@@ -38,20 +39,41 @@ def test_issue350():
     assert ((a**Rational(1,3))**Rational(2)) == a**Rational(2,3)
     assert ((a**Rational(3))**Rational(2,5)) == (a**Rational(3))**Rational(2,5)
 
-    a = Symbol('a', real=True)
-    b = Symbol('b', real=True)
-    assert (a**2)**b == abs(a)**(2*b)
-    assert sqrt(1/a) != 1/sqrt(a)
-    assert (a**3)**Rational(1,3) != a
+    # FIXME: Using a,b for c,d cause an infinite loop. It seems to be due to the
+    #         previously cached expressions involving a
+    c = Symbol('c')
+    d = Symbol('d')
+
+    global_assumptions.add(Assume(c, Q.real, True))
+    global_assumptions.add(Assume(d, Q.real, True))
+
+    assert (c**2)**d == abs(c)**(2*d)
+    assert sqrt(1/c) != 1/sqrt(c)
+    assert (c**3)**Rational(1,3) != c
+
+    global_assumptions.discard(Assume(c, Q.real, True))
+    global_assumptions.discard(Assume(d, Q.real, True))
 
     z = Symbol('z')
-    k = Symbol('k',integer=True)
-    m = Symbol('m',integer=True)
+    k = Symbol('k')
+    m = Symbol('m')
+
+    global_assumptions.add(Assume(k, Q.integer, True))
+    global_assumptions.add(Assume(m, Q.integer, True))
+
     assert (z**k)**m == z**(k*m)
     #assert Number(5)**Rational(2,3)==Number(25)**Rational(1,3)
 
-    a = Symbol('a', positive=True)
-    assert (a**3)**Rational(2,5) == a**Rational(6,5)
+    global_assumptions.discard(Assume(k, Q.integer, True))
+    global_assumptions.discard(Assume(m, Q.integer, True))
+
+    c = Symbol('c')
+
+    global_assumptions.add(Assume(c, Q.positive, True))
+
+    assert (c**3)**Rational(2,5) == c**Rational(6,5)
+
+    global_assumptions.discard(Assume(c, Q.positive, True))
 
 def test_issue767():
     assert --sqrt(sqrt(5)-1)==sqrt(sqrt(5)-1)
@@ -62,8 +84,12 @@ def test_negative_one():
     assert 1/x**y == x**(-y)
 
 def test_issue1263():
-    neg = Symbol('neg', negative=True)
-    nonneg = Symbol('nonneg', negative=False)
+    neg = Symbol('neg')
+    nonneg = Symbol('nonneg')
+
+    global_assumptions.add(Assume(neg, Q.negative, True))
+    global_assumptions.add(Assume(nonneg, Q.negative, False))
+
     any = Symbol('any')
     num, den = sqrt(1/neg).as_numer_denom()
     assert num == sqrt(-1)
@@ -112,14 +138,24 @@ def test_issue1263():
     eq=eqn(nneg, dpos, -2*any);assert eq.is_Pow and eq.as_numer_denom() == (eq, 1)
     eq=eqn(nneg, dneg, -2*any);assert eq.is_Pow and eq.as_numer_denom() == (eq, 1)
 
+    global_assumptions.discard(Assume(neg, Q.negative, True))
+    global_assumptions.discard(Assume(nonneg, Q.negative, False))
+
 def test_issue1496():
     x = Symbol('x')
     y = Symbol('y')
-    n = Symbol('n', even=True)
+    n = Symbol('n')
+
+    global_assumptions.add(Assume(n, Q.even, True))
+    global_assumptions.add(Assume(n, Q.integer, True))
+
     assert (3-y)**2 == (y-3)**2
     assert (3-y)**n == (y-3)**n
     assert (-3+y-x)**2 == (3-y+x)**2
     assert (y-3)**3 == -(3-y)**3
+
+    global_assumptions.discard(Assume(n, Q.even, True))
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_power_with_noncommutative_mul_as_base():
     x = Symbol('x', commutative=False)

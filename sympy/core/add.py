@@ -233,6 +233,26 @@ class Add(AssocOp):
     _eval_is_integer = lambda self: self._eval_template_is_attr('is_integer')
     _eval_is_comparable = lambda self: self._eval_template_is_attr('is_comparable')
 
+    @property
+    def is_real(self):
+        return self._eval_is_real()
+
+    @property
+    def is_bounded(self):
+        return self._eval_is_bounded()
+
+    @property
+    def is_positive(self):
+        return self._eval_is_positive()
+
+    @property
+    def is_negative(self):
+        return self._eval_is_negative()
+
+    @property
+    def is_unbounded(self):
+        return not self.is_bounded
+
     def _eval_is_odd(self):
         l = [f for f in self.args if not (f.is_even==True)]
         if not l:
@@ -266,6 +286,18 @@ class Add(AssocOp):
             return True
         if c.is_nonpositive and r.is_nonpositive:
             return False
+
+        # Check the case where one is positive and greater than the other
+        if c.is_positive:
+            if abs(c) > abs(r):
+                return True
+            else:
+                return False
+        if r.is_positive:
+            if abs(r) > abs(c):
+                return True
+            else:
+                return False
 
     def _eval_is_negative(self):
         c = self.args[0]

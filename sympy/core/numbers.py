@@ -1472,6 +1472,7 @@ class NumberSymbol(Atom, Expr):
     is_commutative = True
     is_comparable = True
     is_bounded = True
+    is_unbounded = False
     is_finite = True
 
     __slots__ = []
@@ -1584,7 +1585,9 @@ class Pi(NumberSymbol):
 
     is_real = True
     is_positive = True
+    is_nonpositive = False
     is_negative = False
+    is_nonnegative = True
     is_irrational = True
 
     __slots__ = []

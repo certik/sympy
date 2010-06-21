@@ -1,4 +1,4 @@
-from sympy import Symbol, Rational, cos, sin, tan, cot, exp, log, Function
+from sympy import Symbol, Rational, cos, sin, tan, cot, exp, log, Function, global_assumptions, Q, Assume
 
 def test_diff():
     a = Symbol("a")
@@ -64,8 +64,13 @@ def test_speed():
     assert x.diff(x, 10**8) == 0
 
 def test_deriv_noncommutative():
-    A = Symbol("A", commutative=False)
+    A = Symbol("A")
     f = Function("f")
     x = Symbol("x")
+
+    global_assumptions.add(Assume(A, Q.commutative, False))
+
     assert A*f(x)*A == f(x)*A**2
     assert A*f(x).diff(x)*A == f(x).diff(x) * A**2
+
+    global_assumptions.discard(Assume(A, Q.commutative, False))

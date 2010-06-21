@@ -269,19 +269,14 @@ class Add(AssocOp):
 
         # Check the case where one is positive and greater than the other
         if c.is_positive:
-            if c > abs(r):
-                return True
-            else:
-                return False
+            return c.evalf() > abs(r).evalf()
         if r.is_positive:
-            if r > abs(c):
-                return True
-            else:
-                return False
+            return r.evalf() > abs(c).evalf()
 
     def _eval_is_negative(self):
         c = self.args[0]
         r = Add(*self.args[1:])
+
         if c.is_negative and r.is_negative:
             return True
         if c.is_unbounded:
@@ -299,18 +294,11 @@ class Add(AssocOp):
         if c.is_nonnegative and r.is_nonnegative:
             return False
 
-        # FIXME: This introduces an infinite loop since __lt__ calls is_negative
         # Check the case where one is positive and greater than the other
-        #if c.is_negative:
-            #if abs(c) > r:
-                #return True
-            #else:
-                #return False
-        #if r.is_negative:
-            #if abs(r) > c:
-                #return True
-            #else:
-                #return False
+        if c.is_negative:
+            return abs(c).evalf() > r.evalf()
+        if r.is_negative:
+            return abs(r).evalf() > c.evalf()
 
     def as_coeff_terms(self, x=None):
         # -2 + 2 * a -> -1, 2-2*a

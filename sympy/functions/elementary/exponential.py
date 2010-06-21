@@ -409,6 +409,9 @@ class log(Function):
         #     without it. There's probably a nicer way though.
         return (self.args[0] is S.One)
 
+    def _eval_is_negative(self):
+        return not (self.is_positive or self.is_zero)
+
     def as_numer_denom(self):
         n, d = self.args[0].as_numer_denom()
         if d is S.One:

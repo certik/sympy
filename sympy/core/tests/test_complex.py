@@ -39,23 +39,43 @@ def test_conjugate():
     global_assumptions.discard(Assume(b, Q.real, True))
 
 def test_abs1():
-    a=Symbol("a", real=True)
-    b=Symbol("b", real=True)
+    a=Symbol("a")
+    b=Symbol("b")
+
+    global_assumptions.add(Assume(a, Q.real, True))
+    global_assumptions.add(Assume(b, Q.real, True))
+
     assert abs(a) == abs(a)
     assert abs(-a) == abs(a)
     assert abs(a+I*b) == sqrt(a**2+b**2)
 
+    global_assumptions.discard(Assume(a, Q.real, True))
+    global_assumptions.discard(Assume(b, Q.real, True))
+
 def test_abs2():
-    a=Symbol("a", real=False)
-    b=Symbol("b", real=False)
+    a=Symbol("a")
+    b=Symbol("b")
+
+    global_assumptions.add(Assume(a, Q.real, True))
+    global_assumptions.add(Assume(b, Q.real, True))
+
     assert abs(a) != a
     assert abs(-a) != a
     assert abs(a+I*b) != sqrt(a**2+b**2)
 
+    global_assumptions.discard(Assume(a, Q.real, True))
+    global_assumptions.discard(Assume(b, Q.real, True))
+
 def test_evalc():
-    x=Symbol("x", real=True)
-    y=Symbol("y", real=True)
-    z=Symbol("z")
+
+    # FIXME: These had to be renamed because old info persisted in the cache.
+    x=Symbol("xx")
+    y=Symbol("yy")
+    z=Symbol("zz")
+
+    global_assumptions.add(Assume(x, Q.real, True))
+    global_assumptions.add(Assume(y, Q.real, True))
+
     assert ((x+I*y)**2).expand(complex=True) == x**2+2*I*x*y - y**2
     assert expand_complex(z**(2*I)) == I*im(z**(2*I)) + re(z**(2*I))
 
@@ -86,6 +106,9 @@ def test_evalc():
     assert tanh(I*x).expand(complex=True) == tan(x) * I
     assert tanh(x+I*y).expand(complex=True) == \
             ((sinh(x)*cosh(x) + I*cos(y)*sin(y)) / (sinh(x)**2 + cos(y)**2)).expand()
+
+    global_assumptions.discard(Assume(x, Q.real, True))
+    global_assumptions.discard(Assume(y, Q.real, True))
 
 
 def test_pythoncomplex():

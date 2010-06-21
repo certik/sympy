@@ -227,18 +227,15 @@ def test_atoms():
    assert sorted(list(Poly(x + y, x, y, z).atoms())) == sorted([x, y])
    assert sorted(list(Poly(x + y*t, x, y, z).atoms())) == sorted([t, x, y])
 
-   # FIXME: I don't know why, but the order has changed with recent fixes. Used
-   #         to be [pi, I] as the proper order.
    I = S.ImaginaryUnit
    assert list((I*pi).atoms(NumberSymbol)) == [pi]
    assert sorted((I*pi).atoms(NumberSymbol, I)) == \
-          sorted((I*pi).atoms(I,NumberSymbol)) == [I, pi]
+          sorted((I*pi).atoms(I,NumberSymbol)) == [pi, I]
 
-   # FIXME: See the previous comment.
    I = S.ImaginaryUnit
    assert list((I*pi).atoms(NumberSymbol)) == [pi]
    assert sorted((I*pi).atoms(NumberSymbol, I)) == \
-          sorted((I*pi).atoms(I,NumberSymbol)) == [I, pi]
+          sorted((I*pi).atoms(I,NumberSymbol)) == [pi, I]
 
 def test_is_polynomial():
     z = Symbol('z')

@@ -906,7 +906,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_even' in dir(self):
             return self._eval_is_even()
         else:
-            return False
+            return None
 
     @property
     def is_odd(self):
@@ -918,7 +918,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_odd' in dir(self):
             return self._eval_is_odd()
         else:
-            return False
+            return None
 
     @property
     def is_positive(self):
@@ -930,7 +930,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_positive' in dir(self):
             return self._eval_is_positive()
         else:
-            return False
+            return None
 
     @property
     def is_negative(self):
@@ -942,7 +942,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_negative' in dir(self):
             return self._eval_is_negative()
         else:
-            return False
+            return None
 
     @property
     def is_real(self):
@@ -954,7 +954,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_real' in dir(self):
             return self._eval_is_real()
         else:
-            return False
+            return None
 
     @property
     def is_nonnegative(self):
@@ -1002,7 +1002,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_commutative' in dir(self):
             return self._eval_is_commutative()
         else:
-            return False
+            return None
 
     @property
     def is_bounded(self):
@@ -1031,7 +1031,7 @@ class Expr(Basic, EvalfMixin):
         if '_eval_is_comparable' in dir(self):
             return self._eval_is_comparable()
         else:
-            return False
+            return None
 
     @property
     def is_imaginary(self):
@@ -1043,14 +1043,21 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_imaginary' in dir(self):
             return self._eval_is_imaginary()
         else:
-            return False
+            return None
 
     @property
     def is_zero(self):
         if '_eval_is_zero' in dir(self):
             return self._eval_is_zero()
         else:
-            return False
+            return None
+
+    @property
+    def is_nonzero(self):
+        if '_eval_is_nonzero' in dir(self):
+            return self._eval_is_nonzero()
+        else:
+            return None
 
     @property
     def is_integer(self):
@@ -1062,7 +1069,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_integer' in dir(self):
             return self._eval_is_integer()
         else:
-            return False
+            return None
 
     @property
     def is_infinitesimal(self):
@@ -1074,7 +1081,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_infinitesimal' in dir(self):
             return self._eval_is_infinitesimal()
         else:
-            return False
+            return None
 
 from mul import Mul
 from power import Pow

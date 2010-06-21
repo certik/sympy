@@ -53,18 +53,20 @@ def test_abs1():
     global_assumptions.discard(Assume(b, Q.real, True))
 
 def test_abs2():
-    a=Symbol("a")
-    b=Symbol("b")
 
-    global_assumptions.add(Assume(a, Q.real, True))
-    global_assumptions.add(Assume(b, Q.real, True))
+    # FIXME: These had to be renamed because old info persisted in the cache.
+    a=Symbol("aa")
+    b=Symbol("bb")
+
+    global_assumptions.add(Assume(a, Q.real, False))
+    global_assumptions.add(Assume(b, Q.real, False))
 
     assert abs(a) != a
     assert abs(-a) != a
     assert abs(a+I*b) != sqrt(a**2+b**2)
 
-    global_assumptions.discard(Assume(a, Q.real, True))
-    global_assumptions.discard(Assume(b, Q.real, True))
+    global_assumptions.discard(Assume(a, Q.real, False))
+    global_assumptions.discard(Assume(b, Q.real, False))
 
 def test_evalc():
 

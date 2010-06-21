@@ -85,6 +85,12 @@ class Symbol(Atom, Expr, Boolean):
     def is_number(self):
         return False
 
+    def _eval_is_positive(self):
+        return None
+
+    def _eval_is_negative(self):
+        return None
+
 class Dummy(Symbol):
     """Dummy Symbol
 

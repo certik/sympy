@@ -233,26 +233,6 @@ class Add(AssocOp):
     _eval_is_integer = lambda self: self._eval_template_is_attr('is_integer')
     _eval_is_comparable = lambda self: self._eval_template_is_attr('is_comparable')
 
-    @property
-    def is_real(self):
-        return self._eval_is_real()
-
-    @property
-    def is_bounded(self):
-        return self._eval_is_bounded()
-
-    @property
-    def is_positive(self):
-        return self._eval_is_positive()
-
-    @property
-    def is_negative(self):
-        return self._eval_is_negative()
-
-    @property
-    def is_unbounded(self):
-        return not self.is_bounded
-
     def _eval_is_odd(self):
         l = [f for f in self.args if not (f.is_even==True)]
         if not l:
@@ -289,12 +269,12 @@ class Add(AssocOp):
 
         # Check the case where one is positive and greater than the other
         if c.is_positive:
-            if abs(c) > abs(r):
+            if c > abs(r):
                 return True
             else:
                 return False
         if r.is_positive:
-            if abs(r) > abs(c):
+            if r > abs(c):
                 return True
             else:
                 return False
@@ -318,6 +298,19 @@ class Add(AssocOp):
             return True
         if c.is_nonnegative and r.is_nonnegative:
             return False
+
+        # FIXME: This introduces an infinite loop since __lt__ calls is_negative
+        # Check the case where one is positive and greater than the other
+        #if c.is_negative:
+            #if abs(c) > r:
+                #return True
+            #else:
+                #return False
+        #if r.is_negative:
+            #if abs(r) > c:
+                #return True
+            #else:
+                #return False
 
     def as_coeff_terms(self, x=None):
         # -2 + 2 * a -> -1, 2-2*a

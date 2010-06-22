@@ -162,6 +162,7 @@ class Basic(object):
     __slots__ = ['_mhash',              # hash value
                  '_args',               # arguments
                  '_assume_type_keys',   # assumptions typeinfo keys
+                 '_options',            # kwarg options for the particular objects
                 ]
 
     # To be overridden with True in the appropriate subclasses
@@ -182,11 +183,12 @@ class Basic(object):
     is_Poly = False
     is_AlgebraicNumber = False
 
-    def __new__(cls, *args, **assumptions):
+    def __new__(cls, *args, **options):
         obj = object.__new__(cls)
 
         obj._mhash = None # will be set by __hash__ method.
         obj._args = args  # all items in args must be Basic objects
+        obj._options = options
         return obj
 
     # NOTE NOTE NOTE

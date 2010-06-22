@@ -953,6 +953,8 @@ class Expr(Basic, EvalfMixin):
             return False
         elif '_eval_is_real' in dir(self):
             return self._eval_is_real()
+        elif self.is_positive or self.is_negative or self.is_integer:
+            return True
         else:
             return None
 

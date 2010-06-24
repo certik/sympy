@@ -1,13 +1,15 @@
 from sympy import symbols, Symbol, sqrt, oo, re, nan, im, sign, I, E, log, \
-        pi, arg, conjugate, expand, exp, sin, cos, Function
+        pi, arg, conjugate, expand, exp, sin, cos, Function, global_assumptions, Q, Assume
 from sympy.utilities.pytest import XFAIL
 
 
 def test_re():
 
-    x, y = symbols('xy')
+    x, y, r = symbols('xyr')
 
-    r = Symbol('r', real=True)
+    r = Symbol('r')
+
+    global_assumptions.add(Assume(r, Q.real, True))
 
     assert re(nan) == nan
 
@@ -42,11 +44,13 @@ def test_re():
 
     assert re((2+I)**2).expand(complex=True) == 3
 
+    global_assumptions.discard(Assume(r, Q.real, True))
+
 def test_im():
 
-    x, y = symbols('xy')
+    x, y, r = symbols('xyr')
 
-    r = Symbol('r', real=True)
+    global_assumptions.add(Assume(r, Q.real, True))
 
     assert im(nan) == nan
 
@@ -82,6 +86,8 @@ def test_im():
 
     assert im((2+I)**2).expand(complex=True) == 4
 
+    global_assumptions.discard(Assume(r, Q.real, True))
+
 def test_sign():
     assert sign(1.2) == 1
     assert sign(-1.2) == -1
@@ -89,36 +95,63 @@ def test_sign():
     x = Symbol('x')
     assert sign(x).is_zero == False
     assert sign(2*x) == sign(x)
-    p = Symbol('p', positive = True)
-    n = Symbol('n', negative = True)
-    m = Symbol('m', negative = True)
+
+    p = Symbol('p')
+    n = Symbol('n')
+    m = Symbol('m')
+
+    global_assumptions.add(Assume(p, Q.positive, True))
+    global_assumptions.add(Assume(n, Q.negative, True))
+    global_assumptions.add(Assume(m, Q.negative, True))
+    # FIXME: These assumptions should be automagically applied.
+    global_assumptions.add(Assume(p, Q.negative, False))
+    global_assumptions.add(Assume(n, Q.positive, False))
+    global_assumptions.add(Assume(m, Q.positive, False))
+
     assert sign(2*p*x) == sign(x)
     assert sign(n*x) == -sign(x)
     assert sign(n*m*x) == sign(x)
     x = 0
     assert sign(x).is_zero == True
 
+    global_assumptions.discard(Assume(p, Q.positive, True))
+    global_assumptions.discard(Assume(n, Q.negative, True))
+    global_assumptions.discard(Assume(m, Q.negative, True))
+    global_assumptions.discard(Assume(p, Q.negative, False))
+    global_assumptions.discard(Assume(n, Q.positive, False))
+    global_assumptions.discard(Assume(m, Q.positive, False))
 
 def test_abs():
     x, y = symbols('xy')
     assert abs(0) == 0
     assert abs(1) == 1
     assert abs(-1)== 1
-    x = Symbol('x',real=True)
-    n = Symbol('n',integer=True)
+    x = Symbol('x')
+    n = Symbol('n')
+
+    global_assumptions.add(Assume(x, Q.real, True))
+    global_assumptions.add(Assume(n, Q.integer, True))
+
     assert x**(2*n) == abs(x)**(2*n)
     assert abs(x).diff(x) == sign(x)
+
+    global_assumptions.discard(Assume(x, Q.real, True))
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_abs_real():
     # test some properties of abs that only apply
     # to real numbers
-    x = Symbol('x', complex=True)
+    x = Symbol('x')
+    global_assumptions.add(Assume(x, Q.complex, True))
     assert sqrt(x**2) != abs(x)
     assert abs(x**2) != x**2
+    global_assumptions.discard(Assume(x, Q.complex, True))
 
-    x = Symbol('x', real=True)
+    x = Symbol('x')
+    global_assumptions.add(Assume(x, Q.real, True))
     assert sqrt(x**2) == abs(x)
     assert abs(x**2) == x**2
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 def test_abs_properties():
     x = Symbol('x')
@@ -126,15 +159,24 @@ def test_abs_properties():
     assert abs(x).is_positive == None
     assert abs(x).is_nonnegative == True
 
-    w = Symbol('w', complex=True, zero=False)
+    w = Symbol('w')
+    global_assumptions.add(Assume(w, Q.complex, True))
+    global_assumptions.add(Assume(w, Q.nonzero, True))
     assert abs(w).is_real == True
     assert abs(w).is_positive == True
     assert abs(w).is_zero == False
+    global_assumptions.discard(Assume(w, Q.complex, True))
+    global_assumptions.discard(Assume(w, Q.nonzero, True))
 
-    q = Symbol('q', positive=True)
+    q = Symbol('q')
+    global_assumptions.add(Assume(q, Q.positive, True))
+    # FIXME: This assumption should be automagically applied.
+    global_assumptions.add(Assume(q, Q.nonzero, True))
     assert abs(q).is_real == True
     assert abs(q).is_positive == True
     assert abs(q).is_zero == False
+    global_assumptions.discard(Assume(q, Q.positive, True))
+    global_assumptions.discard(Assume(q, Q.nonzero, True))
 
 def test_arg():
     assert arg(0) == nan
@@ -146,16 +188,22 @@ def test_arg():
     assert arg(-1+I) == 3*pi/4
     assert arg(1-I) == -pi/4
 
-    p = Symbol('p', positive=True)
+    p = Symbol('p')
+    global_assumptions.add(Assume(p, Q.positive, True))
     assert arg(p) == 0
+    global_assumptions.discard(Assume(p, Q.positive, True))
 
-    n = Symbol('n', negative=True)
+    n = Symbol('n')
+    global_assumptions.add(Assume(n, Q.negative, True))
     assert arg(n) == pi
+    global_assumptions.discard(Assume(n, Q.negative, True))
 
 def test_conjugate():
-    a = Symbol('a', real=True)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
     assert conjugate(a) == a
     assert conjugate(I*a) == -I*a
+    global_assumptions.discard(Assume(a, Q.real, True))
 
     x, y = symbols('xy')
     assert conjugate(conjugate(x)) == x
@@ -182,6 +230,8 @@ def test_derivatives_issue1658():
     assert re(f(x)).diff(x) == re(f(x).diff(x))
     assert im(f(x)).diff(x) == im(f(x).diff(x))
 
-    x = Symbol('x', real=True)
+    x = Symbol('x')
+    global_assumptions.add(Assume(x, Q.real, True))
     assert abs(f(x)).diff(x).subs(f(x), 1+I*x) == x/sqrt(1 + x**2)
     assert arg(f(x)).diff(x).subs(f(x), 1+I*x**2) == 2*x/(1+x**4)
+    global_assumptions.discard(Assume(x, Q.real, True))

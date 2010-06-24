@@ -1051,11 +1051,18 @@ class Expr(Basic, EvalfMixin):
     def is_zero(self):
         if '_eval_is_zero' in dir(self):
             return self._eval_is_zero()
+        if self.is_nonzero in [True, False]:
+            return not self.is_nonzero
         else:
             return None
 
     @property
     def is_nonzero(self):
+        from sympy import global_assumptions, Assume, Q
+        if Assume(self, Q.nonzero, True) in global_assumptions:
+            return True
+        elif Assume(self, Q.nonzero, False) in global_assumptions:
+            return False
         if '_eval_is_nonzero' in dir(self):
             return self._eval_is_nonzero()
         else:

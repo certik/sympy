@@ -176,7 +176,7 @@ class Pow(Expr):
                 if self.exp.is_integer:
                     return True
                 elif self.base.is_negative:
-                    if self.exp.is_Rational:
+                    if self.exp.is_rational:
                         return False
 
     def _eval_is_odd(self):
@@ -304,8 +304,8 @@ class Pow(Expr):
         else:
             result = None
 
-        if exp.is_Rational and exp.p > 0 and base.is_Add:
-            if not exp.is_Integer:
+        if exp.is_rational and exp.p > 0 and base.is_Add:
+            if not exp.is_integer:
                 n = Integer(exp.p // exp.q)
 
                 if not n:
@@ -341,15 +341,15 @@ class Pow(Expr):
                     # where 'a' and 'b' are real numbers and 'n' is integer.
                     a, b = base.as_real_imag()
 
-                    if a.is_Rational and b.is_Rational:
-                        if not a.is_Integer:
-                            if not b.is_Integer:
+                    if a.is_rational and b.is_rational:
+                        if not a.is_integer:
+                            if not b.is_integer:
                                 k = (a.q * b.q) ** n
                                 a, b = a.p*b.q, a.q*b.p
                             else:
                                 k = a.q ** n
                                 a, b = a.p, a.q*b
-                        elif not b.is_Integer:
+                        elif not b.is_integer:
                             k = b.q ** n
                             a, b = a*b.q, b.p
                         else:
@@ -401,7 +401,7 @@ class Pow(Expr):
                         return Add(*[f*g for f in base.args for g in multi.args])
                     else:
                         return Add(*[f*multi for f in base.args])
-        elif exp.is_Rational and exp.p < 0 and base.is_Add and abs(exp.p) > exp.q:
+        elif exp.is_rational and exp.p < 0 and base.is_Add and abs(exp.p) > exp.q:
             return 1 / Pow(base, -exp)._eval_expand_multinomial(deep=False)
         elif exp.is_Add and base.is_Number:
             #  a + b      a  b
@@ -430,7 +430,7 @@ class Pow(Expr):
         return self.__class__(*terms)
 
     def _eval_expand_complex(self, deep=True, **hints):
-        if self.exp.is_Integer:
+        if self.exp.is_integer:
             exp = self.exp
             re, im = self.base.as_real_imag()
             if exp >= 0:
@@ -440,7 +440,7 @@ class Pow(Expr):
                 base = re/mag - S.ImaginaryUnit*(im/mag)
                 exp = -exp
             return (base**exp).expand()
-        elif self.exp.is_Rational:
+        elif self.exp.is_rational:
             # NOTE: This is not totally correct since for x**(p/q) with
             #       x being imaginary there are actually q roots, but
             #       only a single one is returned from here.
@@ -489,7 +489,7 @@ class Pow(Expr):
     def _eval_evalf(self, prec):
         base, exp = self.as_base_exp()
         base = base._evalf(prec)
-        if not exp.is_Integer:
+        if not exp.is_integer:
             exp = exp._evalf(prec)
         if exp < 0 and not base.is_real:
             base = base.conjugate() / (base * base.conjugate())._evalf(prec)
@@ -517,12 +517,12 @@ class Pow(Expr):
     def as_numer_denom(self):
         base, exp = self.as_base_exp()
         n, d = base.as_numer_denom()
-        if exp.is_Integer:
+        if exp.is_integer:
             if exp.is_negative:
                 n, d = d, n
                 exp = -exp
             return n ** exp, d ** exp
-        elif exp.is_Rational:
+        elif exp.is_rational:
             if d.is_negative is None:
                 # we won't split up the base
                 if exp.is_negative:
@@ -610,7 +610,7 @@ class Pow(Expr):
             raise NotImplementedError()
 
         base, exp = self.args
-        if exp.is_Integer:
+        if exp.is_integer:
             if exp > 0:
                 # positive integer powers are easy to expand, e.g.:
                 # sin(x)**4 = (x-x**3/3+...)**4 = ...
@@ -658,7 +658,7 @@ class Pow(Expr):
                 k, l = Wild("k"), Wild("l")
                 r = term2.match(k*x**l)
                 k, l = r[k], r[l]
-                if l.is_Rational and l>0:
+                if l.is_rational and l>0:
                     pass
                 elif l.is_number and l>0:
                     l = l.evalf()

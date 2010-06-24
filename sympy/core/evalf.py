@@ -422,7 +422,7 @@ def evalf_pow(v, prec, options):
     # We handle x**n separately. This has two purposes: 1) it is much
     # faster, because we avoid calling evalf on the exponent, and 2) it
     # allows better handling of real/imaginary parts that are exactly zero
-    if exp.is_Integer:
+    if exp.is_integer:
         p = exp.p
         # Exact
         if not p:
@@ -641,7 +641,7 @@ def evalf_piecewise(expr, prec, options):
 
 def evalf_bernoulli(expr, prec, options):
     arg = expr.args[0]
-    if not arg.is_Integer:
+    if not arg.is_integer:
         raise ValueError("Bernoulli number index must be an integer")
     n = int(arg)
     b = mpf_bernoulli(n, prec, round_nearest)
@@ -1081,24 +1081,24 @@ class EvalfMixin(object):
     def _to_mpmath(self, prec, allow_ints=True):
         # mpmath functions accept ints as input
         errmsg = "cannot convert to mpmath number"
-        if allow_ints and self.is_Integer:
+        if allow_ints and self.is_integer:
             return self.p
         v = self._eval_evalf(prec)
         if v is None:
             raise ValueError(errmsg)
-        if v.is_Real:
+        if v.is_real:
             return make_mpf(v._mpf_)
         # Number + Number*I is also fine
         re, im = v.as_real_imag()
-        if allow_ints and re.is_Integer:
+        if allow_ints and re.is_integer:
             re = from_int(re.p)
-        elif re.is_Real:
+        elif re.is_real:
             re = re._mpf_
         else:
             raise ValueError(errmsg)
-        if allow_ints and im.is_Integer:
+        if allow_ints and im.is_integer:
             im = from_int(im.p)
-        elif im.is_Real:
+        elif im.is_real:
             im = im._mpf_
         else:
             raise ValueError(errmsg)

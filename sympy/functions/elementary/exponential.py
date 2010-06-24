@@ -273,8 +273,8 @@ class log(Function):
         if base is not None:
             base = sympify(base)
 
-            if arg.is_positive and arg.is_Integer and \
-               base.is_positive and base.is_Integer:
+            if arg.is_positive and arg.is_integer and \
+               base.is_positive and base.is_integer:
                 base = int(base)
                 arg = int(arg)
                 n = multiplicity(base, arg)
@@ -321,7 +321,7 @@ class log(Function):
                     return S.Infinity
                 elif coeff is S.NegativeInfinity:
                     return S.Infinity
-                elif coeff.is_Rational:
+                elif coeff.is_rational:
                     if coeff.is_nonnegative:
                         return S.Pi * S.ImaginaryUnit * S.Half + cls(coeff)
                     else:

@@ -223,7 +223,7 @@ class Mul(AssocOp):
                     coeff *= b
                 else:
                     c_part.append(b)
-            elif e.is_Integer and b.is_Number:
+            elif e.is_integer and b.is_Number:
                 coeff *= b ** e
             else:
                 c_part.append(Pow(b, e))
@@ -247,7 +247,7 @@ class Mul(AssocOp):
                     coeff *= b
                 else:
                     c_part.append(b)
-            elif e.is_Integer and b.is_Number:
+            elif e.is_integer and b.is_Number:
                 coeff *= b ** e
             else:
                 obj = b**e
@@ -311,11 +311,11 @@ class Mul(AssocOp):
     def _eval_power(b, e):
         if e.is_Number:
             if b.is_commutative:
-                if e.is_Integer:
+                if e.is_integer:
                     # (a*b)**2 -> a**2 * b**2
                     return Mul(*[s**e for s in b.args])
 
-                if e.is_Rational:
+                if e.is_rational:
                     coeff, rest = b.as_coeff_terms()
                     unk=[]
                     nonneg=[]
@@ -362,7 +362,7 @@ class Mul(AssocOp):
                 if coeff is not S.One:
                     # (2*a)**3 -> 2**3 * a**3
                     return coeff**e * Mul(*[s**e for s in rest])
-            elif e.is_Integer:
+            elif e.is_integer:
                 coeff, rest = b.as_coeff_terms()
                 if coeff == S.One:
                     return

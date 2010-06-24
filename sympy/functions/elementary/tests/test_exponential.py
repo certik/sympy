@@ -1,12 +1,12 @@
 from sympy import symbols, log, Real, nan, oo, I, pi, E, exp, Symbol, \
-        LambertW, sqrt, Rational, sin, expand_log
+        LambertW, sqrt, Rational, sin, expand_log, global_assumptions, Q, Assume
 from sympy.utilities.pytest import XFAIL
 
 def test_exp():
 
-    x, y = symbols('xy')
+    x, y, k = symbols('xyk')
 
-    k = Symbol('k', integer=True)
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert exp(nan) == nan
 
@@ -37,6 +37,8 @@ def test_exp():
 
     assert exp(x).as_Pow() == (E, x)
     assert exp(-x).as_Pow() == (E, -x)
+
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
 def test_log():
 
@@ -85,16 +87,20 @@ def test_log():
     assert log(x*y) != log(x) + log(y)
 
     assert log(x**2) != 2*log(x)
-    x = Symbol('x', positive=True)
+    x = Symbol('x')
+    global_assumptions.add(Assume(x, Q.positive, True))
     assert log(x**2).expand() == 2*log(x)
     assert log(x**y) != y*log(x)
+    global_assumptions.discard(Assume(x, Q.positive, True))
 
     #I commented this test out, because it doesn't work well with caching and
     #thus completely breaks limits, that rely on log(exp(x)) -> x
     #simplification. --Ondrej
     #assert log(exp(x)) != x
 
-    x, y = symbols('xy', positive=True)
+    x, y = symbols('xy')
+    global_assumptions.add(Assume(x, Q.positive, True))
+    global_assumptions.add(Assume(y, Q.positive, True))
 
     assert log(x) == log(x)
     #assert log(x*y) != log(x) + log(y)
@@ -108,13 +114,18 @@ def test_log():
     #assert log(-exp(x)) != x + I*pi
     assert log(-exp(x)).expand() == x + I*pi
 
-    k = Symbol('k', positive=True)
+    k = Symbol('k')
+    global_assumptions.add(Assume(k, Q.positive, True))
 
     assert log(-x) == log(-x)
     assert log(-k) == log(-k)
 
     assert log(x, 2) == log(x)/log(2)
     assert log(E, 2) == 1/log(2)
+
+    global_assumptions.discard(Assume(x, Q.positive, True))
+    global_assumptions.discard(Assume(y, Q.positive, True))
+    global_assumptions.discard(Assume(k, Q.positive, True))
 
 def test_log_expand_complex():
     assert log(1+I).expand(complex=True) == log(2)/2 + I*pi/4
@@ -137,20 +148,31 @@ def test_lambertw():
         Real("0.701338383413663009202120278965",30),1e-29)
 
 def test_log_expand():
-    w = Symbol("w", positive=True)
+    w = Symbol("w")
+    global_assumptions.add(Assume(w, Q.positive, True))
     e = log(w**(log(5)/log(3)))
     assert e.expand() == log(5)/log(3) * log(w)
-    x, y, z = symbols('xyz', positive=True)
+    x, y, z = symbols('xyz')
+    global_assumptions.add(Assume(x, Q.positive, True))
+    global_assumptions.add(Assume(y, Q.positive, True))
+    global_assumptions.add(Assume(z, Q.positive, True))
     assert log(x*(y+z)).expand(mul=False) == log(x)+log(y+z)
     assert log(log(x**2)*log(y*z)).expand() == log(2*log(x)*log(y) + 2*log(x)*log(z))
     assert log(x**log(x**2)).expand(deep=False) == log(x)*log(x**2)
     assert log(x**log(x**2)).expand() == 2*log(x)**2
     assert (log(x*(y+z))*(x+y)),expand(mul=True, log=True) == y*log(x) + y*log(y + z) + z*log(x) + z*log(y + z)
 
+    global_assumptions.discard(Assume(w, Q.positive, True))
+    global_assumptions.discard(Assume(x, Q.positive, True))
+    global_assumptions.discard(Assume(y, Q.positive, True))
+    global_assumptions.discard(Assume(z, Q.positive, True))
+
 def test_log_simplify():
-    x = Symbol("x", positive=True)
+    x = Symbol("x")
+    global_assumptions.add(Assume(x, Q.positive, True))
     assert log(x**2).expand() == 2*log(x)
     assert expand_log(log(x**(2+log(2)))) == (2+log(2))*log(x)
+    global_assumptions.discard(Assume(x, Q.positive, True))
 
 
 def test_exp__as_base_exp():

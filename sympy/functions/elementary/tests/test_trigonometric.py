@@ -1,13 +1,12 @@
 from sympy import symbols, Symbol, nan, oo, I, sinh, sin, acot, pi, atan, \
         acos, Rational, sqrt, asin, acot, cot, coth, E, S, tan, tanh, cos, \
-        cosh, atan2, exp, asinh, acoth, atanh, O
+        cosh, atan2, exp, asinh, acoth, atanh, O, global_assumptions, Q, Assume
 
 def test_sin():
-    x, y = symbols('xy')
+    x, y, r, k = symbols('xyrk')
 
-    r = Symbol('r', real=True)
-
-    k = Symbol('k', integer=True)
+    global_assumptions.add(Assume(r, Q.real, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert sin(nan) == nan
 
@@ -75,13 +74,14 @@ def test_sin():
 
     assert sin(r).is_real == True
 
+    global_assumptions.discard(Assume(r, Q.real, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
 def test_cos():
-    x, y = symbols('xy')
+    x, y, r, k = symbols('xyrk')
 
-    r = Symbol('r', real=True)
-
-    k = Symbol('k', integer=True)
+    global_assumptions.add(Assume(r, Q.real, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert cos(nan) == nan
 
@@ -145,12 +145,14 @@ def test_cos():
 
     assert cos(r).is_real == True
 
+    global_assumptions.discard(Assume(r, Q.real, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
+
 def test_tan():
-    x, y = symbols('xy')
+    x, y, r, k = symbols('xyrk')
 
-    r = Symbol('r', real=True)
-
-    k = Symbol('k', integer=True)
+    global_assumptions.add(Assume(r, Q.real, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert tan(nan) == nan
 
@@ -196,6 +198,9 @@ def test_tan():
 
     assert tan(r).is_real == True
 
+    global_assumptions.discard(Assume(r, Q.real, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
+
 def test_tan_rewrite():
     x = Symbol('x')
     neg_exp, pos_exp = exp(-x*I), exp(x*I)
@@ -206,11 +211,10 @@ def test_tan_rewrite():
 
 
 def test_cot():
-    x, y = symbols('xy')
+    x, y, r, k = symbols('xyrk')
 
-    r = Symbol('r', real=True)
-
-    k = Symbol('k', integer=True)
+    global_assumptions.add(Assume(r, Q.real, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert cot(nan) == nan
 
@@ -248,6 +252,9 @@ def test_cot():
     assert cot(k*pi*I) == -coth(k*pi)*I
 
     assert cot(r).is_real == True
+
+    global_assumptions.discard(Assume(r, Q.real, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
 def test_cot_rewrite():
     x = Symbol('x')
@@ -287,7 +294,9 @@ def test_asin_series():
 
 def test_acos():
     x = Symbol('x')
-    r = Symbol('r', real=True)
+    r = Symbol('r')
+
+    global_assumptions.add(Assume(r, Q.real, True))
 
     assert acos(nan) == nan
     assert acos(oo) == I*oo
@@ -303,6 +312,8 @@ def test_acos():
     assert acos(0.2).is_real == True
     assert acos(-2).is_real == False
 
+    global_assumptions.add(Assume(r, Q.real, True))
+
 def test_acos_series():
     x = Symbol('x')
     assert acos(x).series(x, 0, 8) == \
@@ -315,7 +326,9 @@ def test_acos_series():
 def test_atan():
     x = Symbol('x')
 
-    r = Symbol('r', real=True)
+    r = Symbol('r')
+
+    global_assumptions.add(Assume(r, Q.real, True))
 
     assert atan(nan) == nan
 
@@ -332,6 +345,8 @@ def test_atan():
 
     assert atan(-2*I) == -I*atanh(2)
 
+    global_assumptions.discard(Assume(r, Q.real, True))
+
 def test_atan2():
     assert atan2(0, 0) == S.NaN
     assert atan2(0, 1) == 0
@@ -343,7 +358,9 @@ def test_atan2():
 def test_acot():
     x = Symbol('x')
 
-    r = Symbol('r', real=True)
+    r = Symbol('r')
+
+    global_assumptions.add(Assume(r, Q.real, True))
 
     assert acot(nan) == nan
 
@@ -360,6 +377,8 @@ def test_acot():
 
     assert acot(I*pi) == -I*acoth(pi)
     assert acot(-2*I) == I*acoth(2)
+
+    global_assumptions.discard(Assume(r, Q.real, True))
 
 def test_attributes():
     x = Symbol('x')

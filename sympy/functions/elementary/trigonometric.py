@@ -73,7 +73,7 @@ class sin(Function):
 
         pi_coeff = arg.as_coefficient(S.Pi)
         if pi_coeff is not None:
-            if pi_coeff.is_Integer:
+            if pi_coeff.is_integer:
                 return S.Zero
             elif pi_coeff.is_Rational:
                 cst_table_some = {
@@ -188,7 +188,7 @@ class sin(Function):
             y = C.Add(*arg.args[1:])
         else:
             coeff, terms = arg.as_coeff_terms()
-            if not (coeff is S.One) and coeff.is_Integer and terms:
+            if not (coeff is S.One) and coeff.is_integer and terms:
                 x = C.Mul(*terms)
                 y = (coeff-1)*x
         if x is not None:
@@ -396,7 +396,7 @@ class cos(Function):
             return (cos(x)*cos(y) - sin(y)*sin(x)).expand(trig=True)
         else:
             coeff, terms = arg.as_coeff_terms()
-            if not (coeff is S.One) and coeff.is_Integer and terms:
+            if not (coeff is S.One) and coeff.is_integer and terms:
                 x = C.Mul(*terms)
                 return C.chebyshevt(coeff, cos(x))
         return cos(arg)
@@ -480,7 +480,7 @@ class tan(Function):
 
         pi_coeff = arg.as_coefficient(S.Pi)
         if pi_coeff is not None:
-            if pi_coeff.is_Integer:
+            if pi_coeff.is_integer:
                 return S.Zero
             elif pi_coeff.is_Rational:
                 cst_table = {

@@ -1,13 +1,15 @@
 from sympy import Symbol, floor, nan, oo, E, symbols, ceiling, pi, Rational, \
-        Real, I, sin, exp, log, factorial
+        Real, I, sin, exp, log, factorial, global_assumptions, Q, Assume
 
 from sympy.utilities.pytest import XFAIL
 
 def test_floor():
 
-    x = Symbol('x')
-    y = Symbol('y', real=True)
-    k, n = symbols('kn', integer=True)
+    x, y, k, n = symbols('xykn')
+
+    global_assumptions.add(Assume(y, Q.real, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
+    global_assumptions.add(Assume(n, Q.integer, True))
 
     assert floor(nan) == nan
 
@@ -100,12 +102,18 @@ def test_floor():
     assert floor(factorial(50)/exp(1)) == \
         11188719610782480504630258070757734324011354208865721592720336800
 
+    global_assumptions.discard(Assume(y, Q.real, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
+    global_assumptions.discard(Assume(n, Q.integer, True))
+
 
 def test_ceiling():
 
-    x = Symbol('x')
-    y = Symbol('y', real=True)
-    k, n = symbols('kn', integer=True)
+    x, y, k, n = symbols('xykn')
+
+    global_assumptions.add(Assume(y, Q.real, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
+    global_assumptions.add(Assume(n, Q.integer, True))
 
     assert ceiling(nan) == nan
 
@@ -197,6 +205,10 @@ def test_ceiling():
 
     assert ceiling(factorial(50)/exp(1)) == \
         11188719610782480504630258070757734324011354208865721592720336801
+
+    global_assumptions.discard(Assume(y, Q.real, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 @XFAIL
 def test_issue_1050():

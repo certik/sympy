@@ -13,7 +13,7 @@ class RoundFunction(Function):
 
     @classmethod
     def eval(cls, arg):
-        if arg.is_Integer:
+        if arg.is_integer:
             return arg
         if arg.is_imaginary:
             return cls(C.im(arg))*S.ImaginaryUnit
@@ -32,7 +32,7 @@ class RoundFunction(Function):
             terms = [arg]
 
         for t in terms:
-            if t.is_Integer or (t.is_imaginary and C.im(t).is_Integer):
+            if t.is_integer or (t.is_imaginary and C.im(t).is_integer):
                 ipart += t
             elif t.atoms(C.Symbol):
                 spart += t
@@ -101,7 +101,7 @@ class floor(RoundFunction):
                 if not arg.q:
                     return arg
                 return C.Integer(arg.p // arg.q)
-            elif arg.is_Real:
+            elif arg.is_real:
                 return C.Integer(int(arg.floor()))
         if arg.is_NumberSymbol:
             return arg.approximation_interval(C.Integer)[0]
@@ -150,7 +150,7 @@ class ceiling(RoundFunction):
                 if not arg.q:
                     return arg
                 return -C.Integer(-arg.p // arg.q)
-            elif arg.is_Real:
+            elif arg.is_real:
                 return C.Integer(int(arg.ceiling()))
         if arg.is_NumberSymbol:
             return arg.approximation_interval(C.Integer)[1]

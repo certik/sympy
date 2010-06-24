@@ -1,13 +1,13 @@
 from sympy import symbols, Symbol, sinh, nan, oo, pi, asinh, acosh, log, sqrt, \
         coth, I, cot, E, tanh, tan, cosh, cos, S, sin, Rational, atanh, acoth, \
-        Integer, O
+        Integer, O, global_assumptions, Q, Assume
 
 from sympy.utilities.pytest import XFAIL
 
 def test_sinh():
-    x, y = symbols('xy')
+    x, y, k = symbols('xyk')
 
-    k = Symbol('k', integer=True)
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert sinh(nan) == nan
 
@@ -65,10 +65,12 @@ def test_sinh():
 
     assert sinh(k*pi*I/2) == sin(k*pi/2)*I
 
-def test_cosh():
-    x, y = symbols('xy')
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
-    k = Symbol('k', integer=True)
+def test_cosh():
+    x, y, k = symbols('xyk')
+
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert cosh(nan) == nan
 
@@ -126,10 +128,12 @@ def test_cosh():
 
     assert cosh(k*pi) == cosh(k*pi)
 
-def test_tanh():
-    x, y = symbols('xy')
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
-    k = Symbol('k', integer=True)
+def test_tanh():
+    x, y, k = symbols('xyk')
+
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert tanh(nan) == nan
 
@@ -187,10 +191,12 @@ def test_tanh():
 
     assert tanh(k*pi*I/2) == tan(k*pi/2)*I
 
-def test_coth():
-    x, y = symbols('xy')
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
-    k = Symbol('k', integer=True)
+def test_coth():
+    x, y, k = symbols('xyk')
+
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert coth(nan) == nan
 
@@ -247,6 +253,8 @@ def test_coth():
     assert coth(17*k*pi*I) == -cot(17*k*pi)*I
 
     assert coth(k*pi*I) == -cot(k*pi)*I
+
+    global_assumptions.discard(Assume(k, Q.integer, True))
 
 def test_asinh():
     x, y = symbols('xy')

@@ -183,6 +183,8 @@ class Basic(object):
     is_Poly = False
     is_AlgebraicNumber = False
 
+    is_commutative = None
+
     def __new__(cls, *args, **options):
         obj = object.__new__(cls)
 

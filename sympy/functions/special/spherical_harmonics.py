@@ -1,4 +1,4 @@
-from sympy import C, pi, I
+from sympy import C, pi, I, global_assumptions, Q, Assume
 from sympy.core import Symbol, sympify
 from sympy.functions import legendre, assoc_legendre
 from sympy.functions.elementary.miscellaneous import sqrt
@@ -15,7 +15,9 @@ def Plmcos(l, m, th):
     cos = C.cos
     P = Plm(l, m, _x).subs(_x, cos(th))
     # assume th in (0,pi) => sin(th) is nonegative
-    _sinth = Symbol("_sinth", nonnegative=True)
+    _sinth = Symbol("_sinth")
+    global_assumptions.add(Assume(_sinth, Q.negative, False))
+
     P = P.subs(1-cos(th)**2, _sinth**2).subs(_sinth, sin(th))
     return P
 

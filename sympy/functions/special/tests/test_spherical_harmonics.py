@@ -1,4 +1,4 @@
-from sympy import Ylm, Zlm, Symbol, sympify, sqrt, pi, sin, cos, exp, I
+from sympy import Ylm, Zlm, Symbol, sympify, sqrt, pi, sin, cos, exp, I, global_assumptions, Q, Assume
 from sympy.functions.special.spherical_harmonics import Pl, Plm, Plmcos
 
 def test_Pl():
@@ -34,7 +34,8 @@ def test_Plm():
 
 def test_Plmcos():
     #http://en.wikipedia.org/wiki/Legendre_function
-    th = Symbol("th", real = True)
+    th = Symbol("th")
+    global_assumptions.add(Assume(th, Q.real, True))
     assert Plmcos(0, 0, th) == 1
     assert Plmcos(1, -1, th) == sin(th)/2
     assert Plmcos(1, 0, th) == cos(th)
@@ -46,10 +47,13 @@ def test_Plmcos():
     assert Plmcos(3, 1, th) == -3*(5*cos(th)**2-1)/2 *sin(th)
     assert Plmcos(3, 2, th) == 15*cos(th)*sin(th)**2
     assert Plmcos(3, 3, th) == -15*sin(th)**3
+    global_assumptions.discard(Assume(th, Q.real, True))
 
 def test_Ylm():
     #http://en.wikipedia.org/wiki/Spherical_harmonics
-    th, ph = Symbol("theta", real = True), Symbol("phi", real = True)
+    th, ph = Symbol("theta"), Symbol("phi")
+    global_assumptions.add(Assume(th, Q.real, True))
+    global_assumptions.add(Assume(ph, Q.real, True))
     assert Ylm(0, 0, th, ph) == sympify(1)/(2*sqrt(pi))
     assert Ylm(1, -1, th, ph) == sympify(1)/2 * sqrt(3/(2*pi)) * sin(th) * \
             exp(-I*ph)
@@ -66,10 +70,14 @@ def test_Ylm():
     #Ylm returns here a correct, but different expression:
     #assert Ylm(2, 2, th, ph).expand() == (sympify(1)/4 * sqrt(15/(2*pi)) * \
     #        sin(th)**2 * exp(2*I*ph)).expand()
+    global_assumptions.discard(Assume(th, Q.real, True))
+    global_assumptions.discard(Assume(ph, Q.real, True))
 
 def test_Zlm():
     #http://en.wikipedia.org/wiki/Solid_harmonics#List_of_lowest_functions
-    th, ph = Symbol("theta", real = True), Symbol("phi", real = True)
+    th, ph = Symbol("theta"), Symbol("phi")
+    global_assumptions.add(Assume(th, Q.real, True))
+    global_assumptions.add(Assume(ph, Q.real, True))
     assert Zlm(0, 0, th, ph) == sqrt(1/(4*pi))
     assert Zlm(1, -1, th, ph) == sqrt(3/(4*pi))*sin(th)*sin(ph)
     assert Zlm(1, 0, th, ph) == sqrt(3/(4*pi))*cos(th)
@@ -79,3 +87,5 @@ def test_Zlm():
     assert Zlm(2, 0, th, ph).expand() == (sympify(1)/4 * sqrt(5/pi) * \
             (3*cos(th)**2-1)).expand()
     assert Zlm(2, 1, th, ph) == sqrt(15/(4*pi))*sin(th)*cos(th)*cos(ph)
+    global_assumptions.discard(Assume(th, Q.real, True))
+    global_assumptions.discard(Assume(ph, Q.real, True))

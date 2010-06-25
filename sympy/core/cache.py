@@ -80,10 +80,10 @@ def __cacheit(func):
             k = args
 
         # FIXME: Commenting this out to avoid caching for now.
-        #try:
-            #return func_cache_it_cache[k]
-        #except KeyError:
-            #pass
+        try:
+            return func_cache_it_cache[k]
+        except KeyError:
+            pass
         func_cache_it_cache[k] = r = func(*args, **kw_args)
         return r
 

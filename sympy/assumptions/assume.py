@@ -2,6 +2,7 @@
 from sympy.core import  Symbol
 from sympy.core.relational import Relational
 from sympy.logic.boolalg import Boolean
+from sympy.core.cache import clear_cache
 
 class AssumptionsContext(set):
     """Set representing assumptions.
@@ -30,6 +31,15 @@ class AssumptionsContext(set):
         for a in assumptions:
             assert isinstance(a, Assume), 'can only store instances of Assume'
             super(AssumptionsContext, self).add(a)
+        if self == global_assumptions:
+            clear_cache()
+
+    def discard(self, *assumptions):
+        """Discard an assumption."""
+        if self == global_assumptions:
+            clear_cache()
+        for a in assumptions:
+            super(AssumptionsContext, self).discard(a)
 
 global_assumptions = AssumptionsContext()
 

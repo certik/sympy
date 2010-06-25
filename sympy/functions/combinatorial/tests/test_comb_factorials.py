@@ -1,4 +1,4 @@
-from sympy import symbols, rf, Symbol, factorial, Factorial, ff, nan, oo
+from sympy import symbols, rf, Symbol, factorial, Factorial, ff, nan, oo, global_assumptions, Q, Assume
 
 def test_rf_eval_apply():
 
@@ -60,8 +60,10 @@ def test_ff_eval_apply():
 
 def test_factorials():
     n = Symbol('n', integer=True)
+    global_assumptions.add(Assume(n, Q.integer, True))
     assert factorial(-2) == 0
     assert factorial(0) == 1
     assert factorial(7) == 5040
     assert factorial(n).func == Factorial
     assert factorial(2*n).func == Factorial
+    global_assumptions.discard(Assume(n, Q.integer, True))

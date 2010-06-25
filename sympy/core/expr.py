@@ -943,6 +943,8 @@ class Expr(Basic, EvalfMixin):
             return True
         elif Assume(self, Q.positive, False) in global_assumptions:
             return False
+        elif Assume(self, Q.negative, True) in global_assumptions:
+            return False
         elif '_eval_is_positive' in dir(self):
             return self._eval_is_positive()
         else:
@@ -954,6 +956,8 @@ class Expr(Basic, EvalfMixin):
         if Assume(self, Q.negative, True) in global_assumptions:
             return True
         elif Assume(self, Q.negative, False) in global_assumptions:
+            return False
+        elif Assume(self, Q.positive, True) in global_assumptions:
             return False
         elif '_eval_is_negative' in dir(self):
             return self._eval_is_negative()

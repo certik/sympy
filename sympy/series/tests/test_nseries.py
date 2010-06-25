@@ -1,6 +1,6 @@
 from sympy import Symbol, Rational, ln, exp, log, sqrt, E, O, pi, I, sinh, \
         sin, cosh, cos, tanh, coth, asinh, acosh, atanh, acoth, tan, Integer, \
-        PoleError, floor, ceiling, raises, asin, symbols
+        PoleError, floor, ceiling, raises, asin, symbols, global_assumptions, Q, Assume
 from sympy.abc import x, y, z
 
 def test_simple_1():
@@ -119,11 +119,13 @@ def test_series2x():
     assert (1/(1+1/x**2)).nseries(x,0,6) == x**2-x**4+O(x**6, x)
 
 def test_bug2(): ### 1/log(0) * log(0) problem
-    w = Symbol("w", nonnegative=True)
+    w = Symbol("w")
+    global_assumptions.add(Assume(w, Q.negative, False))
     e = (w**(-1)+w**(-log(3)*log(2)**(-1)))**(-1)*(3*w**(-log(3)*log(2)**(-1))+2*w**(-1))
     e = e.expand()
     #should be 3, but is 2
     assert e.nseries(w,0,4).subs(w,0)==3
+    global_assumptions.discard(Assume(w, Q.negative, False))
 
 def test_exp():
     x = Symbol("x")
@@ -162,10 +164,12 @@ def test_genexp_x():
 
 # more complicated example
 def test_genexp_x2():
-    x = Symbol("x", nonnegative=True)
+    x = Symbol("x")
+    global_assumptions.add(Assume(x, Q.negative, False))
     p = Rational(3,2)
     e = (2/x+3/x**p)/(1/x+1/x**p)
     assert e.nseries(x,0,3) == 3 - sqrt(x) + x + O(sqrt(x)**3)
+    global_assumptions.discard(Assume(x, Q.negative, False))
 
 def test_seriesbug2():
     w = Symbol("w")
@@ -181,24 +185,30 @@ def test_seriesbug2b():
     assert e.nseries(w,0,3) == 2 + O(w**2, w)
 
 def test_seriesbug2d():
-    w = Symbol("w", real=True)
+    w = Symbol("w")
+    global_assumptions.add(Assume(w, Q.real, True))
     e = log(sin(2*w)/w)
     assert e.nseries(w, 0, 5) == log(2) - 2*w**2/3 - 4*w**4/45 + O(w**5)
+    global_assumptions.discard(Assume(w, Q.real, True))
 
 def test_seriesbug2c():
-    w = Symbol("w", real=True)
+    w = Symbol("w")
+    global_assumptions.add(Assume(w, Q.real, True))
     #more complicated case, but sin(x)~x, so the result is the same as in (1)
     e=(sin(2*w)/w)**(1+w)
     assert e.nseries(w,0,1) == 2 + O(w)
     assert e.nseries(w,0,3) == 2-Rational(4,3)*w**2+w**2*log(2)**2+2*w*log(2)+O(w**3, w)
     assert e.nseries(w,0,2).subs(w,0) == 2
+    global_assumptions.discard(Assume(w, Q.real, True))
 
 def test_expbug4():
-    x = Symbol("x", real=True)
+    x = Symbol("x")
+    global_assumptions.add(Assume(x, Q.real, True))
     assert (log(sin(2*x)/x)*(1+x)).nseries(x,0,2) == log(2) + x*log(2) + O(x**2, x)
     #assert exp(log(2)+O(x)).nseries(x,0,2) == 2 +O(x**2, x)
     assert exp(log(sin(2*x)/x)*(1+x)).nseries(x,0,2) == 2 + 2*x*log(2) + O(x**2)
     #assert ((2+O(x))**(1+x)).nseries(x,0,2) == 2 + O(x**2, x)
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 def test_logbug4():
     x = Symbol("x")
@@ -219,9 +229,11 @@ def test_issue159():
     assert a.nseries(x,0,6) == 1 - x/2 - x**4/720 + x**2/12 + O(x**5)
 
 def test_issue105():
-    x = Symbol("x", nonnegative=True)
+    x = Symbol("x")
+    global_assumptions.add(Assume(x, Q.negative, False))
     f = sin(x**3)**Rational(1,3)
     assert f.nseries(x,0,17) == x - x**7/18 - x**13/3240 + O(x**17)
+    global_assumptions.discard(Assume(x, Q.negative, False))
 
 def test_issue125():
     y = Symbol("y")
@@ -310,16 +322,24 @@ def test_hyperbolic():
     assert acoth(x).nseries(x, 0, 6) == x + x**3/3 + x**5/5 + pi*I/2 + O(x**6)
 
 def test_series2():
-    w = Symbol("w", real=True)
-    x = Symbol("x", real=True)
+    w = Symbol("w")
+    x = Symbol("x")
+    global_assumptions.add(Assume(w, Q.real, True))
+    global_assumptions.add(Assume(x, Q.real, True))
     e =  w**(-2)*(w*exp(1/x - w) - w*exp(1/x))
     assert e.nseries(w, 0, 3) == -exp(1/x) + w * exp(1/x) / 2  + O(w**2)
+    global_assumptions.discard(Assume(w, Q.real, True))
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 def test_series3():
-    w = Symbol("w", real=True)
-    x = Symbol("x", real=True)
+    w = Symbol("w")
+    x = Symbol("x")
+    global_assumptions.add(Assume(w, Q.real, True))
+    global_assumptions.add(Assume(x, Q.real, True))
     e = w**(-6)*(w**3*tan(w) - w**3*sin(w))
     assert e.nseries(w, 0, 5) == Integer(1)/2 + O(w**2)
+    global_assumptions.discard(Assume(w, Q.real, True))
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 def test_bug4():
     w = Symbol("w")

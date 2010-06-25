@@ -1,4 +1,4 @@
-from sympy import Symbol, Rational, Order, C, exp, ln, log, O, var, nan, pi, S
+from sympy import Symbol, Rational, Order, C, exp, ln, log, O, var, nan, pi, S, global_assumptions, Q, Assume
 from sympy.utilities.pytest import XFAIL
 from sympy.abc import w, x, y, z
 
@@ -143,8 +143,11 @@ def test_multivar_3():
 
 def test_issue369():
     x = Symbol('x')
-    y = Symbol('y', negative=True)
-    z = Symbol('z', complex=True)
+    y = Symbol('y')
+    z = Symbol('z')
+
+    global_assumptions.add(Assume(y, Q.negative, True))
+    global_assumptions.add(Assume(z, Q.complex, True))
 
     # check that Order does not modify assumptions about symbols
     Order(x)
@@ -158,6 +161,9 @@ def test_issue369():
     assert x.is_infinitesimal == None
     assert y.is_infinitesimal == None
     assert z.is_infinitesimal == None
+
+    global_assumptions.discard(Assume(y, Q.negative, True))
+    global_assumptions.discard(Assume(z, Q.complex, True))
 
 def test_leading_order():
     assert (x+1+1/x**5).extract_leading_order(x) == ((1/x**5, O(1/x**5)),)

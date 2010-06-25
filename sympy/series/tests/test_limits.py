@@ -1,5 +1,5 @@
 from sympy import limit, exp, oo, log, sqrt, Limit, sin, floor, cos, ceiling, \
-        atan, Symbol, S, pi, Integral, cot
+        atan, Symbol, S, pi, Integral, cot, global_assumptions, Q, Assume
 from sympy.abc import x, y, z
 from sympy.utilities.pytest import XFAIL
 
@@ -105,9 +105,11 @@ def test_ceiling():
     assert limit(ceiling(5+cos(x)), x, 0, "-") == 6
 
 def test_atan():
-    x = Symbol("x", real=True)
+    x = Symbol("x")
+    global_assumptions.add(Assume(x, Q.real, True))
     assert limit(atan(x)*sin(1/x), x, 0) == 0
     assert limit(atan(x) + sqrt(x+1) - sqrt(x), x, oo) == pi/2
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 def test_abs():
     assert limit(abs(x), x, 0) == 0
@@ -116,14 +118,18 @@ def test_abs():
     assert limit(abs(sin(x+1)), x, 0) == sin(1)
 
 def test_heuristic():
-    x = Symbol("x", real=True)
+    x = Symbol("x")
+    global_assumptions.add(Assume(x, Q.real, True))
     assert limit(log(2+sqrt(atan(x))*sqrt(sin(1/x))), x, 0) == log(2)
+    global_assumptions.discard(Assume(x, Q.real, True))
 
 def test_issue772():
-    z = Symbol("z", positive=True)
+    z = Symbol("z")
+    global_assumptions.add(Assume(z, Q.positive, True))
     f = -1/z*exp(-z*x)
     assert limit(f, x, oo) == 0
     assert f.limit(x, oo) == 0
+    global_assumptions.discard(Assume(z, Q.positive, True))
 
 def test_exponential():
     n = Symbol('n')

@@ -1,4 +1,4 @@
-from sympy import SYMPY_DEBUG
+from sympy import SYMPY_DEBUG, global_assumptions, Q, Assume
 from sympy.core import Basic, S, oo, Symbol, sympify, C, I
 from sympy.functions import log, exp
 from sympy.series.order import Order
@@ -400,7 +400,9 @@ def mrv_leadterm(e, x, Omega=[]):
     # in the algorithm). For limits of complex functions, the algorithm would
     # have to be improved, or just use limits of Re and Im components
     # separately.
-    wsym = Symbol("w", real=True, positive=True, dummy=True)
+    wsym = Symbol("wysm", dummy=True)
+    global_assumptions.add(Assume(wsym, Q.real, True))
+    global_assumptions.add(Assume(wsym, Q.positive, True))
     f, logw=rewrite(e, set(Omega), x, wsym)
     series = calculate_series(f, wsym)
     series=series.subs(log(wsym), logw)

@@ -1,6 +1,6 @@
 from sympy import symbols, Matrix, eye, I, Symbol, Rational, wronskian, cos, \
         sin, exp, hessian, sqrt, zeros, ones, randMatrix, Poly, S, pi, \
-        oo, raises, trigsimp, Integer, block_diag, N
+        oo, raises, trigsimp, Integer, block_diag, N, global_assumptions, Assume, Q
 from sympy.matrices.matrices import ShapeError, MatrixError, \
         matrix_multiply_elementwise
 
@@ -512,7 +512,9 @@ def test_eigen():
     r2=[(NS(r[i][0],2),NS(r[i][1],2),[NS(j,2) for j in r[i][2][0]]) for i in range(len(r))]
     assert sorted(r1) == sorted(r2)
 
-    eps = Symbol('eps',real=True)
+    eps = Symbol('eps')
+
+    global_assumptions.add(Assume(eps, Q.real, True))
 
     M = Matrix([[abs(eps), I*eps    ],
                [-I*eps,   abs(eps) ]])
@@ -520,6 +522,8 @@ def test_eigen():
     assert canonicalize(M.eigenvects()) == canonicalize(
         [( 2*abs(eps), 1, [ Matrix([[I*eps/abs(eps)],[1]]) ] ),
          ( 0, 1, [Matrix([[-I*eps/abs(eps)],[1]])]) ])
+
+    global_assumptions.discard(Assume(eps, Q.real, True))
 
 def test_sparse_matrix():
     return
@@ -842,8 +846,10 @@ def test_subs():
 
 def test_simplify():
     x,y,f,n = symbols('xyfn')
+    # FIXME: We need a single copy of f(x) since the cache is disabled.
+    fx = f(x)
     M = Matrix([ [    1/x + 1/y,               (x + x*y)/ x             ],
-                 [(f(x) + y*f(x))/f(x), 2 * (1/n - cos(n * pi)/n)/ pi ]
+                 [(fx + y*fx)/fx, 2 * (1/n - cos(n * pi)/n)/ pi ]
                  ])
     M.simplify()
     assert M ==  Matrix([[(x + y)/(x * y),               1 + y           ],

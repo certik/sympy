@@ -1375,7 +1375,7 @@ def nsimplify(expr, constants=[], tolerance=None, full=False):
     for constant in constants:
         constant = sympify(constant)
         v = constant.evalf(prec)
-        if not v.is_Real:
+        if not v.is_real:
             raise ValueError("constants must be real-valued")
         constants_dict[str(constant)] = v._to_mpmath(bprec)
 
@@ -1383,7 +1383,7 @@ def nsimplify(expr, constants=[], tolerance=None, full=False):
     re, im = exprval.as_real_imag()
 
     # Must be numerical
-    if not ((re.is_Real or re.is_Integer) and (im.is_Real or im.is_Integer)):
+    if not ((re.is_real or re.is_integer) and (im.is_real or im.is_integer)):
         return expr
 
     def nsimplify_real(x):

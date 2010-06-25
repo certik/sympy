@@ -1064,7 +1064,7 @@ class Expr(Basic, EvalfMixin):
         elif '_eval_is_bounded' in dir(self):
             return self._eval_is_bounded()
         else:
-            return False
+            return None
 
     @property
     def is_unbounded(self):

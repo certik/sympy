@@ -269,7 +269,7 @@ class Add(AssocOp):
 
         # Check the case where one is positive and greater than the other
         # We make sure that they're real so we can compare them properly
-        if c.is_real and r.is_real:
+        if c.is_number and r.is_number and c.is_real and r.is_real:
             if c.is_positive:
                 return c.evalf() > abs(r).evalf()
             if r.is_positive:
@@ -298,7 +298,7 @@ class Add(AssocOp):
 
         # Check the case where one is positive and greater than the other
         # We make sure that they're real so we can compare them properly
-        if c.is_real and r.is_real:
+        if c.is_number and r.is_number and c.is_real and r.is_real:
             if c.is_negative:
                 return abs(c).evalf() > r.evalf()
             if r.is_negative:

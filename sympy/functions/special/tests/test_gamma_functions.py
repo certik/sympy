@@ -1,9 +1,9 @@
 from sympy import Symbol, gamma, oo, nan, zoo, factorial, sqrt, Rational, log,\
-        polygamma, EulerGamma, pi, uppergamma, S, expand_func
+        polygamma, EulerGamma, pi, uppergamma, S, expand_func, global_assumptions, Assume, Q
 
 x = Symbol('x')
 y = Symbol('y')
-n = Symbol('n', integer=True)
+n = Symbol('n')
 
 def test_gamma():
 
@@ -47,6 +47,8 @@ def test_uppergamma():
 
 def test_polygamma():
 
+    global_assumptions.add(Assume(n, Q.integer, True))
+
     assert polygamma(n, nan) == nan
 
     assert polygamma(0, oo) == oo
@@ -71,6 +73,8 @@ def test_polygamma():
     assert polygamma(5, 1) == 8 * pi**6 / 63
 
     assert polygamma(3, 7*x).diff(x) == 7*polygamma(4, 7*x)
+
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_polygamma_expand_func():
     assert polygamma(0, x).expand(func=True) == polygamma(0, x)

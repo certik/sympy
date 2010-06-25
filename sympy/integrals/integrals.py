@@ -153,7 +153,7 @@ class Integral(Expr):
 
             if antideriv is None:
                 newargs = (function, self.__getnewargs__()[1])
-                return self.new(*newargs)
+                return self.__class__(*newargs)
             else:
                 if ab is None:
                     function = antideriv

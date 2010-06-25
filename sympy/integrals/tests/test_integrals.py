@@ -1,12 +1,11 @@
 from sympy import (S, symbols, integrate, Integral, Derivative, exp, oo, Symbol,
         Function, Rational, log, sin, cos, pi, E, I, Poly, LambertW, diff,
         Matrix, sympify, sqrt, atan, asin, acos, atan, DiracDelta, Heaviside,
-        raises, Lambda, sstr)
+        raises, Lambda, sstr, global_assumptions, Q, Assume)
 from sympy.utilities.pytest import XFAIL, skip
 from sympy.physics.units import m, s
 
-x,y,a,t = symbols('xyat')
-n = Symbol('n', integer=True)
+x,y,a,t,n = symbols('xyatn')
 f = Function('f')
 
 def test_improper_integral():
@@ -134,17 +133,21 @@ def test_issue519():
                                                2*pi*x**Rational(3,2)/3  + \
                                                2*E *x**Rational(5,2)/5
 def test_issue524():
+    global_assumptions.add(Assume(n, Q.integer, True))
     assert integrate(cos((n+1) * x), x)   == sin(x*(n+1)) / (n+1)
     assert integrate(cos((n-1) * x), x)   == sin(x*(n-1)) / (n-1)
 
     assert integrate(cos((n+1) * x) + cos((n-1) * x), x) == \
                                              sin(x*(n+1)) / (n+1)  + \
                                              sin(x*(n-1)) / (n-1)
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_issue565():
+    global_assumptions.add(Assume(n, Q.integer, True))
     assert integrate(-1./2 * x * sin(n * pi * x/2), [x, -2, 0])  == 2*cos(pi*n)/(pi*n)
     assert integrate(-Rational(1)/2 * x * sin(n * pi * x/2), [x, -2, 0]) \
                                                                  == 2*cos(pi*n)/(pi*n)
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_issue580():
     # definite integration of rational functions gives wrong answers

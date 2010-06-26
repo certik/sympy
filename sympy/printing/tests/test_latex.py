@@ -1,14 +1,14 @@
 from sympy import symbols, Rational, Symbol, Integral, log, diff, sin, exp, \
         Function, factorial, floor, ceiling, abs, re, im, conjugate, gamma, \
         Order, Piecewise, Matrix, asin, Interval, EmptySet, Union, S, Sum, \
-        Limit, oo, Poly, raises
+        Limit, oo, Poly, raises, global_assumptions, Assume, Q
 from sympy.abc import mu, tau
 from sympy.printing.latex import latex
 from sympy.utilities.pytest import XFAIL
 from sympy.functions import DiracDelta
 
 x,y = symbols('xy')
-k,n = symbols('kn', integer=True)
+k,n = symbols('kn')
 
 def test_printmethod():
     class R(abs):
@@ -58,6 +58,8 @@ def test_latex_symbols():
     #assert latex(mass**3 * volume**3) == r"{\mathrm{mass}}^{3} \cdot {\mathrm{volume}}^{3}"
 
 def test_latex_functions():
+    global_assumptions.add(Assume(k, Q.integer, True))
+    global_assumptions.add(Assume(n, Q.integer, True))
     assert latex(exp(x)) == "e^{x}"
     assert latex(exp(1)+exp(2)) == "e + e^{2}"
 
@@ -93,6 +95,8 @@ def test_latex_functions():
     assert latex(conjugate(x)) == r"\overline{x}"
     assert latex(gamma(x)) == r"\operatorname{\Gamma}\left(x\right)"
     assert latex(Order(x)) == r"\operatorname{\mathcal{O}}\left(x\right)"
+    global_assumptions.discard(Assume(k, Q.integer, True))
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_latex_brackets():
     assert latex((-1)**x) == r"\left(-1\right)^{x}"
@@ -114,12 +118,14 @@ def test_latex_integrals():
         == r"$$\int\int_{0}^{1} y x^{2}\,dx dy$$"
 
 def test_latex_intervals():
-    a = Symbol('a', real=True)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
     assert latex(Interval(0, a)) == r"\left[0, a\right]"
     assert latex(Interval(0, a, False, False)) == r"\left[0, a\right]"
     assert latex(Interval(0, a, True, False)) == r"\left(0, a\right]"
     assert latex(Interval(0, a, False, True)) == r"\left[0, a\right)"
     assert latex(Interval(0, a, True, True)) == r"\left(0, a\right)"
+    global_assumptions.discard(Assume(a, Q.real, False))
 
 def test_latex_emptyset():
     assert latex(S.EmptySet) == r"\emptyset"

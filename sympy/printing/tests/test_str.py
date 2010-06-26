@@ -2,7 +2,7 @@ from sympy import abs, Catalan, cos, Derivative, E, EulerGamma, exp, factorial,\
                   Function, GoldenRatio, I, Integer, Integral, Interval, Lambda,\
                   Limit, log, Matrix, nan, O, oo, pi, Rational, Real, Rel, S,\
                   sin, SMatrix, sqrt, sum, Sum, Sum2, Symbol, symbols, Wild,\
-                  WildFunction, zeta, zoo, raises
+                  WildFunction, zeta, zoo, raises, global_assumptions, Assume, Q
 from sympy.core import Expr
 from sympy.physics.units import second
 from sympy.polys import Poly, RootsOf, RootOf, RootSum
@@ -72,12 +72,14 @@ def test_Exp():
     assert str(E) == "E"
 
 def test_Factorial():
-    n = Symbol('n', integer=True)
+    n = Symbol('n')
+    global_assumptions.add(Assume(n, Q.integer, True))
     assert str(factorial(-2)) == "0"
     assert str(factorial(0)) == "1"
     assert str(factorial(7)) == "5040"
     assert str(factorial(n)) == "n!"
     assert str(factorial(2*n)) == "(2*n)!"
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 def test_Function():
     f = Function('f')
@@ -113,12 +115,14 @@ def test_Integral():
     assert str(Integral(sin(x), (y, 0, 1))) == "Integral(sin(x), (y, 0, 1))"
 
 def test_Interval():
-    a = Symbol('a', real=True)
+    a = Symbol('a')
+    global_assumptions.add(Assume(a, Q.real, True))
     assert str(Interval(0, a)) == "[0, a]"
     assert str(Interval(0, a, False, False)) == "[0, a]"
     assert str(Interval(0, a, True, False)) == "(0, a]"
     assert str(Interval(0, a, False, True)) == "[0, a)"
     assert str(Interval(0, a, True, True)) == "(0, a)"
+    global_assumptions.add(Assume(a, Q.real, False))
 
 def test_Lambda():
     assert str(Lambda(d, d**2)) == "Lambda(_d, _d**2)"
@@ -149,14 +153,18 @@ def test_Mul():
         pass
     class CustomClass2(Expr):
         pass
-    cc1 = CustomClass1(commutative=True)
-    cc2 = CustomClass2(commutative=True)
+    cc1 = CustomClass1()
+    cc2 = CustomClass2()
+    global_assumptions.add(Assume(cc1, Q.commutative, True))
+    global_assumptions.add(Assume(cc2, Q.commutative, True))
     assert str(Rational(2)*cc1) == '2*CustomClass1()'
     assert str(cc1*Rational(2)) == '2*CustomClass1()'
     assert str(cc1*Real("1.5")) == '1.5*CustomClass1()'
     assert str(cc2*Rational(2)) == '2*CustomClass2()'
     assert str(cc2*Rational(2)*cc1) == '2*CustomClass1()*CustomClass2()'
     assert str(cc1*Rational(2)*cc2) == '2*CustomClass1()*CustomClass2()'
+    global_assumptions.discard(Assume(cc1, Q.commutative, True))
+    global_assumptions.discard(Assume(cc2, Q.commutative, True))
 
 def test_NaN():
     assert str(nan) == "nan"

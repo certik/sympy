@@ -2,7 +2,8 @@
 from sympy import Matrix, Piecewise, Ne, symbols, sqrt, Function, raises, \
     Rational, conjugate, Derivative, tan, Function, log, floor, Symbol, \
     pprint, sqrt, factorial, pi, sin, ceiling, pprint_use_unicode, I, S, \
-    Limit, oo, cos, Pow, Integral, exp, Eq, Lt, Gt, Ge, Le, gamma
+    Limit, oo, cos, Pow, Integral, exp, Eq, Lt, Gt, Ge, Le, gamma, Assume, \
+    Q, global_assumptions
 
 from sympy.printing.pretty import pretty as xpretty
 from sympy.printing.pretty import pprint
@@ -837,6 +838,7 @@ u"""\
     assert upretty(expr) == ucode_str
 
     n = Symbol('n', integer=True)
+    global_assumptions.add(Assume(n, Q.integer, True))
     expr = factorial(n)
     ascii_str = \
 """\
@@ -1117,6 +1119,8 @@ u"""\
 """
     assert  pretty(expr) == ascii_str
     assert upretty(expr) == ucode_str
+
+    global_assumptions.discard(Assume(n, Q.integer, True))
 
 
 def test_pretty_sqrt():

@@ -10,7 +10,7 @@ from sympy.physics.secondquant import (
 from sympy import (
     symbols, Symbol, sympify,
     sqrt, Rational, Sum, I, simplify,
-    expand, Function
+    expand, Function, global_assumptions, Q, Assume
 )
 
 
@@ -266,7 +266,10 @@ def test_commutation():
     assert c == -1 + 2*NO(Fd(m)*F(m))
 
     C = Commutator
-    X,Y,Z = symbols('XYZ',commutative=False)
+    X,Y,Z = symbols('XYZ')
+    global_assumptions.add(Assume(X, Q.commutative, False))
+    global_assumptions.add(Assume(Y, Q.commutative, False))
+    global_assumptions.add(Assume(Z, Q.commutative, False))
     assert C(C(X,Y),Z) != 0
     assert C(C(X,Z),Y) != 0
     assert C(Y,C(X,Z)) != 0
@@ -281,6 +284,10 @@ def test_commutation():
     assert C(Fd(a),F(i)) == -2*NO(F(i)*Fd(a))
     assert C(Fd(j),NO(Fd(a)*F(i))).doit() == -D(j,i)*Fd(a)
     assert C(Fd(a)*F(i),Fd(b)*F(j)).doit() == 0
+
+    global_assumptions.discard(Assume(X, Q.commutative, False))
+    global_assumptions.discard(Assume(Y, Q.commutative, False))
+    global_assumptions.discard(Assume(Z, Q.commutative, False))
 
 def test_create_f():
     i, j, n, m = symbols('i j n m')

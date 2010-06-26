@@ -374,9 +374,9 @@ class KroneckerDelta(Function):
         elif diff.is_number:
             return S.Zero
 
-        if i.assumptions0.get("below_fermi") and j.assumptions0.get("above_fermi"):
+        if i._options.get("below_fermi") and j._options.get("above_fermi"):
             return S.Zero
-        if j.assumptions0.get("below_fermi") and i.assumptions0.get("above_fermi"):
+        if j._options.get("below_fermi") and i._options.get("above_fermi"):
             return S.Zero
 
     def _eval_subs(self, old, new):
@@ -402,9 +402,9 @@ class KroneckerDelta(Function):
         True
 
         """
-        if self.args[0].assumptions0.get("below_fermi"):
+        if self.args[0]._options.get("below_fermi"):
             return False
-        if self.args[1].assumptions0.get("below_fermi"):
+        if self.args[1]._options.get("below_fermi"):
             return False
         return True
 
@@ -427,9 +427,9 @@ class KroneckerDelta(Function):
         True
 
         """
-        if self.args[0].assumptions0.get("above_fermi"):
+        if self.args[0]._options.get("above_fermi"):
             return False
-        if self.args[1].assumptions0.get("above_fermi"):
+        if self.args[1]._options.get("above_fermi"):
             return False
         return True
 
@@ -452,9 +452,9 @@ class KroneckerDelta(Function):
         False
 
         """
-        return ( self.args[0].assumptions0.get("above_fermi")
+        return ( self.args[0]._options.get("above_fermi")
                 or
-                self.args[1].assumptions0.get("above_fermi")
+                self.args[1]._options.get("above_fermi")
                 ) or False
 
     @property
@@ -476,9 +476,9 @@ class KroneckerDelta(Function):
         False
 
         """
-        return ( self.args[0].assumptions0.get("below_fermi")
+        return ( self.args[0]._options.get("below_fermi")
                 or
-                self.args[1].assumptions0.get("below_fermi")
+                self.args[1]._options.get("below_fermi")
                 ) or False
 
     @property
@@ -502,11 +502,11 @@ class KroneckerDelta(Function):
         False
 
         """
-        if (self.args[0].assumptions0.get("below_fermi") and
-                self.args[1].assumptions0.get("below_fermi")):
+        if (self.args[0]._options.get("below_fermi") and
+                self.args[1]._options.get("below_fermi")):
             return True
-        if (self.args[0].assumptions0.get("above_fermi")
-                and self.args[1].assumptions0.get("above_fermi")):
+        if (self.args[0]._options.get("above_fermi")
+                and self.args[1]._options.get("above_fermi")):
             return True
 
         # if both indices are general we are True, else false
@@ -577,12 +577,12 @@ class KroneckerDelta(Function):
         level.  If indices contain same information, index 0 is returned.
         """
         if not self.is_above_fermi:
-            if self.args[0].assumptions0.get("below_fermi"):
+            if self.args[0]._options.get("below_fermi"):
                 return 0
             else:
                 return 1
         elif not self.is_below_fermi:
-            if self.args[0].assumptions0.get("above_fermi"):
+            if self.args[0]._options.get("above_fermi"):
                 return 0
             else:
                 return 1
@@ -614,9 +614,10 @@ class SqOperator(Expr):
     """
 
     op_symbol = 'sq'
+    is_commutative = False
 
     def __new__(cls, k):
-        obj = Basic.__new__(cls, sympify(k), commutative=False)
+        obj = Basic.__new__(cls, sympify(k))
         return obj
 
     def _eval_subs(self, old, new):
@@ -657,7 +658,7 @@ class SqOperator(Expr):
         False
 
         """
-        if self.state.is_Integer:
+        if self.state.is_integer:
             return False
         else:
             return True
@@ -768,7 +769,7 @@ class FermionicOperator(SqOperator):
         0
 
         """
-        ass = self.args[0].assumptions0
+        ass = self.args[0]._options
         if ass.get("below_fermi"): return -1
         if ass.get("above_fermi"): return  1
         return 0
@@ -796,7 +797,7 @@ class FermionicOperator(SqOperator):
         The same applies to creation operators Fd
 
         """
-        return not self.args[0].assumptions0.get("below_fermi")
+        return not self.args[0]._options.get("below_fermi")
 
     @property
     def is_below_fermi(self):
@@ -819,7 +820,7 @@ class FermionicOperator(SqOperator):
         The same applies to creation operators Fd
 
         """
-        return not self.args[0].assumptions0.get("above_fermi")
+        return not self.args[0]._options.get("above_fermi")
 
     @property
     def is_only_below_fermi(self):
@@ -1162,6 +1163,9 @@ class FockState(Expr):
     All code must check for this!
     """
 
+    is_number = False
+    is_commutative = False
+
     def __new__(cls, occupations):
         """
         occupations is a list with two possible meanings:
@@ -1174,7 +1178,7 @@ class FockState(Expr):
           is the i'th occupied state.
         """
         o = map(sympify, occupations)
-        obj = Basic.__new__(cls, tuple(o), commutative=False)
+        obj = Basic.__new__(cls, tuple(o))
         return obj
 
     def _eval_subs(self, old, new):
@@ -1363,7 +1367,7 @@ class FermionState(FockState):
         """
         if i.is_number:
             return i<= cls.fermi_level
-        if i.assumptions0.get('below_fermi'):
+        if i._options.get('below_fermi'):
             return True
         return False
 
@@ -1378,7 +1382,7 @@ class FermionState(FockState):
         """
         if i.is_number:
             return i> cls.fermi_level
-        if i.assumptions0.get('above_fermi'):
+        if i._options.get('above_fermi'):
             return True
         return not cls.fermi_level
 
@@ -1503,7 +1507,7 @@ def apply_Mul(m):
                         return apply_Mul(Mul(*(c_part+nc_part[:-2]+[result])))
             elif isinstance(next_to_last, Pow):
                 if isinstance(next_to_last.base, SqOperator) and \
-                    next_to_last.exp.is_Integer:
+                    next_to_last.exp.is_integer:
                     if next_to_last.base.is_symbolic:
                         return m
                     else:
@@ -1549,13 +1553,16 @@ class InnerProduct(Basic):
     <a|b>.
 
     """
+
+    is_commutative = False
+
     def __new__(cls, bra, ket):
         assert isinstance(bra, FockStateBra), 'must be a bra'
         assert isinstance(ket, FockStateKet), 'must be a key'
         r = cls.eval(bra, ket)
         if isinstance(r, Basic):
             return r
-        obj = Basic.__new__(cls, *(bra, ket), **dict(commutative=True))
+        obj = Basic.__new__(cls, *(bra, ket))
         return obj
 
     @classmethod
@@ -2046,7 +2053,7 @@ class NO(Function):
         subslist=[]
         for i in self.iter_q_creators():
             if self[i].is_q_annihilator:
-                assume = self[i].state.assumptions0
+                assume = self[i].state._options
                 assume["dummy"]=True
                 Dummy = type(Symbol('x',dummy=True))
 
@@ -2231,25 +2238,25 @@ def contraction(a,b):
     """
     if isinstance(b,FermionicOperator) and isinstance(a,FermionicOperator):
         if isinstance(a,AnnihilateFermion) and isinstance(b,CreateFermion):
-            if b.state.assumptions0.get("below_fermi"):
+            if b.state._options.get("below_fermi"):
                 return S.Zero
-            if a.state.assumptions0.get("below_fermi"):
+            if a.state._options.get("below_fermi"):
                 return S.Zero
-            if b.state.assumptions0.get("above_fermi"):
+            if b.state._options.get("above_fermi"):
                 return KroneckerDelta(a.state,b.state)
-            if a.state.assumptions0.get("above_fermi"):
+            if a.state._options.get("above_fermi"):
                 return KroneckerDelta(a.state,b.state)
 
             return (KroneckerDelta(a.state,b.state)*
                     KroneckerDelta(b.state,Symbol('a',dummy=True,above_fermi=True)))
         if isinstance(b,AnnihilateFermion) and isinstance(a,CreateFermion):
-            if b.state.assumptions0.get("above_fermi"):
+            if b.state._options.get("above_fermi"):
                 return S.Zero
-            if a.state.assumptions0.get("above_fermi"):
+            if a.state._options.get("above_fermi"):
                 return S.Zero
-            if b.state.assumptions0.get("below_fermi"):
+            if b.state._options.get("below_fermi"):
                 return KroneckerDelta(a.state,b.state)
-            if a.state.assumptions0.get("below_fermi"):
+            if a.state._options.get("below_fermi"):
                 return KroneckerDelta(a.state,b.state)
 
             return (KroneckerDelta(a.state,b.state)*
@@ -2433,7 +2440,7 @@ def _get_dummies(expr, arg_iterator, **require):
             if arg.dummy_index:
                 # here we check that the dummy matches requirements
                 for key,val in require.items():
-                    if val != arg.assumptions0.get(key, False):
+                    if val != arg._options.get(key, False):
                         break
                 else:
                     result.append(arg)
@@ -2498,10 +2505,10 @@ def _substitute(expr, ordered_dummies, arg_iterator, **require):
     Substitute dummies in expr
 
     If keyword arguments are given, those dummies that have an identical
-    keyword in .assumptions0 must provide the same value (True or False)
+    keyword in ._options must provide the same value (True or False)
     to be substituted.
 
-    Dummies without the keyword in .assumptions0 will be default to
+    Dummies without the keyword in ._options will be default to
     give the value False.
 
     Warning
@@ -2667,7 +2674,7 @@ def substitute_dummies(expr, new_indices=False, reverse_order=True, pretty_indic
     # generate lists with the dummies we will insert
     a = i = p = 0
     for d in dummies:
-        assum = d.assumptions0
+        assum = d._options
         assum["dummy"]=True
 
         if assum.get("above_fermi"):

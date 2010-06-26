@@ -30,6 +30,9 @@ from sympy.mpmath import findroot
 
 from sympy.solvers.polysys import solve_poly_system
 
+from sympy.assumptions import global_assumptions, Assume
+from sympy.assumptions.ask import Q as assumption_choices
+
 from warnings import warn
 
 # Codes for guess solve strategy
@@ -260,7 +263,8 @@ def solve(f, *symbols, **flags):
                     m = reduce(ilcm, exponents_denom)
                 # x -> y**m.
                 # we assume positive for simplification purposes
-                t = Symbol('t', positive=True, dummy=True)
+                t = Symbol('sympy-solvers-solvers-t', dummy=True)
+                global_assumptions.add(Assume(t, assumption_choices.positive, True))
                 f_ = f.subs(symbol, t**m)
                 if guess_solve_strategy(f_, t) != GS_POLY:
                     raise NotImplementedError("Could not convert to a polynomial equation: %s" % f_)

@@ -1285,9 +1285,9 @@ def constantsimp(expr, independentsymbol, endnumber, startnumber=1,
             else:
                 newfuncargs = [constantsimp(t, x, endnumber, startnumber,
                 symbolname) for t in expr.args]
-                return expr.new(*newfuncargs)
+                return expr.__class__(*newfuncargs)
         else:
-            newexpr = expr.new(*newargs)
+            newexpr = expr.__class__(*newargs)
             if reeval:
                 return constantsimp(newexpr, x, endnumber, startnumber,
                 symbolname)
@@ -1355,12 +1355,12 @@ def ode_renumber(expr, symbolname, startnumber, endnumber):
             return newconst
         else:
             if expr.is_Function or expr.is_Pow:
-                return expr.new(*map(lambda x: _ode_renumber(x, symbolname, \
+                return expr.__class__(*map(lambda x: _ode_renumber(x, symbolname, \
                 startnumber, endnumber), expr.args))
             else:
                 sortedargs = list(expr.args)
                 sortedargs.sort(Basic._compare_pretty)
-                return expr.new(*map(lambda x: _ode_renumber(x, symbolname, \
+                return expr.__class__(*map(lambda x: _ode_renumber(x, symbolname, \
                 startnumber, endnumber), sortedargs))
 
 

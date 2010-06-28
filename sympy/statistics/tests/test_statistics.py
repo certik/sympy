@@ -1,4 +1,4 @@
-from sympy import sqrt, Rational, oo, Symbol, exp, pi
+from sympy import sqrt, Rational, oo, Symbol, exp, pi, global_assumptions, Assume, Q
 from sympy.functions import erf
 from sympy.statistics import Normal, Uniform
 from sympy.statistics.distributions import PDF
@@ -61,8 +61,12 @@ def test_sample():
     assert s.median == Rational(5,2)
 
 def test_PDF():
-    a = Symbol('a', positive=True)
-    x = Symbol('x', real=True)
+    a = Symbol('a')
+    x = Symbol('x')
+
+    global_assumptions.add(Assume(a, Q.positive, True))
+    global_assumptions.add(Assume(x, Q.real, True))
+
     exponential = PDF(exp(-x/a), (x,0,oo))
     exponential = exponential.normalize()
     assert exponential.pdf(x) == 1/a*exp(-x/a)
@@ -70,3 +74,6 @@ def test_PDF():
     assert exponential.mean == a
     assert exponential.variance == a**2
     assert exponential.stddev == a
+
+    global_assumptions.discard(Assume(a, Q.positive, True))
+    global_assumptions.discard(Assume(x, Q.real, True))

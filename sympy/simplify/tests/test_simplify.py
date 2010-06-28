@@ -2,7 +2,8 @@ from sympy import Symbol, symbols, together, hypersimp, factorial, binomial, \
         collect, Function, powsimp, separate, sin, exp, Rational, fraction, \
         simplify, trigsimp, cos, tan, cot, log, ratsimp, Matrix, pi, integrate, \
         solve, nsimplify, GoldenRatio, sqrt, E, I, sympify, atan, Derivative, \
-        S, diff, oo, Eq, Integer, gamma, acos, Integral, logcombine, separatevars
+        S, diff, oo, Eq, Integer, gamma, acos, Integral, logcombine, separatevars, \
+        global_assumptions, Assume, Q
 from sympy.utilities import all
 from sympy.utilities.pytest import XFAIL
 
@@ -250,8 +251,11 @@ def test_powsimp():
     assert powsimp((1 + E*exp(E))*exp(-E)) == (1 + E*exp(E))*exp(-E)
     assert powsimp((1 + E*exp(E))*exp(-E), combine='exp') == (1 + E*exp(E))*exp(-E)
     assert powsimp((1 + E*exp(E))*exp(-E), combine='base') == (1 + E*exp(E))*exp(-E)
-    x,y = symbols('xy', nonnegative=True)
-    n = Symbol('n', real=True)
+    x,y = symbols('xy')
+    n = Symbol('n')
+    global_assumptions.add(Assume(x, Q.negative, False))
+    global_assumptions.add(Assume(y, Q.negative, False))
+    global_assumptions.add(Assume(n, Q.real, True))
     assert powsimp( y**n * (y/x)**(-n) ) == x**n
     assert powsimp(x**(x**(x*y)*y**(x*y))*y**(x**(x*y)*y**(x*y)),deep=True) == (x*y)**(x*y)**(x*y)
     assert powsimp(2**(2**(2*x)*x), deep=False) == 2**(2**(2*x)*x)
@@ -264,6 +268,9 @@ def test_powsimp():
     assert powsimp(x*y**(z**x*z**y), deep=True) == x*y**(z**(x + y))
     assert powsimp((z**x*z**y)**x, deep=True) == (z**(x + y))**x
     assert powsimp(x*(z**x*z**y)**x, deep=True) == x*(z**(x + y))**x
+    global_assumptions.discard(Assume(x, Q.negative, False))
+    global_assumptions.discard(Assume(y, Q.negative, False))
+    global_assumptions.discard(Assume(n, Q.real, True))
 
 
 def test_collect_1():
@@ -365,9 +372,11 @@ def test_separatevars():
     assert separatevars(1+x+y+x*y) == (x+1)*(y+1)
     assert separatevars(y / pi * exp(-(z - x) / cos(n))) == y * exp((x - z) / cos(n)) / pi
     # 1759
-    p=Symbol('p',positive=True)
+    p=Symbol('p')
+    global_assumptions.add(Assume(p, Q.positive, True))
     assert separatevars(sqrt(p**2 + x*p**2)) == p*sqrt(1 + x)
     assert separatevars(sqrt(y*(p**2 + x*p**2))) == p*sqrt(y)*sqrt(1 + x)
+    global_assumptions.discard(Assume(p, Q.positive, True))
 
 def test_separatevars_advanced_factor():
     x,y,z = symbols('xyz')
@@ -375,11 +384,18 @@ def test_separatevars_advanced_factor():
     assert separatevars(1 + x - log(z) - x*log(z) - exp(y)*log(z) - \
         x*exp(y)*log(z) + x*exp(y) + exp(y)) == \
         (1 + x)*(1 - log(z))*(1 + exp(y))
-    x, y = symbols('xy', positive=True)
+    x, y = symbols('xy')
+    global_assumptions.add(Assume(x, Q.positive, True))
+    global_assumptions.add(Assume(y, Q.positive, True))
     assert separatevars(1 + log(x**log(y)) + log(x*y)) == (log(x) + 1)*(log(y) + 1)
+    global_assumptions.discard(Assume(x, Q.positive, True))
+    global_assumptions.discard(Assume(y, Q.positive, True))
 
 def test_hypersimp():
-    n, k = symbols('nk', integer=True)
+    n, k = symbols('nk')
+
+    global_assumptions.add(Assume(n, Q.integer, True))
+    global_assumptions.add(Assume(k, Q.integer, True))
 
     assert hypersimp(factorial(k), k) == k + 1
     assert hypersimp(factorial(k**2), k) is None
@@ -400,13 +416,20 @@ def test_hypersimp():
     term = binomial(n, k)*(-1)**k/factorial(k)
     assert hypersimp(term, k) == (k - n)/(k**2+2*k+1)
 
+    global_assumptions.discard(Assume(n, Q.integer, True))
+    global_assumptions.discard(Assume(k, Q.integer, True))
+
 def test_together2():
     x, y, z = symbols("xyz")
     assert together(1/(x*y) + 1/y**2) == 1/x*y**(-2)*(x + y)
     assert together(1/(1 + 1/x)) == x/(1 + x)
-    x = symbols("x", nonnegative=True)
-    y = symbols("y", real=True)
+    x = symbols("x")
+    y = symbols("y")
+    global_assumptions.add(Assume(x, Q.negative, False))
+    global_assumptions.add(Assume(y, Q.real, True))
     assert together(1/x**y + 1/x**(y-1)) == x**(-y)*(1 + x)
+    global_assumptions.discard(Assume(x, Q.negative, False))
+    global_assumptions.discard(Assume(y, Q.real, True))
 
 def test_nsimplify():
     x = Symbol("x")
@@ -454,8 +477,11 @@ def test_diff():
 def test_logcombine_1():
     x, y = symbols("xy")
     a = Symbol("a")
-    z, w = symbols("zw", positive=True)
-    b = Symbol("b", real=True)
+    z, w = symbols("zw")
+    b = Symbol("b")
+    global_assumptions.add(Assume(z, Q.positive, True))
+    global_assumptions.add(Assume(w, Q.positive, True))
+    global_assumptions.add(Assume(b, Q.real, True))
     assert logcombine(log(x)+2*log(y)) == log(x) + 2*log(y)
     assert logcombine(log(x)+2*log(y), assume_pos_real=True) == log(x*y**2)
     assert logcombine(a*log(w)+log(z)) == a*log(w) + log(z)
@@ -490,6 +516,9 @@ def test_logcombine_1():
     assert logcombine(Integral((sin(x**2)+cos(x**3))/x, x)+ (2+3*I)*log(x), \
         assume_pos_real=True) == log(x**2)+3*I*log(x) + \
         Integral((sin(x**2)+cos(x**3))/x, x)
+    global_assumptions.discard(Assume(z, Q.positive, True))
+    global_assumptions.discard(Assume(w, Q.positive, True))
+    global_assumptions.discard(Assume(b, Q.real, True))
 
 @XFAIL
 def test_logcombine_2():

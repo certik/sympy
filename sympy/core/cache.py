@@ -79,7 +79,6 @@ def __cacheit(func):
         else:
             k = args
 
-        # FIXME: Commenting this out to avoid caching for now.
         try:
             return func_cache_it_cache[k]
         except KeyError:

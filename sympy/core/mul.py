@@ -247,7 +247,7 @@ class Mul(AssocOp):
                     coeff *= b
                 else:
                     c_part.append(b)
-            elif e.is_integer and b.is_Number:
+            elif e.is_Integer and b.is_Number:
                 coeff *= b ** e
             else:
                 obj = b**e

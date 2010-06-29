@@ -11,14 +11,6 @@ class Symbol(Atom, Expr, Boolean):
     Assumptions::
        commutative = True
 
-    You can override the default assumptions in the constructor::
-       >>> from sympy import symbols
-       >>> A,B = symbols('AB', commutative = False)
-       >>> bool(A*B != B*A)
-       True
-       >>> bool(A*B*2 == 2*A*B) == True # multiplication by scalars is commutative
-       True
-
     """
 
     is_comparable = False
@@ -28,7 +20,7 @@ class Symbol(Atom, Expr, Boolean):
     is_Symbol = True
 
     def __new__(cls, name, commutative=True, dummy=False,
-                **assumptions):
+                **options):
         """if dummy == True, then this Symbol is totally unique, i.e.::
 
         >>> from sympy import Symbol
@@ -42,18 +34,15 @@ class Symbol(Atom, Expr, Boolean):
 
         """
 
-        # FIXME: This should be stripped out along with any mention of the assumptions.
-        cls.assumptions0 = assumptions
-
         # XXX compatibility stuff
         if dummy==True:
-            return Dummy(name, commutative=commutative, **assumptions)
+            return Dummy(name, commutative=commutative, **options)
         else:
-            return Symbol.__xnew_cached_(cls, name, commutative, **assumptions)
+            return Symbol.__xnew_cached_(cls, name, commutative, **options)
 
-    def __new_stage2__(cls, name, commutative=True, **assumptions):
+    def __new_stage2__(cls, name, commutative=True, **options):
         assert isinstance(name, str),`type(name)`
-        obj = Expr.__new__(cls, **assumptions)
+        obj = Expr.__new__(cls, **options)
         obj.is_commutative = commutative
         obj.name = name
         return obj
@@ -68,11 +57,11 @@ class Symbol(Atom, Expr, Boolean):
         return (self.is_commutative, self.name)
 
     def as_dummy(self):
-        return Dummy(self.name, self.is_commutative, **self.assumptions0)
+        return Dummy(self.name, self.is_commutative, **self._options)
 
     def __call__(self, *args):
         from function import Function
-        return Function(self.name, nargs=len(args))(*args, **self.assumptions0)
+        return Function(self.name, nargs=len(args))(*args, **self._options)
 
     def _eval_expand_complex(self, deep=True, **hints):
             return C.re(self) + C.im(self)*S.ImaginaryUnit
@@ -108,8 +97,8 @@ class Dummy(Symbol):
 
     __slots__ = ['dummy_index']
 
-    def __new__(cls, name, commutative=True, **assumptions):
-        obj = Symbol.__xnew__(cls, name, commutative=commutative, **assumptions)
+    def __new__(cls, name, commutative=True, **options):
+        obj = Symbol.__xnew__(cls, name, commutative=commutative, **options)
 
         Dummy.dummycount += 1
         obj.dummy_index = Dummy.dummycount
@@ -126,8 +115,8 @@ class Temporary(Dummy):
 
     __slots__ = []
 
-    def __new__(cls, **assumptions):
-        obj = Dummy.__new__(cls, 'T%i' % Dummy.dummycount, **assumptions)
+    def __new__(cls, **options):
+        obj = Dummy.__new__(cls, 'T%i' % Dummy.dummycount, **options)
         return obj
 
     def __getnewargs__(self):
@@ -141,21 +130,21 @@ class Wild(Symbol):
 
     __slots__ = ['exclude', 'properties']
 
-    def __new__(cls, name, exclude=None, properties=None, **assumptions):
+    def __new__(cls, name, exclude=None, properties=None, **options):
         if type(exclude) is list:
             exclude = tuple(exclude)
         if type(properties) is list:
             properties = tuple(properties)
 
-        return Wild.__xnew__(cls, name, exclude, properties, **assumptions)
+        return Wild.__xnew__(cls, name, exclude, properties, **options)
 
     def __getnewargs__(self):
         return (self.name, self.exclude, self.properties)
 
     @staticmethod
     @cacheit
-    def __xnew__(cls, name, exclude, properties, **assumptions):
-        obj = Symbol.__xnew__(cls, name, **assumptions)
+    def __xnew__(cls, name, exclude, properties, **options):
+        obj = Symbol.__xnew__(cls, name, **options)
 
         if exclude is None:
             obj.exclude = None
@@ -189,8 +178,8 @@ class Wild(Symbol):
         repl_dict[self] = expr
         return repl_dict
 
-    def __call__(self, *args, **assumptions):
-        return WildFunction(self.name, nargs=len(args))(*args, **assumptions)
+    def __call__(self, *args, **options):
+        return WildFunction(self.name, nargs=len(args))(*args, **options)
 
 
 def symbols(*names, **kwargs):
@@ -209,17 +198,6 @@ def symbols(*names, **kwargs):
 
     >>> symbols('xyz', each_char=False)
     xyz
-
-    All newly created symbols have assumptions set accordingly
-    to 'kwargs'. Main intention behind this function is to
-    simplify and shorten examples code in doc-strings.
-
-    >>> a = symbols('a', integer=True)
-    >>> a.is_integer
-    True
-    >>> xx, yy, zz = symbols('xx', 'yy', 'zz', real=True)
-    >>> xx.is_real and yy.is_real and zz.is_real
-    True
 
     """
     # use new behavior if space or comma in string
@@ -275,11 +253,6 @@ def var(*names, **kwargs):
     (n, xx, yy, zz)
     >>> n
     n
-    >>> var('x y', real=True)
-    (x, y)
-    >>> x.is_real and y.is_real
-    True
-
     """
     import inspect
     frame = inspect.currentframe().f_back

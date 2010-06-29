@@ -846,10 +846,8 @@ def test_subs():
 
 def test_simplify():
     x,y,f,n = symbols('xyfn')
-    # FIXME: We need a single copy of f(x) since the cache is disabled.
-    fx = f(x)
     M = Matrix([ [    1/x + 1/y,               (x + x*y)/ x             ],
-                 [(fx + y*fx)/fx, 2 * (1/n - cos(n * pi)/n)/ pi ]
+                 [(f(x) + y*f(x))/f(x), 2 * (1/n - cos(n * pi)/n)/ pi ]
                  ])
     M.simplify()
     assert M ==  Matrix([[(x + y)/(x * y),               1 + y           ],

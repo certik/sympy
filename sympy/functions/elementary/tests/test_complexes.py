@@ -103,10 +103,6 @@ def test_sign():
     global_assumptions.add(Assume(p, Q.positive, True))
     global_assumptions.add(Assume(n, Q.negative, True))
     global_assumptions.add(Assume(m, Q.negative, True))
-    # FIXME: These assumptions should be automagically applied.
-    global_assumptions.add(Assume(p, Q.negative, False))
-    global_assumptions.add(Assume(n, Q.positive, False))
-    global_assumptions.add(Assume(m, Q.positive, False))
 
     assert sign(2*p*x) == sign(x)
     assert sign(n*x) == -sign(x)
@@ -117,9 +113,6 @@ def test_sign():
     global_assumptions.discard(Assume(p, Q.positive, True))
     global_assumptions.discard(Assume(n, Q.negative, True))
     global_assumptions.discard(Assume(m, Q.negative, True))
-    global_assumptions.discard(Assume(p, Q.negative, False))
-    global_assumptions.discard(Assume(n, Q.positive, False))
-    global_assumptions.discard(Assume(m, Q.positive, False))
 
 def test_abs():
     x, y = symbols('xy')

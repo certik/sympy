@@ -54,9 +54,8 @@ def test_abs1():
 
 def test_abs2():
 
-    # FIXME: These had to be renamed because old info persisted in the cache.
-    a=Symbol("aa")
-    b=Symbol("bb")
+    a=Symbol("a")
+    b=Symbol("b")
 
     global_assumptions.add(Assume(a, Q.real, False))
     global_assumptions.add(Assume(b, Q.real, False))
@@ -70,10 +69,9 @@ def test_abs2():
 
 def test_evalc():
 
-    # FIXME: These had to be renamed because old info persisted in the cache.
-    x=Symbol("xx")
-    y=Symbol("yy")
-    z=Symbol("zz")
+    x=Symbol("x")
+    y=Symbol("y")
+    z=Symbol("z")
 
     global_assumptions.add(Assume(x, Q.real, True))
     global_assumptions.add(Assume(y, Q.real, True))

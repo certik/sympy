@@ -79,7 +79,5 @@ def test_function():
     f = Function('f')
     l,x = map(Symbol, 'lx')
 
-    # FIXME: This variable had to be created since l(x) != l(x) with the cache disabled.
-    lx = l(x)
-    assert exp(lx)*lx/exp(lx) == lx
+    assert exp(l(x))*l(x)/exp(l(x)) == l(x)
     assert exp(f(x))*f(x)/exp(f(x)) == f(x)

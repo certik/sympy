@@ -39,8 +39,6 @@ def test_issue350():
     assert ((a**Rational(1,3))**Rational(2)) == a**Rational(2,3)
     assert ((a**Rational(3))**Rational(2,5)) == (a**Rational(3))**Rational(2,5)
 
-    # FIXME: Using a,b for c,d cause an infinite loop. It seems to be due to the
-    #         previously cached expressions involving a
     c = Symbol('c')
     d = Symbol('d')
 

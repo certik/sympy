@@ -243,9 +243,7 @@ def test_is_polynomial():
     k = Symbol('k')
 
     global_assumptions.add(Assume(k, Q.integer, True))
-
-    # FIXME: This assumption should be nonnegative, but that doesn't exist yet.
-    global_assumptions.add(Assume(k, Q.positive, True))
+    global_assumptions.add(Assume(k, Q.negative, False))
 
     #nonnegative=True
 
@@ -270,11 +268,7 @@ def test_is_polynomial():
     assert (k**k).is_polynomial(k) == False
     assert (k**x).is_polynomial(k) == None
 
-
-    # FIXME: Changed to False from None, because the above assumption
-    #         has been switched to Q.positive
-    assert (x**(-k)).is_polynomial(x) == False
-
+    assert (x**(-k)).is_polynomial(x) == None
 
     assert ((2*x)**k).is_polynomial(x) == True
 
@@ -297,7 +291,7 @@ def test_is_polynomial():
     assert ((x**2)*(y**2) + x*(y**2) + y*x + exp(x)).is_polynomial(x, y) == False
 
     global_assumptions.discard(Assume(k, Q.integer, True))
-    global_assumptions.discard(Assume(k, Q.positive, True))
+    global_assumptions.discard(Assume(k, Q.negative, False))
 
 def test_is_rational_function():
     x,y = symbols('xy')

@@ -303,7 +303,6 @@ def test_I():
     assert gruntz(I*x, x, oo) == I*oo
     assert gruntz(y*I*x, x, oo) == y*I*oo
     assert gruntz(y*3*I*x, x, oo) == y*I*oo
-    # FIXME: Can't figure out why this test fails...
-    #assert gruntz(y*3*sin(I)*x, x, oo) == y*I*oo
+    assert gruntz(y*3*sin(I)*x, x, oo) == y*I*oo
     global_assumptions.discard(Assume(x, Q.real, True))
     global_assumptions.discard(Assume(m, Q.real, True))

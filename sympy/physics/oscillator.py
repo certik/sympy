@@ -2,7 +2,7 @@ from sympy import factorial, sqrt, exp, S, laguerre_l, Real
 
 def E_n(n, omega=1):
     """
-    Returns the energy of the state "n" of 1D harmonic oscillator.
+    Returns the energy of the state "n" of a 1D harmonic oscillator.
 
     We use Hartree atomic units.
 
@@ -30,3 +30,20 @@ def E_n(n, omega=1):
     if n.is_integer and (n < 0):
         raise ValueError("'n' must be nonnegative integer")
     return omega * (n + S(1)/2)
+
+def END(n_tuple, omega=1):
+    """
+    Returns the energy of the state "n" of an N-D harmonic oscillator.
+
+    n_tuple ... tuple of (n1, n2, n3, ...).
+
+    len(n_tuple) determines the space dimension
+
+    We use Hartree atomic units.
+    """
+    # The N-dimensional harmonic oscillator energy is the sum of N independent
+    # one-dimensional harmonic oscillators:
+    E = 0
+    for n in n_tuple:
+        E += E_n(n, omega)
+    return E

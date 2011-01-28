@@ -1,5 +1,5 @@
 from sympy import var, sqrt, exp, simplify, S, integrate, oo, Symbol, symbols
-from sympy.physics.oscillator import E_n, END
+from sympy.physics.oscillator import E_n, END, spectrum
 from sympy.utilities.pytest import raises
 
 var("omega")
@@ -72,3 +72,9 @@ def test_oscillator_energies_3D():
     # ...
 
     raises(ValueError, "END((-1, 0, 0))")
+
+def test_spectrum_2d():
+    energies = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6,
+            7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9]
+    for n in range(len(energies)):
+        assert energies[:n] == spectrum(N=2, n=n)

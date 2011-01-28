@@ -47,3 +47,29 @@ def END(n_tuple, omega=1):
     for n in n_tuple:
         E += E_n(n, omega)
     return E
+
+def spectrum(N=3, omega=1, n=10):
+    """
+    Returns the whole spectrum for N-dim oscillator in atomic units.
+    """
+
+    # This is a little brute-force approach, but on the other hand it is very
+    # robust:
+    l = []
+    _n = int(float(n)/N) + 1
+    if N == 1:
+        for i in range(_n):
+            l.append(END((i,), omega))
+    elif N == 2:
+        for i in range(_n):
+            for j in range(_n):
+                l.append(END((i, j), omega))
+    elif N == 3:
+        for i in range(_n):
+            for j in range(_n):
+                for k in range(_n):
+                    l.append(END((i, j, k), omega))
+    else:
+        raise NotImplementedError()
+    l.sort()
+    return l[:n]

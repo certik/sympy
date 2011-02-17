@@ -12,3 +12,4 @@ from decorator import threaded, xthreaded, deprecated, wraps
 
 from cythonutils import cythonized
 from timeutils import timed
+from python_numpy import array

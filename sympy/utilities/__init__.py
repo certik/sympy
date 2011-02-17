@@ -17,5 +17,6 @@ from source import source
 from decorator import threaded, deprecated
 
 from cythonutils import cythonized
+from python_numpy import array
 
 del sys

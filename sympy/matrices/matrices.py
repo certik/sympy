@@ -2108,11 +2108,20 @@ class SMatrix(Matrix):
 
 def list2numpy(l):
     """Converts python list of SymPy expressions to a NumPy array."""
-    from numpy import empty
-    a = empty(len(l), dtype=object)
-    for i, s in enumerate(l):
-        a[i] = s
-    return a
+    try:
+        from numpy import empty
+        numpy_ok = True
+    except ImportError:
+        numpy_ok = False
+    if numpy_ok:
+        a = empty(len(l), dtype=object)
+        for i, s in enumerate(l):
+            a[i] = s
+        return a
+    else:
+        from sympy import array
+        return array(l)
+
 
 def matrix2numpy(m):
     """Converts SymPy's matrix to a NumPy array."""

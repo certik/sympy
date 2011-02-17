@@ -99,3 +99,97 @@ def tuple_wrapper(method):
                 newargs.append(arg)
         return method(*newargs, **kw_args)
     return wrap_tuples
+
+class TableForm(Basic):
+
+    def __init__(self, data, headings=None, alignment="left"):
+        """
+        Creates a TableForm.
+
+        Parameters:
+
+            data ... 2D data to be put into the table
+            headings ... gives the labels for entries in each dimension:
+                         None ... no labels in any dimension
+                         "automatic" ... gives successive integer labels
+                         [[l1, l2, ...], ...] gives labels for each entry in
+                             each dimension (can be None for some dimension)
+            alignment ... "left", "center", "right" (alignment of the columns)
+        """
+        # We only support 2D data. Check the consistency:
+        self._w = len(data[0])
+        self._h = len(data)
+        for line in data:
+            assert len(line) == self._w
+        self._lines = data
+
+        if headings is None:
+            self._headings = [None, None]
+        elif headings == "automatic":
+            self._headings = [range(1, self._h + 1), range(1, self._w + 1)]
+        else:
+            h1, h2 = headings
+            if h1 == "automatic":
+                h1 = range(1, self._h + 1)
+            if h2 == "automatic":
+                h2 = range(1, self._w + 1)
+            self._headings = [h1, h2]
+
+        self._alignment = alignment
+
+    def as_str(self):
+        column_widths = [0] * self._w
+        lines = []
+        for line in self._lines:
+            new_line = []
+            for i in range(self._w):
+                # Format the item somehow if needed:
+                s = str(line[i])
+                w = len(s)
+                if w > column_widths[i]:
+                    column_widths[i] = w
+                new_line.append(s)
+            lines.append(new_line)
+
+        # Check heading:
+        if self._headings[1]:
+            new_line = []
+            for i in range(self._w):
+                # Format the item somehow if needed:
+                s = str(self._headings[1][i])
+                w = len(s)
+                if w > column_widths[i]:
+                    column_widths[i] = w
+                new_line.append(s)
+            self._headings[1] = new_line
+
+        format_str = ""
+        for w in column_widths:
+            if self._alignment == "left":
+                align = "-"
+            elif self._alignment == "right":
+                align = ""
+            else:
+                raise NotImplementedError()
+            format_str += "%" + align + str(w) + "s "
+        format_str += "\n"
+
+        if self._headings[0]:
+            self._headings[0] = [str(x) for x in self._headings[0]]
+            heading_width = max([len(x) for x in self._headings[0]])
+            format_str = "%" + str(heading_width) + "s | " + format_str
+
+        s = ""
+        if self._headings[1]:
+            d = self._headings[1]
+            if self._headings[0]:
+                d = [""] + d
+            first_line = format_str % tuple(d)
+            s += first_line
+            s += "-" * (len(first_line) - 2) + "\n"
+        for i, line in enumerate(lines):
+            d = line
+            if self._headings[0]:
+                d = [self._headings[0][i]] + d
+            s += format_str % tuple(d)
+        return s

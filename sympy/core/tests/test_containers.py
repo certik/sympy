@@ -1,4 +1,4 @@
-from sympy import Tuple, symbols
+from sympy import Tuple, symbols, TableForm, array
 from sympy.core.containers import tuple_wrapper
 from sympy.utilities.pytest import raises
 
@@ -57,3 +57,21 @@ def test_tuple_wrapper():
     assert wrap_tuples_and_return(p, 1) == (p, 1)
     assert wrap_tuples_and_return((p, 1)) == (Tuple(p, 1),)
     assert wrap_tuples_and_return(1, (p, 2), 3) == (1, Tuple(p, 2), 3)
+
+
+
+def test_TableForm():
+    a = array([4, 2, 3])
+    s = str(TableForm(zip(a, a**3)))
+
+    s = str(TableForm([["a", "b"], ["c", "d"], ["e", "f"]],
+        headings="automatic"))
+    s = str(TableForm([["a", "b"], ["c", "d"], ["e", "f"]],
+            headings=("automatic", None)))
+    s = str(TableForm([["a", "b"], ["c", "d"], ["e", "f"]],
+            headings=(None, "automatic")))
+    s = str(TableForm([[5, 7], [4, 2], [10, 3]],
+            headings=[["Group A", "Group B", "Group C"], ["y1", "y2"]]))
+    s = str(TableForm([[5, 7], [4, 2], [10, 3]],
+            headings=[["Group A", "Group B", "Group C"], ["y1", "y2"]],
+            alignment="right"))

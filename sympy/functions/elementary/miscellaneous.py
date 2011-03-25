@@ -62,3 +62,15 @@ class Min(Function):
             return y
         elif rv == y:
             return x
+
+class InterpolatingFunction(object):
+
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+
+    def evalf(self, x):
+        i = 0
+        while i < len(self._x) and self._x[i] < x:
+            i += 1
+        return self._y[i]

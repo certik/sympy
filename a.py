@@ -1,4 +1,4 @@
-from sympy import pi, S, sqrt, sympify, var, exp, I, sin, cos
+from sympy import pi, S, sqrt, sympify, var, exp, I, sin, cos, simplify
 
 def factorial(n):
     if n < 0:
@@ -33,14 +33,21 @@ def wigner_d(j, m, mp, beta):
         for k in ang_range(j):
             #r += wigner_d(j, m, k, pi/2) * exp(-I*k*beta).rewrite(sin) * wigner_d(j, k, mp,
             #        pi/2)
-            #r += wigner_d(j, m, k, pi/2) * (cos(-k*beta)+I*sin(-k*beta)) * wigner_d(j, k, mp,
-            #        pi/2)
-            r += wigner_d(j, m, k, pi/2) * (-1)**k * wigner_d(j, k, mp, pi/2)
-            print r
+            r += wigner_d(j, m, k, pi/2) * (cos(-k*beta)+I*sin(-k*beta)) * \
+                wigner_d(j, k, -mp, pi/2)
+            #r += wigner_d(j, m, k, pi/2) * (-1)**k * wigner_d(j, k, mp, pi/2)
+            #print r
             #print k, wigner_d(j, m, k, pi/2), wigner_d(j, k, mp, pi/2), \
                     #    cos(k*beta)
             #r += wigner_d(j, m, k, pi/2) * cos(k*beta) * wigner_d(j, k, mp,
             #        pi/2)
+        #r = r / ((-I)**(m+mp) * (-S(1))**(j+mp))
+        r = r / ((-I)**(m+mp) * (-S(1))**(j+mp))
+        #r = r * I
+        r = r * (-1)
+        r = r * (-1)**(m)
+        r = r * (-S(1))**j
+        r = simplify(r)
     return r
 
 def ang_range(j):
@@ -69,5 +76,5 @@ print_table(S(3)/2, pi/2)
 print_table(2, pi/2)
 
 print_table(S(1)/2, beta)
-#print_table(1, beta)
+print_table(1, beta)
 #print_table(S(3)/2, beta)

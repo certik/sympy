@@ -34,6 +34,7 @@ def wigner_d(j, m, mp, beta):
                 wigner_d(j, k, -mp, pi/2)
         r = r * I**(2*j-m-mp) * (-1)**(2*m)
         r = simplify(r)
+        #r = r.subs(beta, pi/2)
     return r
 
 def ang_range(j):
@@ -63,4 +64,5 @@ print_table(2, pi/2)
 
 print_table(S(1)/2, beta)
 print_table(1, beta)
-#print_table(S(3)/2, beta)
+print_table(S(3)/2, beta)
+#print_table(2, beta)

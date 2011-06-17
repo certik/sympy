@@ -41,12 +41,7 @@ def wigner_d(j, m, mp, beta):
                     #    cos(k*beta)
             #r += wigner_d(j, m, k, pi/2) * cos(k*beta) * wigner_d(j, k, mp,
             #        pi/2)
-        #r = r / ((-I)**(m+mp) * (-S(1))**(j+mp))
-        r = r / ((-I)**(m+mp) * (-S(1))**(j+mp))
-        #r = r * I
-        r = r * (-1)
-        r = r * (-1)**(m)
-        r = r * (-S(1))**j
+        r = r * ((-I)**(-m-mp) * (-S(1))**(-mp+1+m))
         r = simplify(r)
     return r
 

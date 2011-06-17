@@ -29,18 +29,9 @@ def wigner_d(j, m, mp, beta):
         r *= (-S(1))**(m-mp) * 1/2**j * sqrt(factorial(j+m) * \
                 factorial(j-m) / (factorial(j+mp) * factorial(j-mp)))
     else:
-        #print "XXX"
         for k in ang_range(j):
-            #r += wigner_d(j, m, k, pi/2) * exp(-I*k*beta).rewrite(sin) * wigner_d(j, k, mp,
-            #        pi/2)
             r += wigner_d(j, m, k, pi/2) * (cos(-k*beta)+I*sin(-k*beta)) * \
                 wigner_d(j, k, -mp, pi/2)
-            #r += wigner_d(j, m, k, pi/2) * (-1)**k * wigner_d(j, k, mp, pi/2)
-            #print r
-            #print k, wigner_d(j, m, k, pi/2), wigner_d(j, k, mp, pi/2), \
-                    #    cos(k*beta)
-            #r += wigner_d(j, m, k, pi/2) * cos(k*beta) * wigner_d(j, k, mp,
-            #        pi/2)
         r = r * I**(2*j-m-mp) * (-1)**(2*m)
         r = simplify(r)
     return r

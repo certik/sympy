@@ -206,6 +206,17 @@ class Permutation(Basic):
         ret_obj._cyclic_form, ret_obj._array_form = cform, aform
         return ret_obj
 
+    def __getitem__(self, key):
+        """
+        Makes the Permutation object subscriptable.
+
+        Examples:
+        >>> from sympy.combinatorics.permutations import Permutation
+        >>> p = Permutation([0,1,2,3])
+        >>> p[2]
+        2
+        """
+        return self._array_form[key]
 
     def __add__(self, other):
         """

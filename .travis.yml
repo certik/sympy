@@ -12,7 +12,6 @@ script:
   # of sympy in the source directory.
   - mkdir empty
   - cd empty
-  - "echo -e \"import sympy\\nif not sympy.test(): raise Exception('Tests failed')\" | python"
-  - "echo -e \"import sympy\\nif not sympy.doctest(): raise Exception('Doctests failed')\" | python"
+  - "echo -e \"from sympy.utilities.runtests import run_all_tests\\nif not run_all_tests(): raise Exception('Tests failed')\" | python"
 notifications:
   email: false

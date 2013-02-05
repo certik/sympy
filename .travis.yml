@@ -1,23 +1,15 @@
 language: python
 python:
-  - 2.5
-  - 2.6
   - 2.7
-  - 3.2
-  - 3.3
 matrix:
   include:
     - python: 2.7
-      env: TEST_GMPY="true"
-    - python: 3.3
       env: TEST_GMPY="true"
   # Below we list *exact* builds that are allowed to fail. Once they are fixed,
   # you can remove the appropriate test from below (you still need to keep it
   # above in order to be tested at all).
   allow_failures:
     - python: 2.7
-      env: TEST_GMPY="true"
-    - python: 3.3
       env: TEST_GMPY="true"
 before_install:
   - if [ "${TEST_GMPY}" == "true" ]; then
@@ -31,7 +23,7 @@ script:
   # of sympy in the source directory.
   - mkdir empty
   - cd empty
-  - "echo -e \"import sympy\\nif not sympy.test(): raise Exception('Tests failed')\" | python"
-  - "echo -e \"import sympy\\nif not sympy.doctest(): raise Exception('Doctests failed')\" | python"
+  - "echo -e \"raise Exception('Tests failed I')\" | python"
+  - "echo -e \"raise Exception('Tests failed II')\" | python"
 notifications:
   email: false

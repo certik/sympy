@@ -24,6 +24,5 @@ script:
   - mkdir empty
   - cd empty
   - python -c "raise Exception('Tests failed I')"
-  - python -c "raise Exception('Tests failed II')"
 notifications:
   email: false

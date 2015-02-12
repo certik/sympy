@@ -8,7 +8,7 @@ HAS_GMPY = True
 # For example, int(gmpy.mpz(2**256)) would raise OverflowError.
 # See issue 1881.
 
-gmpy = import_module('gmpy', min_module_version='1.03',
+gmpy = import_module('gmpy2', min_module_version='1.03',
     module_version_attr='version', module_version_attr_call_args=())
 
 HAS_GMPY = bool(gmpy)
@@ -38,7 +38,7 @@ from sympy import (
 )
 
 if HAS_GMPY:
-    from gmpy import (
+    from gmpy2 import (
         mpz    as GMPYIntegerType,
         mpq    as GMPYRationalType,
         fac    as gmpy_factorial,

@@ -299,7 +299,7 @@ sqrt_fixed2 = sqrt_fixed
 
 if BACKEND == 'gmpy':
     isqrt_small = isqrt_fast = isqrt = gmpy.sqrt
-    sqrtrem = gmpy.sqrtrem
+    sqrtrem = None #gmpy.sqrtrem
 elif BACKEND == 'sage':
     isqrt_small = isqrt_fast = isqrt = \
         getattr(sage_utils, "isqrt", lambda n: MPZ(n).isqrt())

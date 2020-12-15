@@ -11105,3 +11105,8 @@ if matchpy:
         return ZeroQ(p + q)
 
     cons2039 = CustomConstraint(cons_f2039)
+
+
+    def cons_a1(n):
+        return ZeroQ(n + S(1))
+    consa1 = CustomConstraint(cons_a1)

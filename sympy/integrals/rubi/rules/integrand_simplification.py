@@ -136,25 +136,34 @@ if matchpy:
 
 
 def integrand_simplification():
-    from sympy.integrals.rubi.constraints import cons1, cons2, cons3, cons4, cons5, cons6, cons7, cons8, cons9, cons10, cons11, cons12, cons13, cons14, cons15, cons16, cons17, cons18, cons19, cons20, cons21, cons22, cons23, cons24, cons25, cons26, cons27, cons28, cons29, cons30, cons31, cons32, cons33, cons34, cons35, cons36, cons37, cons38, cons39, cons40, cons41, cons42, cons43, cons44, cons45, cons46, cons47, cons48, cons49, cons50, cons51, cons52, cons53, cons54, cons55, cons56, cons57, cons58, cons59, cons60, cons61, cons62, cons63, cons64, cons65, cons66, cons67, consa1
+    from sympy.integrals.rubi.constraints import cons1, cons2, cons3, cons4, cons5, cons6, cons7, cons8, cons9, cons10, cons11, cons12, cons13, cons14, cons15, cons16, cons17, cons18, cons19, cons20, cons21, cons22, cons23, cons24, cons25, cons26, cons27, cons28, cons29, cons30, cons31, cons32, cons33, cons34, cons35, cons36, cons37, cons38, cons39, cons40, cons41, cons42, cons43, cons44, cons45, cons46, cons47, cons48, cons49, cons50, cons51, cons52, cons53, cons54, cons55, cons56, cons57, cons58, cons59, cons60, cons61, cons62, cons63, cons64, cons65, cons66, cons67, consa1, consa2
 
-    pattern1 = Pattern(Integral(x_**WC("n", S(0))*WC("b", S(1)), x_),
+    pattern1 = Pattern(Integral(x_**WC("n", S(1))*WC("b", S(1)), x_),
         cons4,
         cons3,
         consa1,
         )
     rule1 = ReplacementRule(pattern1, replacement1)
 
-    pattern2 = Pattern(Integral(x_*WC("b", S(1)), x_),
+    pattern2 = Pattern(Integral(x_**WC("n", S(1))*WC("b", S(1)), x_),
+        cons4,
         cons3,
+        consa2,
         )
     rule2 = ReplacementRule(pattern2, replacement2)
 
-    return [rule1, rule2]
+    pattern3 = Pattern(Integral(x_*WC("b", S(1)), x_),
+        cons3,
+        )
+    rule3 = ReplacementRule(pattern3, replacement3)
+
+    return [rule1, rule2, rule3]
 
 def replacement1(b, n, x):
-    return x_**(n+1)*b/(n+1)
+    return x**(n+1)*b/(n+1)
 
+def replacement2(b, n, x):
+    return b*log(x)
 
-def replacement2(b, x):
+def replacement3(b, x):
     return b*x**2/2

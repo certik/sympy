@@ -11108,5 +11108,9 @@ if matchpy:
 
 
     def cons_a1(n):
-        return ZeroQ(n + S(1))
+        return NonzeroQ(n + S(1))
     consa1 = CustomConstraint(cons_a1)
+
+    def cons_a2(n):
+        return ZeroQ(n + S(1))
+    consa2 = CustomConstraint(cons_a2)
